@@ -13,4 +13,9 @@ class Game():
             db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
         """
-        pass
+        this.gamepath = gamepath
+        this.assets = assets
+        this.db = db
+        this.profile = profile
+        
+        

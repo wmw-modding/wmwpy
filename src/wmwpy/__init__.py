@@ -1,8 +1,4 @@
-import os
-import pathlib
-import lxml
-from lxml import etree
-from .Game import Game
+from . import Game
 
 def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None):
     """load game
