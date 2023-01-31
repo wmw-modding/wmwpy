@@ -1,1 +1,0 @@
-from .Waltex import WaltexImage

@@ -3,7 +3,7 @@ import pathlib
 import lxml
 from lxml import etree
 
-from .ImportUtils import WaltexImage
+from .Utils import WaltexImage
 from .classes import Level
 from .classes import Layout
 
