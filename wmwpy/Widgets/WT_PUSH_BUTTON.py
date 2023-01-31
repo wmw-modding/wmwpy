@@ -1,7 +1,7 @@
 import lxml
 from lxml import etree
 from PIL import Image, ImageTk
-from ..ImportUtils.Waltex import getWaltexImage
+from ..ImportUtils import WaltexImage
 from . import Widget
 
 class WT_PUSH_BUTTON(Widget):

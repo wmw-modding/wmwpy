@@ -3,6 +3,10 @@ import pathlib
 import lxml
 from lxml import etree
 
+from .ImportUtils import WaltexImage
+from .classes import Level
+from .classes import Layout
+
 class Game():
     def __init__(this, gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None) -> None:
         """load game
@@ -18,4 +22,8 @@ class Game():
         this.db = db
         this.profile = profile
         
-        
+    def loadLevel(this, xml : str = None, image : str = None, ):
+        Level()
+    
+    def loadLayout(this, layout : str):
+        pass

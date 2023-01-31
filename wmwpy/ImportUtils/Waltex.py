@@ -5,7 +5,7 @@ from PIL import Image
 import math
 # import json
 
-def getWaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False):
+def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False) -> Image:
     """Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     # with open(path, 'rb') as file:
     #     rawData = file.read()
     
-    image = getWaltexImage(path, (1024, 1024), 'rgba4444')
+    image = WaltexImage(path, (1024, 1024), 'rgba4444')
         
     # image = WrapRawData(rawData, 1024, 1024, 2, 4, 4, 4, 4, 'rgba', dePremultiplyAlpha=True)
     # print(image)

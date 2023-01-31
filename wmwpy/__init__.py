@@ -1,4 +1,4 @@
-from . import Game
+from .Game import Game
 
 def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None):
     """load game
