@@ -9,6 +9,12 @@ from .XMLTools import findTag
 
 _cachedWaltextImages = {}
 
+def getHDFile(file):
+    split = os.path.splitext(file)
+    split = list(split)
+    split.insert(1, '-HD')
+    return ''.join(split)
+
 class Imagelist():
     def __init__(this, gamepath : str, assets : str, imagelist : str, HD : bool = False) -> None:
         """Imagelist
@@ -31,6 +37,10 @@ class Imagelist():
         this.getData()
         
     def getData(this):
+        hd = getHDFile(this.path)
+        if os.path.exists(joinPath(this.gamepath, this.assets, hd)):
+            this.path = hd
+        
         # with open(, 'r') as file:
         this.xml = etree.parse(joinPath(this.gamepath, this.assets, this.path)).getroot()
         
@@ -46,11 +56,9 @@ class Imagelist():
         this.type = this.type[1:]
         
         if this.HD:
-            split = os.path.splitext(this.atlasFile)
-            split = list(split)
-            split.insert(1, '-HD')
-            
-            this.atlasFile = ''.join(split)
+            hd = getHDFile(this.atlasFile)
+            if os.path.exists(joinPath(this.gamepath, this.assets, hd)):
+                this.atlasFile = hd
             # del split
             
         this.fullAtlasPath = joinPath(this.gamepath, this.assets, this.atlasFile)
