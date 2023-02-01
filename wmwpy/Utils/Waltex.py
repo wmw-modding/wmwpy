@@ -5,7 +5,7 @@ from PIL import Image
 import math
 # import json
 
-def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False) -> Image:
+def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False) -> Image.Image:
     """Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
@@ -145,12 +145,12 @@ def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int,
             
         # a = 255
             
-        if premultiplyAlpha:
+        if dePremultiplyAlpha:
             r = round(r * a / 255.0)
             g = round(g * a / 255.0)
             b = round(b * a / 255.0)
             
-        if dePremultiplyAlpha:
+        if premultiplyAlpha:
             if (a != 0):
                 r = round(r * 255.0 / a)
                 g = round(g * 255.0 / a)
