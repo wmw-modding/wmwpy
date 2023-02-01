@@ -1,4 +1,5 @@
 from ..Utils import WaltexImage
+from ..classes import Sprite
 
 class Object():
     def __init__(this, gamepath : str, assets : str, object : str, ) -> None:
@@ -10,15 +11,6 @@ class Object():
             object (str): Object file relative to assets path. Must be `.hs` file.
         """
         pass
-    
-class Sprite():
-    pass
-
-    class Animation():
-        pass
-
-        class Frame():
-            pass
 
 class Shape():
     class Point():
