@@ -7,6 +7,8 @@ from PIL import Image
 from .path import joinPath
 from .XMLTools import findTag
 
+_cachedWaltextImages = {}
+
 class Imagelist():
     def __init__(this, gamepath : str, assets : str, imagelist : str, HD : bool = False) -> None:
         """Imagelist
@@ -24,30 +26,61 @@ class Imagelist():
         this.HD = HD
         this.xml = None
         
+        this.images = {}
+        
         this.getData()
         
     def getData(this):
-        with open(this.path, 'r') as file:
-            this.xml = etree.parse(file).getroot()
+        # with open(, 'r') as file:
+        this.xml = etree.parse(joinPath(this.gamepath, this.assets, this.path)).getroot()
         
-        this.attributes = this.xml.attr
+        this.attributes = this.xml.attrib
         if this.attributes['imgSize']:
             this.size = tuple([int(v) for v in this.attributes['imgSize'].split(' ')])
         if this.attributes['textureBasePath']:
             this.textureBasePath = this.attributes['textureBasePath']
         if this.attributes['file']:
             this.atlasFile = this.attributes['file']
+            
+        this.name, this.type = os.path.splitext(this.atlasFile)
+        this.type = this.type[1:]
+        
+        if this.HD:
+            split = os.path.splitext(this.atlasFile)
+            split = list(split)
+            split.insert(1, '-HD')
+            
+            this.atlasFile = ''.join(split)
+            # del split
+            
+        this.fullAtlasPath = joinPath(this.gamepath, this.assets, this.atlasFile)
+        print(this.fullAtlasPath)
+        
+        this.getAtlas()
+        this.getImages()
         
             
-    def getAtles(this):
-        pass
+    def getAtlas(this):
+        this.textureSettings = getTextueSettings(
+            this.gamepath,
+            this.assets,
+            joinPath(os.path.dirname(os.path.dirname(this.textureBasePath)), 'Data/textureSettings.xml'),
+            this.name
+        )
         
-    def findImage(this, name : str):
-        pass
+        this.atlas = getImage(this.fullAtlasPath, this.textureSettings, this.size)
+        
+    def getImages(this):
+        for image in this.xml:
+            if not image.tag is etree.Comment:
+                this.images[image.get('name')] = this.Image(this.atlas, image.attrib)
+        
+    def getImage(this, name : str):
+        return this.images[name]
     
     class Image():
-        def __init__(this, path : str, attributes : dict) -> None:
-            this.path = path
+        def __init__(this, image : Image.Image, attributes : dict) -> None:
+            this.atlas = image
             this.attributes = attributes
             
             this.size = (0,0)
@@ -55,7 +88,7 @@ class Imagelist():
             this.rect = (0,0,0,0)
             this.name = None
             
-            this.name = None
+            this.image = None
             
             this.getData()
             this.getImage()
@@ -71,8 +104,54 @@ class Imagelist():
                 this.name = this.attributes['name']
         
         def getImage(this):
-            atlas = Image.open(this.path)
-            atlas = atlas.convert('RGBA')
+            this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
             
-            this.image = atlas.crop(numpy.add(this.rect, (0,0) + this.rect[2:4]))
+        def show(this):
+            this.image.show()
+            
+def getImage(path : str, textureSettings : dict, size : tuple, cache = True) -> Image.Image:
+    type = os.path.splitext(path)[1][1:]
+    image = None
+    if type == 'waltex':
+        if cache:
+            try:
+                image = _cachedWaltextImages[os.path.basename(path)].copy()
+            except:
+                pass
+        if image == None:
+            image = WaltexImage(
+                path,
+                size,
+                textureSettings['colorspace'],
+                textureSettings['premultiplyAlpha']
+            )
+            if cache:
+                _cachedWaltextImages[os.path.basename(path)] = image.copy()
+    else:
+        image = Image.open(path).convert('RGBA')
         
+    return image
+    
+def getTextueSettings(gamepath : str, assets : str, textureSettings : str, name : str, ) -> dict:
+    fullpath = joinPath(gamepath, assets, textureSettings)
+    xml = etree.parse(fullpath).getroot()
+    
+    Texture = None
+    for i in xml:
+        if not i.tag is etree.Comment:
+            if i.tag == 'Texture' and i.get('name') == name:
+                Texture = i
+                break
+            
+    attributes = {
+        'colorspace': 'RGBA4444',
+        'premultiplyAlpha': False,
+        'dePremultiplyAlpha': False,
+    }
+    
+    values = Texture.attrib
+    
+    for key in values:
+        attributes[key] = values[key]
+    
+    return attributes

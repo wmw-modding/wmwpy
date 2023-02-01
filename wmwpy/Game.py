@@ -27,3 +27,4 @@ class Game():
     
     def loadLayout(this, layout : str):
         pass
+    
