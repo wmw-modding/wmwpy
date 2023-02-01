@@ -1,4 +1,8 @@
 from .Game import Game
+from . import classes
+from . import Font
+from . import Widgets
+from . import Utils
 
 def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None):
     """load game
