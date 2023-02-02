@@ -1,3 +1,6 @@
+from ..Utils import ImageUtils
+
+
 class Sprite():
     pass
 
