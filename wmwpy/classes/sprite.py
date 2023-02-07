@@ -2,10 +2,13 @@ from ..Utils import ImageUtils
 
 
 class Sprite():
-    pass
-
-    class Animation():
+    def __init__(self) -> None:
         pass
 
-        class Frame():
+    class Animation():
+        def __init__(self) -> None:
             pass
+
+        class Frame():
+            def __init__(self) -> None:
+                pass

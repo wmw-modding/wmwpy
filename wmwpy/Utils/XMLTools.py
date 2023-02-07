@@ -1,6 +1,6 @@
 from lxml import etree
 
-def findTag(root : etree.Element, tag : str) -> etree.Element:
+def findTag(root : etree.ElementBase, tag : str) -> etree.Element:
     element = 0
     curTag = ''
     for e in root:
@@ -10,4 +10,3 @@ def findTag(root : etree.Element, tag : str) -> etree.Element:
         curTag = e.tag
         if curTag == tag:
             return e
-            break
