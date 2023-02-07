@@ -2,7 +2,7 @@ from ..Utils import ImageUtils
 
 
 class Sprite():
-    def __init__(self) -> None:
+    def __init__(self, gamepath : str, assets : str, sprite : str, attributes : dict = {}) -> None:
         pass
 
     class Animation():

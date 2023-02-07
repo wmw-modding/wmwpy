@@ -10,3 +10,5 @@ def findTag(root : etree.ElementBase, tag : str) -> etree.Element:
         curTag = e.tag
         if curTag == tag:
             return e
+        
+    return None

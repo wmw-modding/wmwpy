@@ -1,5 +1,6 @@
 from ..Utils import ImageUtils
 from ..classes import Sprite
+from ..Utils import XMLTools
 import lxml
 from lxml import etree
 
@@ -38,8 +39,16 @@ class Object():
         # specifically specifying type so it's easier to use in vscode
         this.xml : etree.ElementBase = etree.parse(this.objectPath).getroot()
         
+        this.getSprites()
+        this.getProperties()
+        this.getShapes()
+        this.getUVs()
+        this.getVertIndices()
+        
     def getSprites(this):
-        pass
+        spritesXML = XMLTools.findTag(this.xml, 'Sprites')
+        if spritesXML == None:
+            return None
     
     def getShapes(this):
         pass
