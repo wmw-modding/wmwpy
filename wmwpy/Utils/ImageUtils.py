@@ -35,6 +35,7 @@ class Imagelist():
         this.images = {}
         
         this.getData()
+        this.getNO_TEX()
         
     def getData(this):
         hd = getHDFile(this.path)
@@ -76,54 +77,74 @@ class Imagelist():
             this.name
         )
         
-        this.atlas = getImage(this.fullAtlasPath, this.textureSettings, this.size)
+        this.atlas = getTexture(this.fullAtlasPath, this.textureSettings, this.size)
         
     def getImages(this):
         for image in this.xml:
             if not image.tag is etree.Comment:
-                this.images[image.get('name')] = this.Image(this.atlas, image.attrib)
+                this.images[image.get('name')] = this.Texture(this.atlas, image.attrib)
         
     def getImage(this, name : str):
-        return this.images[name]
+        if name in this.images:
+            return this.images[name]
+        else:
+            return this.NO_TEX
+        
+    def getNO_TEX(this):
+        NO_TEX_settings = getTextueSettings(
+            this.gamepath,
+            this.assets,
+            joinPath(os.path.dirname(os.path.dirname(this.textureBasePath)), 'Data/textureSettings.xml'),
+            os.path.join(this.textureBasePath, 'NO_TEX.png')
+        )
+        NO_TEX_image = Image.open(joinPath(this.gamepath, this.assets, this.textureBasePath, 'NO_TEX.png')).convert('RGBA')
+        this.NO_TEX = this.Texture(NO_TEX_image, {
+            'size': ' '.join([str(x) for x in NO_TEX_image.size]),
+            'rect': ' '.join([str(x) for x in (0,0) + NO_TEX_image.size]),
+            'name': 'NO_TEX.png',
+        })
+        # this.Image(this.atlas, image.attrib)
     
-    class Image():
-        def __init__(this, image : Image.Image, attributes : dict) -> None:
-            this.atlas = image
+    class Texture():
+        def __init__(this, atlas : Image.Image, attributes : dict) -> None:
+            this.atlas = atlas
             this.attributes = attributes
             
-            this.size = (0,0)
+            this.size = (1,1)
             this.offset = (0,0)
             this.rect = (0,0,0,0)
             this.name = None
             
-            this.image = None
+            this.image = Image.new('RGBA', this.size)
             
             this.getData()
             this.getImage()
             
         def getData(this):
-            if this.attributes['size']:
+            if 'size' in this.attributes:
                 this.size = tuple([int(v) for v in this.attributes['size'].split(' ')])
-            if this.attributes['offset']:
+            if 'offset' in this.attributes:
                 this.offset = tuple([int(v) for v in this.attributes['offset'].split(' ')])
-            if this.attributes['rect']:
+            if 'rect' in this.attributes:
                 this.rect = tuple([int(v) for v in this.attributes['rect'].split(' ')])
-            if this.attributes['name']:
+            if 'name' in this.attributes:
                 this.name = this.attributes['name']
         
         def getImage(this):
             this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
+            this.image = this.image.resize(this.size)
+            return this.image
             
         def show(this):
             this.image.show()
             
-def getImage(path : str, textureSettings : dict, size : tuple, cache = True) -> Image.Image:
+def getTexture(path : str, textureSettings : dict, size : tuple, cache = True) -> Image.Image:
     type = os.path.splitext(path)[1][1:]
     image = None
     if type == 'waltex':
         if cache:
             try:
-                image = _cachedWaltextImages[os.path.basename(path)].copy()
+                image = _cachedWaltextImages[path].copy()
             except:
                 pass
         if image == None:
@@ -134,7 +155,7 @@ def getImage(path : str, textureSettings : dict, size : tuple, cache = True) -> 
                 textureSettings['premultiplyAlpha']
             )
             if cache:
-                _cachedWaltextImages[os.path.basename(path)] = image.copy()
+                _cachedWaltextImages[path] = image.copy()
     else:
         image = Image.open(path).convert('RGBA')
         
@@ -144,7 +165,7 @@ def getTextueSettings(gamepath : str, assets : str, textureSettings : str, name 
     fullpath = joinPath(gamepath, assets, textureSettings)
     xml = etree.parse(fullpath).getroot()
     
-    Texture = None
+    Texture = etree.ElementBase()
     for i in xml:
         if not i.tag is etree.Comment:
             if i.tag == 'Texture' and i.get('name') == name:
