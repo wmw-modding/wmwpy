@@ -30,6 +30,9 @@ class Object():
         this.shapes = []
         this.UVs = []
         this.VertIndices = []
+        this.defaultProperties = {}
+        this.properties = {}
+        this.type = None
         
         this.image = None
         
@@ -49,28 +52,69 @@ class Object():
         spritesXML = XMLTools.findTag(this.xml, 'Sprites')
         if spritesXML == None:
             return None
-    
-    def getShapes(this):
-        pass
+        for sprite in spritesXML:
+            if (not sprite is etree.Comment) and sprite.tag == 'Sprite':
+                attributes = sprite.attrib
+                this.sprites.append(Sprite(this.gamepath, this.assets, attributes['filename'], attributes))
+        
+        return this.sprites
     
     def getProperties(this):
         this._getDefaultProperties()
-        pass
+        for prop in this.defaultProperties:
+            this.properties[prop] = this.defaultProperties[prop]
+        for prop in this._properties:
+            this.properties[prop] = this._properties[prop]
+        return this.properties
     
     def getDefaultProperties(this):
-        pass
+        this.defaultProperties = {}
+        propertiesXML = XMLTools.findTag(this.xml, 'DefaultProperties')
+        if propertiesXML == None:
+            return None
+        for prop in propertiesXML:
+            if (not prop is etree.Comment) and prop.tag == 'Property':
+                name = prop.get('name')
+                value = prop.get('value')
+                if name == 'Type':
+                    this.type = value
+                this.defaultProperties[name] = value
+            return this.defaultProperties
+    
+    def getShapes(this):
+        this.shapes = []
+        shapesXML = XMLTools.findTag(this.xml, 'Shapes')
+        if shapesXML == None:
+            return None
+        for shape in shapesXML:
+            if (not shape is etree.Comment) and shape.tag == 'Shape':
+                obj = Shape()
+                obj.readXML(shape)
+                this.shapes.append(obj)
+        return this.shapes
     
     def getUVs(this):
-        pass
+        this.UVs = []
+        UVsXML = XMLTools.findTag(this.xml, 'UVs')
+        if UVsXML == None:
+            return None
+        for UV in UVsXML:
+            if (not UV is etree.Comment) and UV.tag == 'UV':
+                pos = UV.get('pos')
+                this.UVs.append(tuple([float(axis) for axis in pos.split(' ')]))
+        return this.UVs
     
     def getVertIndices(this):
         pass
         
 
 class Shape():
+    def __init__(self) -> None:
+        pass
+    
+    def readXML(this, xml : etree.ElementBase = None):
+        pass
+    
     class Point():
         def __init__(self) -> None:
-            pass
-        
-        def readXML(this, xml : etree.ElementBase = None):
-            pass
+            pass        
