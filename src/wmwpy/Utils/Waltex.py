@@ -5,7 +5,7 @@ from PIL import Image
 import math
 # import json
 
-def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little') -> Image.Image:
+def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little', offset : int = 0) -> Image.Image:
     """Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
@@ -41,12 +41,12 @@ def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgb
     
     if endian == 'big' or endian == 1:
         colorOrder = colorOrder[::-1]
-        bpprgba = bpprgba[::-1]
+        # bpprgba = bpprgba[::-1] # don't know whether to use this or not
     
     with open(path, 'rb') as file:
-        return WrapRawData(file.read(), size[0], size[1], bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha)
+        return WrapRawData(file.read(), size[0], size[1], bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha, offset)
 
-def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int, redBits : int, greenBits : int, blueBits : int, alphaBits : int, colorOrder : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False):
+def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int, redBits : int, greenBits : int, blueBits : int, alphaBits : int, colorOrder : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, offset : int = 0):
     _8BIT_MASK = 256.0
     OUTBITDEPTH = 8
     DEBUG_MODE = False
@@ -78,7 +78,7 @@ def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int,
         
         # read all bytes for this pixel
         for j in range(bytesPerPixel):
-            nextByte = rawData[i * bytesPerPixel + j]
+            nextByte = rawData[i * bytesPerPixel + j + offset]
             
             # print(f'Read byte: {hex(nextByte)}')
             
