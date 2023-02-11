@@ -5,7 +5,7 @@ from PIL import Image
 import math
 # import json
 
-def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False) -> Image.Image:
+def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little') -> Image.Image:
     """Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
@@ -16,7 +16,7 @@ def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgb
         colorspace (str, optional): Color spec of image. Defaults to 'rgba4444'.
         premultiplyAlpha (bool, optional): Defaults to False.
         dePremultiplyAlpha (bool, optional): Defaults to False.
-        
+        dePremultiplyAlpha (str, optional): Defaults to 'little'.
 
     Returns:
         PIL.Image: Pillow image.
@@ -38,6 +38,10 @@ def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgb
         
     bytesPerPixel = round(sum(bpprgba) / 8)
     # print(colorspace, bytesPerPixel, colorOrder, bpprgba)
+    
+    if endian == 'big' or endian == 1:
+        colorOrder = colorOrder[::-1]
+        bpprgba = bpprgba[::-1]
     
     with open(path, 'rb') as file:
         return WrapRawData(file.read(), size[0], size[1], bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha)

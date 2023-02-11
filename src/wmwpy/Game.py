@@ -8,6 +8,8 @@ from .Utils.path import joinPath
 from .classes import Level
 from .classes import Layout
 
+os.path.isdir
+
 class Game():
     def __init__(this, gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None) -> None:
         """load game
