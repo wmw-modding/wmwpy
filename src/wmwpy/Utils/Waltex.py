@@ -16,7 +16,8 @@ def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgb
         colorspace (str, optional): Color spec of image. Defaults to 'rgba4444'.
         premultiplyAlpha (bool, optional): Defaults to False.
         dePremultiplyAlpha (bool, optional): Defaults to False.
-        dePremultiplyAlpha (str, optional): Defaults to 'little'.
+        endian (str, optional): Endian mode. Set to 'big' or 1 to use big endian. Defaults to 'little'.
+        offset (int, optional): General byte offset. Defaults to 0.
 
     Returns:
         PIL.Image: Pillow image.
@@ -200,20 +201,4 @@ if __name__ == "__main__":
     #     rawData = file.read()
     
     image = WaltexImage(path, (1024, 1024), 'rgba4444')
-        
-    # image = WrapRawData(rawData, 1024, 1024, 2, 4, 4, 4, 4, 'rgba', dePremultiplyAlpha=True)
-    # print(image)
     image.show()
-    
-    # with open('pixels.json', 'w') as file:
-    #     json.dump(image, file)
-        
-    # pixels = numpy.array(image, dtype=numpy.uint8)
-    # pixels = pixels.astype('uint8')
-    # print(pixels)
-    # new_image = Image.fromarray(pixels, 'RGBA')
-    # new_image = Image.new('RGBA', (1024, 1024))
-    # flattened = list(pixels.flatten())
-    # print(flattened)
-    # new_image.putdata(new_image)
-    # new_image.show()
