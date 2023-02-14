@@ -82,7 +82,8 @@ class Imagelist():
     def getImages(this):
         for image in this.xml:
             if not image.tag is etree.Comment:
-                this.images[image.get('name')] = this.Texture(this.atlas, image.attrib)
+                if image.tag == 'Image':
+                    this.images[image.get('name')] = this.Texture(this.atlas, image.attrib)
         
     def getImage(this, name : str):
         if name in this.images:
