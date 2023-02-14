@@ -27,6 +27,46 @@ class Game():
         this.db = db
         this.profile = profile
         
+        this.files = {}
+        
+    def getFiles(this):
+        this.files = {}
+        assets = joinPath(this.gamepath, this.assets)
+        for dir, subdir, files in os.walk(assets):
+            for file in files:
+                path = pathlib.Path(os.path.relpath(os.path.join(dir, file), assets)).as_posix()
+                this._addFile(path, path)
+        
+        return this.files
+                    
+    def _addFile(this, path, file, **kwargs):
+        if isinstance(path, (list, tuple)):
+            data = kwargs['data']
+            if len(path) <= 1:
+                data[path[0]] = file
+                return data
+            
+            try:
+                data[path[0]]
+                # if not isinstance(data[path[0]], dict):
+                #     logging.error(f'Path {data} taken')
+            except:
+                data[path[0]] = {}
+                
+            if not isinstance(data[path[0]], dict):
+                print(f'Path {data} taken')
+                return data
+            
+            data = data[path[0]]
+            
+            this._addFile(path[1:], file, data=data)
+        else:
+            parts = pathlib.Path(path).parts
+            if parts[0] == '':
+                parts = parts[1:]
+            
+            this._addFile(parts, file, data=this.files)
+        
     def loadLevel(this, xml : str = None, image : str = None, ):
         Level()
     
