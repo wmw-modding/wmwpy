@@ -33,17 +33,16 @@ class Game():
     def loadLayout(this, layout : str):
         pass
     
-    def generateFileManifest(this):
+    def generateFileManifest(this, writeFile : bool = True):
         manifest = []
         assets = joinPath(this.gamepath, this.assets)
-        print(assets)
         for dir, subdir, files in os.walk(assets):
             for file in files:
-                print(f'{file = }\n{dir = }\n{subdir = }')
+                # print(f'{file = }\n{dir = }\n{subdir = }')
                 
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
                 # path = pathlib.Path(path).parts
-                print(f'{path = }')
+                # print(f'{path = }')
                 manifest.append(path)
                 
         manifest = natsort.natsorted(manifest)
@@ -51,9 +50,10 @@ class Game():
         content = '\n'.join(manifest)
         
         path = joinPath(this.gamepath, this.assets, 'FileManifest.txt')
-        print(path)
+        # print(path)
         
-        with open(path, 'w') as file:
+        if writeFile:
+            with open(path, 'w') as file:
                 file.write(content)
                 
-        return assets
+        return manifest
