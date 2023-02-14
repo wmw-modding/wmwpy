@@ -11,7 +11,7 @@ authors = [
 description = "Python module to work with Where's My...? games files."
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -21,6 +21,7 @@ dependencies = [
   "lxml",
   "numpy",
   "Pillow",
+  "natsort",
 ]
 dynamic = ["version"]
 
