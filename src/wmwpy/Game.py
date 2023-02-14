@@ -2,6 +2,7 @@ import os
 import pathlib
 import lxml
 from lxml import etree
+import natsort
 
 from .Utils import WaltexImage
 from .Utils.path import joinPath
@@ -44,3 +45,15 @@ class Game():
                 # path = pathlib.Path(path).parts
                 print(f'{path = }')
                 manifest.append(path)
+                
+        manifest = natsort.natsorted(manifest)
+        
+        content = '\n'.join(manifest)
+        
+        path = joinPath(this.gamepath, this.assets, 'FileManifest.txt')
+        print(path)
+        
+        with open(path, 'w') as file:
+                file.write(content)
+                
+        return assets
