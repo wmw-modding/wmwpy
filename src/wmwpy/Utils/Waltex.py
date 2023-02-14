@@ -20,7 +20,7 @@ def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgb
         offset (int, optional): General byte offset. Defaults to 0.
 
     Returns:
-        PIL.Image: Pillow image.
+        PIL.Image.Image: Pillow image.
     """
     colorspace = colorspace.lower()
     
