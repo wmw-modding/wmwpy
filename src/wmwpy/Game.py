@@ -3,8 +3,9 @@ import pathlib
 import lxml
 from lxml import etree
 import natsort
+import zipfile
 
-from .Utils import WaltexImage
+from .Utils import ImageUtils
 from .Utils.path import joinPath
 from .classes import Level
 from .classes import Layout
@@ -35,13 +36,30 @@ class Game():
         for dir, subdir, files in os.walk(assets):
             for file in files:
                 path = pathlib.Path(os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                this._addFile(path, path)
+                this._addFile(path, this._testFile(path), data=this.files)
+                
         
         return this.files
+    
+    def _testFile(this, path):
+        data = path
+        abspath = joinPath(this.gamepath, this.assets, path)
+        
+        if os.path.basename(abspath) == 'waltex.bin':
+            if zipfile.is_zipfile(abspath):
+                info = []
+                files = {}
+                with zipfile.ZipFile(abspath, 'r', ) as zip:
+                    pass
+        elif os.path.splitext(path)[1] == '.imagelist':
+            data = ImageUtils.Imagelist(this.gamepath, this.assets, path)
+            
+        
+        return data
                     
-    def _addFile(this, path, file, **kwargs):
+    def _addFile(this, path, file, data, **kwargs):
         if isinstance(path, (list, tuple)):
-            data = kwargs['data']
+            # data = kwargs['data']
             if len(path) <= 1:
                 data[path[0]] = file
                 return data
@@ -65,7 +83,7 @@ class Game():
             if parts[0] == '':
                 parts = parts[1:]
             
-            this._addFile(parts, file, data=this.files)
+            this._addFile(parts, file, data=data)
         
     def loadLevel(this, xml : str = None, image : str = None, ):
         Level()
