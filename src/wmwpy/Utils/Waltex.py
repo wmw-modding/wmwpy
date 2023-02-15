@@ -5,54 +5,72 @@ from PIL import Image
 import math
 # import json
 
-def WaltexImage(path : str, size : tuple = (1024, 1024), colorspace : str = 'rgba4444', premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little', offset : int = 0) -> Image.Image:
+def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little') -> Image.Image:
     """Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
     
     Args:
         path (str): Path to `waltex` image
-        size ((width,height), optional): Size of image. Defaults to (1024, 1024).
-        colorspace (str, optional): Color spec of image. Defaults to 'rgba4444'.
         premultiplyAlpha (bool, optional): Defaults to False.
         dePremultiplyAlpha (bool, optional): Defaults to False.
-        endian (str, optional): Endian mode. Set to 'big' or 1 to use big endian. Defaults to 'little'.
-        offset (int, optional): General byte offset. Defaults to 0.
+        endian (str, optional): Endian mode. Set to 'big' to use big endian. Defaults to 'little'.
 
     Returns:
         PIL.Image.Image: Pillow image.
     """
-    colorspace = colorspace.lower()
     
     colorOrder = ''
     bytesPerPixel = 0
     bpprgba = []
     
-    for i in range(len(colorspace)):
-        if colorspace[i].isnumeric():
-            bpprgba.append(int(colorspace[i]))
-        else:
-            colorOrder += colorspace[i]
-            
-    for i in range(len(bpprgba) - 4):
-        bpprgba.append(0)
-        
-    bytesPerPixel = round(sum(bpprgba) / 8)
     # print(colorspace, bytesPerPixel, colorOrder, bpprgba)
     
-    if endian == 'big' or endian == 1:
-        colorOrder = colorOrder[::-1]
-        # bpprgba = bpprgba[::-1] # don't know whether to use this or not
-    
     with open(path, 'rb') as file:
-        return WrapRawData(file.read(), size[0], size[1], bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha, offset)
+        rawdata = file.read()
+        
+    if rawdata[:4] != b'WALT':
+        raise TypeError('File is not a waltex')
+    version = int(rawdata[4])
+    format = int(rawdata[5])
+    w = int.from_bytes(rawdata[6:8], byteorder='little')
+    h = int.from_bytes(rawdata[8:10], byteorder='little')
+    pading = rawdata[10:16]
+    
+    colorspecs = [
+        {
+            'order': 'rgba',
+            'bpp': [8,8,8,8]
+        },
+        {
+            'order': 'rgb',
+            'bpp': [5,6,5,0]
+        },
+        {
+            'order': 'rgba',
+            'bpp': [5,5,5,1]
+        },
+        {
+            'order': 'rgba',
+            'bpp': [4,4,4,4]
+        },
+    ]
+    
+    spec = colorspecs[format]
+    colorOrder = spec['order']
+    bpprgba = spec['bpp']
+    bytesPerPixel = round(sum(bpprgba) / 8)
+    
+    return WrapRawData(rawdata, w, h, bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha, 16, endian)
 
-def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int, redBits : int, greenBits : int, blueBits : int, alphaBits : int, colorOrder : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, offset : int = 0):
+def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int, redBits : int, greenBits : int, blueBits : int, alphaBits : int, colorOrder : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, offset : int = 0, endian = 'little'):
     _8BIT_MASK = 256.0
     OUTBITDEPTH = 8
     DEBUG_MODE = False
     
     colorOrder = colorOrder.lower()
+    if endian == 'little':
+        colorOrder = colorOrder[::-1]
     
     # width and height are switched due to how PIL creates an image from array
     # image = [[(0, 0, 0, 0)] * height] * width
@@ -96,11 +114,10 @@ def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int,
         # print(f'Pixel: {pixel}')
         
         # get RGBA values from the pixel
-        r, g, b, a, = 0, 0, 0, 0
+        r = g = b = a = 0
         
         # loop for each channel
-        for j in reversed(range(len(colorOrder))):
-            color = colorOrder[j]
+        for color in colorOrder:
             
             if color == 'r':
                 r = pixel & redMask
@@ -200,5 +217,5 @@ if __name__ == "__main__":
     # with open(path, 'rb') as file:
     #     rawData = file.read()
     
-    image = WaltexImage(path, (1024, 1024), 'rgba4444')
+    image = WaltexImage(path)
     image.show()
