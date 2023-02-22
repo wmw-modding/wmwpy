@@ -1,12 +1,168 @@
 # Thanks to @campbellsonic for the wrapRawData script. It was originally written in C#, I just rewrote it in python. I couldn't have done it without them.
 
-import numpy
-from PIL import Image
+# import numpy
+from PIL import Image, ImageFile
 import math
+import struct
+import io
 # import json
 
-def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little') -> Image.Image:
-    """Get image from `waltex` file
+try:
+    import filetype
+
+    class _WaltexFile(filetype.Type):
+        MIME = 'image/waltex'
+        EXTENSION = 'waltex'
+
+        def __init__(self):
+            super(_WaltexFile, self).__init__(
+                mime=_WaltexFile.MIME,
+                extension=_WaltexFile.EXTENSION,
+            )
+
+        def match(self, buf):
+            return (len(buf) > 3 and
+                    buf[0] == 0x57 and
+                    buf[1] == 0x41 and
+                    buf[2] == 0x4C and
+                    buf[3] == 0x54)
+
+    filetype.add_type(_WaltexFile())
+    # filetype.guess()
+except:
+    # optional filetype addition
+    pass
+
+# add waltex image to PIL
+# Thanks to Mark Setchell for most of this code https://stackoverflow.com/a/75511423/17129659
+def _accept(prefix):
+    return prefix[:4] == b"WALT"
+
+class _WaltexImageFile(ImageFile.ImageFile):
+
+    HEADER_LENGTH = 16
+    HEADER_MAGIC = '4sBBHH6s'
+    format = "Waltex"
+    format_description = "Waltex walaber texture image"
+
+    def _open(self):
+        header = self.fp.read(self.HEADER_LENGTH)
+        magic, vers, fmt, w, h, _ = struct.unpack(self.HEADER_MAGIC, header)
+
+        # size in pixels (width, height)
+        self._size = w, h
+
+        # mode setting
+        self.mode = 'RGBA'
+
+        # Decoder
+        if fmt == 0:
+            # RGBA8888
+            # Just use built-in raw decoder
+            self.tile = [("raw", (0, 0) + self.size, self.HEADER_LENGTH, (self.mode, 0, 1))]
+        elif fmt == 3:
+            # RGBA4444
+            # Use raw decoder with custom RGBA;4B unpacker
+            self.tile = [("raw", (0, 0) + self.size, self.HEADER_LENGTH, ('RGBA;4B', 0, 1))]
+        elif fmt in [1,2]:
+            raise NotImplementedError(f'Format {fmt} is not supported yet.\nPlease go to https://github.com/wmw-modding/wmwpy/issues and report the issue. Please include the file too.')
+
+# regester file type in PIL
+Image.register_open(_WaltexImageFile.format, _WaltexImageFile, _accept)
+
+Image.register_extensions(
+    _WaltexImageFile.format,
+    [
+        ".waltex"
+    ],
+)
+
+# main class
+ 
+class Waltex():
+    format = 'waltex'
+    format_description = "Walaber image file"
+    
+    def __init__(this, file : str | bytes, byte_order : str = 'little') -> None:
+        this._colorspecs = [
+            {
+                'order': 'rgba',
+                'bpp': [8,8,8,8],
+                'spec': 'rgba8888',
+            },
+            {
+                'order': 'rgb',
+                'bpp': [5,6,5],
+                'spec': 'rgb565',
+            },
+            {
+                'order': 'rgba',
+                'bpp': [5,5,5,1],
+                'spec': 'rgba5551',
+            },
+            {
+                'order': 'rgba',
+                'bpp': [4,4,4,4],
+                'spec': 'rgba4444',
+            },
+        ]
+        
+        if isinstance(file, (str)):
+            with open(file, 'rb') as f:
+                rawdata = f.read()
+                
+        elif isinstance(file, bytes):
+            rawdata = file
+        
+        elif hasattr(file, 'read'):
+            rawdata = file.read()
+            if isinstance(rawdata, str):
+                rawdata = rawdata.encode()
+        else:
+            raise TypeError(f"file has to be a 'str', 'bytes' or file-like object.")
+        
+        this._byte_order = byte_order
+        
+        this.file = file
+        this.rawdata = io.BytesIO(rawdata)
+        
+        this.read(byte_order=this._byte_order)
+    
+    def read(this, byte_order : str = None):
+        if byte_order:
+            this._byte_order = byte_order
+            
+        this.format = int(this.rawdata[5])
+        this.colorspec = this._colorspecs[this.format]
+        this.version = int(this.rawdata[4])
+        size = (int.from_bytes(this.rawdata[6:8], byteorder='little'), int.from_bytes(this.rawdata[8:10], byteorder='little'))
+        this.image = Image.new('RGBA', size)
+        
+        try:
+            this.image = Image.open(this.rawdata)
+            if byte_order == 'little':
+                A, B, G, R = this.image.split()
+                this.image = Image.merge('RGBA', (R,G,B,A))
+        except:
+            this.image = WaltexImage(this.rawdata, byte_order = byte_order)
+        
+        return this.image
+    
+    @property
+    def size(this):
+        return this.image.size
+
+# legacy functions for reading waltex image
+def WaltexImage(path : str | bytes | io.BytesIO, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, endian : str = 'little') -> Image.Image:
+    """
+    ### Depracted
+    Use `Image.load()` instead.
+    
+    I am only keeping this just in case you need to load RGB565 (01) or RGBA5551 (02) waltex format.
+    
+    ---
+    
+    Get image from `waltex` file
 
     Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.
     
@@ -18,6 +174,8 @@ def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha 
 
     Returns:
         PIL.Image.Image: Pillow image.
+    ---
+    Thanks to @campbellsonic for the `WrapRawData()` function.
     """
     
     colorOrder = ''
@@ -26,10 +184,20 @@ def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha 
     
     # print(colorspace, bytesPerPixel, colorOrder, bpprgba)
     
-    with open(path, 'rb') as file:
-        rawdata = file.read()
+    if isinstance(path, str):
+        with open(path, 'rb') as file:
+            rawdata = file.read()
+    elif isinstance(path, bytes):
+        rawdata = path
+    elif hasattr(path, 'read'):
+        rawdata = path.read()
+    else:
+        raise TypeError(f"file has to be a 'str', 'bytes' or file-like object.")
+    
         
-    if rawdata[:4] != b'WALT':
+    print(filetype.guess(rawdata))
+        
+    if filetype.guess(rawdata).MIME != 'image/waltex':
         raise TypeError('File is not a waltex')
     version = int(rawdata[4])
     format = int(rawdata[5])
@@ -40,19 +208,23 @@ def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha 
     colorspecs = [
         {
             'order': 'rgba',
-            'bpp': [8,8,8,8]
+            'bpp': [8,8,8,8],
+            'spec': 'rgba8888'
         },
         {
             'order': 'rgb',
-            'bpp': [5,6,5,0]
+            'bpp': [5,6,5,0],
+            'spec': 'rgb565'
         },
         {
             'order': 'rgba',
-            'bpp': [5,5,5,1]
+            'bpp': [5,5,5,1],
+            'spec': 'rgba5551'
         },
         {
             'order': 'rgba',
-            'bpp': [4,4,4,4]
+            'bpp': [4,4,4,4],
+            'spec': 'rgba4444'
         },
     ]
     
@@ -61,7 +233,12 @@ def WaltexImage(path : str, premultiplyAlpha : bool = False, dePremultiplyAlpha 
     bpprgba = spec['bpp']
     bytesPerPixel = round(sum(bpprgba) / 8)
     
-    return WrapRawData(rawdata, w, h, bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha, 16, endian)
+    image = WrapRawData(rawdata, w, h, bytesPerPixel, bpprgba[0], bpprgba[1], bpprgba[2], bpprgba[3], colorOrder, premultiplyAlpha, dePremultiplyAlpha, 16, endian)
+    
+    image.version = version
+    image.spec = spec
+    
+    return image
 
 def WrapRawData(rawData : bytes, width : int, height : int, bytesPerPixel : int, redBits : int, greenBits : int, blueBits : int, alphaBits : int, colorOrder : str, premultiplyAlpha : bool = False, dePremultiplyAlpha : bool = False, offset : int = 0, endian = 'little'):
     _8BIT_MASK = 256.0
@@ -212,10 +389,16 @@ def GenerateBinaryMask(numOnes):
         
     return binaryMask
 
+# test code
+
 if __name__ == "__main__":
     path = "Carl.waltex"
     # with open(path, 'rb') as file:
     #     rawData = file.read()
     
-    image = WaltexImage(path)
-    image.show()
+    # image = WaltexImage(path)
+    # image.show()
+    
+    # new fast method
+    image = Waltex(path)
+    image.image.show()
