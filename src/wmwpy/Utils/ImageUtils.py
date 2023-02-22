@@ -2,7 +2,7 @@ import os
 import pathlib
 import numpy
 from lxml import etree
-from .Waltex import WaltexImage
+from .Waltex import WaltexImage, Waltex
 from PIL import Image
 from .path import joinPath
 from .XMLTools import findTag
@@ -16,7 +16,7 @@ def getHDFile(file):
     return ''.join(split)
 
 class Imagelist():
-    def __init__(this, gamepath : str, assets : str, imagelist : str, HD : bool = False) -> None:
+    def __init__(this, gamepath : str, assets : str, imagelist : str, HD : bool = False, files : dict = {}) -> None:
         """Imagelist
 
         Args:
@@ -24,13 +24,16 @@ class Imagelist():
             assets (str): Relative path to assets folder.
             imagelist (str): Path to `imagelist` file
             HD (bool, optional): Whether to use the HD textures, if possible. Defaults to False.
+            files (dict, optional): Filesystem to use. If file path is not in it, it will search on disk.
+            
         """
         
         this.gamepath = gamepath
         this.assets = assets
-        this.path = imagelist
+        this.file = imagelist
         this.HD = HD
         this.xml = None
+        this.files = files
         
         this.images = {}
         
@@ -38,12 +41,12 @@ class Imagelist():
         this.getNO_TEX()
         
     def getData(this):
-        hd = getHDFile(this.path)
+        hd = getHDFile(this.file)
         if os.path.exists(joinPath(this.gamepath, this.assets, hd)):
-            this.path = hd
-        
+            this.file = hd
+
         # with open(, 'r') as file:
-        this.xml = etree.parse(joinPath(this.gamepath, this.assets, this.path)).getroot()
+        this.xml = etree.parse(joinPath(this.gamepath, this.assets, this.file)).getroot()
         
         this.attributes = this.xml.attrib
         if this.attributes['imgSize']:
@@ -149,12 +152,9 @@ def getTexture(path : str, textureSettings : dict, size : tuple, cache = True) -
             except:
                 pass
         if image == None:
-            image = WaltexImage(
-                path,
-                size,
-                textureSettings['colorspace'],
-                textureSettings['premultiplyAlpha']
-            )
+            image = Waltex(
+                path
+            ).image
             if cache:
                 _cachedWaltextImages[path] = image.copy()
     else:
