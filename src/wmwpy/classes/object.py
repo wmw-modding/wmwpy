@@ -1,5 +1,5 @@
 from ..Utils import ImageUtils
-from ..classes import Sprite
+from . import Sprite
 from ..Utils import XMLTools
 import lxml
 from lxml import etree
