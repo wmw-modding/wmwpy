@@ -26,8 +26,14 @@ class Filesystem():
         if isinstance(file, str):
             with open(file, 'rb') as f:
                 file = f.read()
+        elif isinstance(file, bytes):
+            pass
+        elif hasattr(file, 'read'):
+            file = file.read()
+            if isinstance(file, str):
+                file = file.encode()
         else:
-            raise TypeError(f"file can only 'str' or 'bytes', not '{type(file)}'")
+            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
         this.root.add(path, file)
     
