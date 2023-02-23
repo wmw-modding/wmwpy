@@ -36,6 +36,21 @@ class Filesystem():
             raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
         this.root.add(path, file)
+        
+    def getAssets(this):
+        """
+        Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.
+        """
+        
+        assets = joinPath(this.gamepath, this.assets)
+        
+        for dir, subdir, files in os.walk(assets):
+            for file in files:
+                path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
+                print(path)
+                this.add(path, os.path.join(dir, file))
+        
+        return this
     
 # Filesystem helpers
 class FileBase():
@@ -82,13 +97,19 @@ class File(FileBase):
         """
         super().__init__(parent, path)
         this._type.value = this._Type.FILE
+        this._rawcontent = content
+        
         this.rawcontent = io.BytesIO(content)
+        # seek back to the start to be able to read the data later.
+        this.rawcontent.seek(0)
+        
         this.content = None
         
         this.testFile()
         
     def testFile(this):
         """Tests what type of file this is."""
+        this.rawcontent.seek(0)
         this.type = filetype.guess(this.rawcontent.read())
         
         if this.type == None:
@@ -102,8 +123,13 @@ class File(FileBase):
         else:
             this.mime = this.type.mime
             this.extension = this.type.extension
+            
+        this.rawcontent.seek(0)
+        return this.mime
         
-    def read(this):
+    def read(this, encoding = 'utf-8'):
+        this.rawcontent.seek(0)
+        
         if this.mime == 'image/waltex':
             this.content = Waltex(this.rawcontent)
             this.image = this.content.image
@@ -115,6 +141,10 @@ class File(FileBase):
             if this.extension == 'imagelist':
                 pass
                 # this.content = ImageUtils.Imagelist()
+            else:
+                this.content = 
+        
+        this.rawcontent.seek(0)
         
         return this.content
 
@@ -158,7 +188,7 @@ class Folder(FileBase):
                 print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
-            file = File(this, parts[0], contents)
+            file = File(this, parts[0], content = contents)
             this.files.append(file)
             
         
