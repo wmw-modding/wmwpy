@@ -5,6 +5,7 @@ from lxml import etree
 import natsort
 import zipfile
 
+from .Utils import Filesystem
 from .Utils import ImageUtils
 from .Utils.path import joinPath
 from .classes import Level
@@ -28,7 +29,8 @@ class Game():
         this.db = db
         this.profile = profile
         
-        this.files = {}
+        this.files = Filesystem(this.gamepath, this.assets)
+        this.files.getAssets()
         
     def getFiles(this):
         this.files = {}
