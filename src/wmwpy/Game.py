@@ -29,63 +29,11 @@ class Game():
         this.db = db
         this.profile = profile
         
+        this.updateFilesystem()
+        
+    def updateFilesystem(this):
         this.files = Filesystem(this.gamepath, this.assets)
         this.files.getAssets()
-        
-    def getFiles(this):
-        this.files = {}
-        assets = joinPath(this.gamepath, this.assets)
-        for dir, subdir, files in os.walk(assets):
-            for file in files:
-                path = pathlib.Path(os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                this._addFile(path, this._testFile(path), data=this.files)
-                
-        
-        return this.files
-    
-    def _testFile(this, path):
-        data = path
-        abspath = joinPath(this.gamepath, this.assets, path)
-        
-        if os.path.basename(abspath) == 'waltex.bin':
-            if zipfile.is_zipfile(abspath):
-                info = []
-                files = {}
-                with zipfile.ZipFile(abspath, 'r', ) as zip:
-                    pass
-        elif os.path.splitext(path)[1] == '.imagelist':
-            data = ImageUtils.Imagelist(this.gamepath, this.assets, path)
-            
-        
-        return data
-                    
-    def _addFile(this, path, file, data, **kwargs):
-        if isinstance(path, (list, tuple)):
-            # data = kwargs['data']
-            if len(path) <= 1:
-                data[path[0]] = file
-                return data
-            
-            try:
-                data[path[0]]
-                # if not isinstance(data[path[0]], dict):
-                #     logging.error(f'Path {data} taken')
-            except:
-                data[path[0]] = {}
-                
-            if not isinstance(data[path[0]], dict):
-                print(f'Path {data} taken')
-                return data
-            
-            data = data[path[0]]
-            
-            this._addFile(path[1:], file, data=data)
-        else:
-            parts = pathlib.Path(path).parts
-            if parts[0] == '':
-                parts = parts[1:]
-            
-            this._addFile(parts, file, data=data)
         
     def loadLevel(this, xml : str = None, image : str = None, ):
         Level()
