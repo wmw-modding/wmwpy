@@ -3,6 +3,7 @@ import os
 import io
 from filetype import filetype
 from PIL import Image
+import zipfile
 
 from .path import joinPath
 from . import Waltex
@@ -35,9 +36,9 @@ class Filesystem():
         else:
             raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
-        this.root.add(path, file)
+        return this.root.add(path, file)
         
-    def getAssets(this):
+    def getAssets(this, extract_zip = False, split_imagelist = False):
         """
         Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.
         """
@@ -48,7 +49,10 @@ class Filesystem():
             for file in files:
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
                 print(path)
-                this.add(path, os.path.join(dir, file))
+                fileobj : File = this.add(path, os.path.join(dir, file))
+                
+                if fileobj.extension == 'zip' and extract_zip:
+                    fileobj.read()
         
         return this
     
@@ -127,7 +131,7 @@ class File(FileBase):
         this.rawcontent.seek(0)
         return this.mime
         
-    def read(this, encoding = 'utf-8'):
+    def read(this, encoding = 'utf-8', **kwargs):
         this.rawcontent.seek(0)
         
         if this.mime == 'image/waltex':
@@ -137,12 +141,25 @@ class File(FileBase):
         elif this.mime.startswith('image/'):
             this.content = Image.open(this.rawcontent)
             this.image = this.content
+        
+        elif this.extension == 'zip':
+            this.content = zipfile.ZipFile(this.rawcontent)
+            if 'extract' in kwargs and kwargs['extract']:
+                print(f'extracting {this.name}')
+                
+                files = this.content.namelist()
+                for f in files:
+                    print(f)
+                    
+                    content = this.content.read(f)
+                    this.root.add(f, content, replace = True)
+                
         elif this.mime.startswith('text/'):
             if this.extension == 'imagelist':
                 pass
                 # this.content = ImageUtils.Imagelist()
             else:
-                this.content = 
+                this.content = this.rawcontent.read().decode(encoding)
         
         this.rawcontent.seek(0)
         
@@ -168,7 +185,7 @@ class Folder(FileBase):
         this._type.value = this._Type.FOLDER
         this.files = []
         
-    def add(this, path : str, contents : bytes, ignore_errors = False):
+    def add(this, path : str, contents : bytes, replace = False) -> File:
         parts = pathlib.Path(path).parts
         
         file = this._getPath(pathlib.Path(*parts).as_posix())
@@ -180,16 +197,18 @@ class Folder(FileBase):
             if file._type.value != file._Type.FOLDER:
                 raise NotADirectoryError(f"{file.path} is not a directory.")
             
-            file.add(pathlib.Path(*parts[1::]).as_posix(), contents, ignore_errors)
+            return file.add(pathlib.Path(*parts[1::]).as_posix(), contents, replace)
         else:
             if file != None:
-                if  not ignore_errors:
+                if  not replace:
                     raise FileExistsError(f'File {file.path} already exists.')
                 print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
             file = File(this, parts[0], content = contents)
             this.files.append(file)
+            
+            return file
             
         
     def _getPath(this, path : str):
