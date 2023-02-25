@@ -23,7 +23,21 @@ class Filesystem():
     def get(this, path : str):
         return this.root.get(path)
     
-    def add(this, path, file : str | bytes):
+    def add(this, path : str, file : str | bytes, replace = False):
+        """
+        Adds file with path to Folder.
+
+        Args:
+            path (str): Path to destenation of file. Must be str.
+            file (str | bytes): File. This can be a path to the file to use, raw `bytes` of the file, or file-like object.
+            replace (bool, optional): Replace any conflicting files? Defaults to False.
+
+        Raises:
+            TypeError: If file is not `str`, `bytes` or file-like object.
+
+        Returns:
+            File: File object of the added file.
+        """
         if isinstance(file, str):
             with open(file, 'rb') as f:
                 file = f.read()
@@ -36,7 +50,7 @@ class Filesystem():
         else:
             raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
-        return this.root.add(path, file)
+        return this.root.add(path, file, replace=replace)
         
     def getAssets(this, extract_zip = False, split_imagelist = False):
         """
@@ -55,6 +69,9 @@ class Filesystem():
                     fileobj.read()
         
         return this
+    
+    def exists(this, fp : str):
+        return this.root.exists(fp)
     
 # Filesystem helpers
 class FileBase():
@@ -156,7 +173,8 @@ class File(FileBase):
                 
         elif this.mime.startswith('text/'):
             if this.extension == 'imagelist':
-                pass
+                # I need to make Imagelist() accept a Folder or Filesystem, and raw file data.
+                raise NotImplementedError('Imagelist reading is currently not implemented yet.')
                 # this.content = ImageUtils.Imagelist()
             else:
                 this.content = this.rawcontent.read().decode(encoding)
@@ -164,6 +182,15 @@ class File(FileBase):
         this.rawcontent.seek(0)
         
         return this.content
+    
+    def get(this, path : str):
+        return this.parent.get(path)
+    
+    def add(this, path : str, file : bytes, replace = False):
+        return this.parent.add(path, file, replace = replace)
+    
+    def exists(this, path : str):
+        return this.parent.exists(path)
 
 class Folder(FileBase):
     def __init__(this, parent = None, path: str = None):
@@ -185,7 +212,7 @@ class Folder(FileBase):
         this._type.value = this._Type.FOLDER
         this.files = []
         
-    def add(this, path : str, contents : bytes, replace = False) -> File:
+    def add(this, path : str, file : bytes, replace = False) -> File:
         parts = pathlib.Path(path).parts
         
         file = this._getPath(pathlib.Path(*parts).as_posix())
@@ -197,7 +224,7 @@ class Folder(FileBase):
             if file._type.value != file._Type.FOLDER:
                 raise NotADirectoryError(f"{file.path} is not a directory.")
             
-            return file.add(pathlib.Path(*parts[1::]).as_posix(), contents, replace)
+            return file.add(pathlib.Path(*parts[1::]).as_posix(), file, replace=replace)
         else:
             if file != None:
                 if  not replace:
@@ -205,7 +232,7 @@ class Folder(FileBase):
                 print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
-            file = File(this, parts[0], content = contents)
+            file = File(this, parts[0], content = file)
             this.files.append(file)
             
             return file
@@ -236,6 +263,9 @@ class Folder(FileBase):
         if file._type.value == this._Type.FOLDER:
             file = file.get(pathlib.Path(*parts[1::]))
         return file
+    
+    def exists(this, path : str):
+        return this.get(path) != None
 
 def getFile(gamepath : str, assets : str, path, files : dict = {}):
     if isinstance(path, (tuple, list)):
