@@ -3,7 +3,7 @@ __version__ = "0.0.1"
 from .Game import Game
 from . import classes
 from . import Font
-from . import Widgets
+from . import widget
 from . import Utils
 
 def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None):

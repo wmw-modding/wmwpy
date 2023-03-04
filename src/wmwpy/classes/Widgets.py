@@ -1,8 +1,8 @@
 import lxml
 from lxml import etree
 from PIL import Image, ImageTk
-from .Waltex import WaltexImage
-from ..Widgets import Widget
+from ..Utils.waltex import WaltexImage
+from .widget import Widget
 
 class Widgets():
     def __init__(this, element : etree.Element, gamePath : str, screenSize = (), texturePath : str = None, baseLayoutFile : str = None) -> None:
