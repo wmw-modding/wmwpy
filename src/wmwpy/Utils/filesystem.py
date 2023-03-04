@@ -71,7 +71,7 @@ class Filesystem():
             for file in files:
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
                 print(path)
-                print(os.path.join(dir, file))
+                # print(os.path.join(dir, file))
                 fileobj : File = this.add(path, os.path.join(dir, file))
                 
                 if fileobj.extension == 'zip' and extract_zip:
