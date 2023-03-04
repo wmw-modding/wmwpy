@@ -7,31 +7,31 @@ import struct
 import io
 # import json
 
-try:
-    import filetype
+# try:
+import filetype
 
-    class _WaltexFile(filetype.Type):
-        MIME = 'image/waltex'
-        EXTENSION = 'waltex'
+class _WaltexFile(filetype.Type):
+    MIME = 'image/waltex'
+    EXTENSION = 'waltex'
 
-        def __init__(self):
-            super(_WaltexFile, self).__init__(
-                mime=_WaltexFile.MIME,
-                extension=_WaltexFile.EXTENSION,
-            )
+    def __init__(self):
+        super(_WaltexFile, self).__init__(
+            mime=_WaltexFile.MIME,
+            extension=_WaltexFile.EXTENSION,
+        )
 
-        def match(self, buf):
-            return (len(buf) > 3 and
-                    buf[0] == 0x57 and
-                    buf[1] == 0x41 and
-                    buf[2] == 0x4C and
-                    buf[3] == 0x54)
+    def match(self, buf):
+        return (len(buf) > 3 and
+                buf[0] == 0x57 and
+                buf[1] == 0x41 and
+                buf[2] == 0x4C and
+                buf[3] == 0x54)
 
-    filetype.add_type(_WaltexFile())
-    # filetype.guess()
-except:
+filetype.add_type(_WaltexFile())
+# filetype.guess()
+# except:
     # optional filetype addition
-    pass
+    # pass
 
 # add waltex image to PIL
 # Thanks to Mark Setchell for most of this code https://stackoverflow.com/a/75511423/17129659
@@ -132,10 +132,12 @@ class Waltex():
         if byte_order:
             this._byte_order = byte_order
             
-        this.format = int(this.rawdata[5])
+        header = this.rawdata.getvalue()[0:16]
+            
+        this.format = int(header[5])
         this.colorspec = this._colorspecs[this.format]
-        this.version = int(this.rawdata[4])
-        size = (int.from_bytes(this.rawdata[6:8], byteorder='little'), int.from_bytes(this.rawdata[8:10], byteorder='little'))
+        this.version = int(header[4])
+        size = (int.from_bytes(header[6:8], byteorder='little'), int.from_bytes(header[8:10], byteorder='little'))
         this.image = Image.new('RGBA', size)
         
         try:
