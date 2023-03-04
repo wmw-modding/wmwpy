@@ -2,7 +2,6 @@ import io
 from lxml import etree
 
 from .. import filesystem
-from ..ImageUtils import Imagelist
 from ...classes import *
 
 class ImagelistFile(filesystem.Reader):
