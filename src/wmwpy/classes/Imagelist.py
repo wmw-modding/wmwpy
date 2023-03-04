@@ -1,4 +1,4 @@
-from ..Utils.ImageUtils import getHDFile, getTextueSettings, getTexture
+from ..Utils.textures import getHDFile, getTextueSettings, getTexture
 from ..Utils.filesystem import *
 from ..Utils import joinPath
 
