@@ -1,27 +1,48 @@
-from . import Imagelist
 from lxml import etree
 from PIL import Image
+import numpy
 
-class Sprite():
-    def __init__(this, gamepath : str, assets : str, sprite : str, attributes : dict = {}) -> None:
-        this.gamepath = gamepath
-        this.assets = assets
-        this.filename = sprite
+from . import Imagelist
+from ..Utils.filesystem import *
+from ..gameobject import GameObject
+
+class Sprite(GameObject):
+    def __init__(this, file : str | bytes | File, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets', attributes : dict = {}) -> None:
+        super().__init__(filesystem, gamepath, assets)
+        this.file = super().test_file(file)
+        
+        this.xml : etree.ElementBase = etree.parse(this.file).getroot()
+        
         this.attributes = attributes
+        this.animations = []
         
+        this.readXML()
         
+    def readXML(this):
+        this.animations = []
+        for element in this.xml:
+            if (not element is etree.Comment) or element.tag == 'Animation':
+                animation = this.Animation(
+                    element,
+                    this.filesystem
+                )
+                
+                this.animations.append(animation)
         
 
-    class Animation():
-        def __init__(this, gamepath : str, assets : str, xml : etree.ElementBase) -> None:
-            this.gamepath = gamepath
-            this.assets = assets
+    class Animation(GameObject):
+        def __init__(this, xml : str | etree.ElementBase, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets') -> None:
+            super().__init__(filesystem, gamepath, assets)
             
-            this.xml = xml
-            this.attributes = {}
+            if isinstance(xml, str):
+                this.xml : etree.ElementBase = etree.parse(xml).getroot()
+            else:
+                this.xml = xml
+            
+            this.properties = {}
             this.name = ''
             this.textureBasePath = '/Textures/'
-            this.atlas = ''
+            this.atlas : Imagelist = None
             this.fps = 30
             this.playbackMode = 'ONCE'
             this.loopCount = 1
@@ -33,188 +54,86 @@ class Sprite():
         def readXML(this):
             this.getAttributes()
             this.getFrames()
+        
+        def getAttributes(this):
+            this.properties = this.xml.attrib
+            
+            if 'name' in this.properties:
+                this.name = this.properties['name']
+            if 'textureBasePath' in this.properties:
+                this.textureBasePath = this.properties['textureBasePath']
+            if 'atlas' in this.properties:
+                this.atlas = Imagelist(
+                    this.filesystem.get(this.properties['atlas']),
+                    this.filesystem,
+                    HD=False
+                )
+                
+                # this.atlasHD = Imagelist(
+                #     this.filesystem.get(this.properties['atlas']),
+                #     this.filesystem,
+                #     HD=True
+                # )
+                
+            if 'fps' in this.properties:
+                this.fps = float(this.properties['fps'])
+            if 'playbackMode' in this.properties:
+                this.playbackMode = this.properties['playbackMode']
+            if 'loopCount' in this.properties:
+                this.loopCount = int(this.properties['loopCount'])
+            
             
         def getFrames(this):
             this.frames = []
+            
             if this.xml == None:
                 return None
             for f in this.xml:
                 if (not f is etree.Comment) and f.tag == 'Frame':
-                    this.frames.append(this.Frame(f.attrib))
+                    this.frames.append(this.Frame(
+                        f.attrib,
+                        this.atlas,
+                        this.textureBasePath
+                    ))
+            
             return this.frames
-            
-        def getAttributes(this):
-            this.attributes = this.xml.attrib
-            
+        
+        
         # Frame
         class Frame():
-            def __init__(this, attributes : dict, atlas : Imagelist.Imagelist = None, textureBasePath : str = None) -> None:
+            def __init__(this, properties : dict, atlas : Imagelist = None, textureBasePath : str = None) -> None:
                 this.atlas = atlas
                 this.textueBasePath = textureBasePath
-                this.attributes = attributes
+                this.properties = properties
                 
-                this.image = Image.new('RGBA', (1,1))
+                this.name = ''
+                this.offset = (0,0)
+                this.scale = (1,1)
+                this.angleDeg = 0
+                this.repeat = 0
+                
+                this.image = None
                 
                 this.getData()
                 this.getImage()
             
             def getData(this):
-                this.offset
+                if 'name' in this.properties:
+                    this.name = this.properties['name']
+                if 'offset' in this.properties:
+                    this.offset = tuple([float(x) for x in this.properties['offset'].split(' ')])
+                if 'scale' in this.properties:
+                    this.scale = tuple([float(x) for x in this.properties['scale'].split(' ')])
+                if 'angleDeg' in this.properties:
+                    this.angleDeg = float(this.properties['angleDeg'])
+                if 'repeat' in this.properties:
+                    this.repeat = int(this.properties['repeat'])
                 
             def getImage(this):
-                this.image = this.atlas.getImage(this.name)
+                this._image = this.atlas.getImage(this.name)
+                this.image = this._image.image.copy()
                 
-            # properties
-            @property
-            def attributes(this):
-                return this._attributes
-                
-            @attributes.setter
-            def attributes(this, value : dict):
-                this._attributes = value
-            
-            @property
-            def name(this):
-                if 'name' in this.attributes:
-                    return this.attributes['name']
-                else:
-                    return 'NO_TEX.png'
-                
-            @name.setter
-            def name(this, value):
-                prop = 'name'
-                this.attributes[prop] = value
-            
-            @property
-            def offset(this):
-                if 'offset' in this.attributes:
-                    return [float(x) for x in this.attributes['offset'].split(' ')]
-                else:
-                    return (0,0)
-                
-            @offset.setter
-            def offset(this, value):
-                prop = 'offset'
-                if isinstance(value, (list, tuple)):
-                    this.attributes[prop] = ' '.join([str(x) for x in value])
-                elif isinstance(value, str):
-                    this.attributes[prop] = value
-                elif isinstance(value, int):
-                    this.attributes[prop] = ' '.join([value,value])
-                else:
-                    raise TypeError('Value must be a tuple, str or int.')
-                
-            @property
-            def scale(this):
-                if 'scale' in this.attributes:
-                    return [float(x) for x in this.attributes['scale'].split(' ')]
-                else:
-                    return (0,0)
-                
-            @scale.setter
-            def scale(this, value):
-                prop = 'scale'
-                if isinstance(value, (list, tuple)):
-                    this.attributes[prop] = ' '.join([str(x) for x in value])
-                elif isinstance(value, str):
-                    this.attributes[prop] = value
-                elif isinstance(value, int):
-                    this.attributes[prop] = ' '.join([value,value])
-                else:
-                    raise TypeError('Value must be a tuple, str or int.')
-            
-            @property
-            def angleDeg(this):
-                if 'angleDeg' in this.attributes:
-                    return float(this.attributes['angleDeg'])
-                else:
-                    return 0
-                
-            @angleDeg.setter
-            def angleDeg(this, value):
-                prop = 'angleDeg'
-                if isinstance(value, (float, int)):
-                    this.attributes[prop] = str(value)
-                elif isinstance(value, str) and value.isnumeric():
-                    this.attributes[prop] = value
-                else:
-                    raise TypeError('Value must be a float, int or str.')
-                
-            @property
-            def repeat(this):
-                if 'repeat' in this.attributes:
-                    return int(this.attributes['repeat'])
-                else:
-                    return 1
-                
-            @repeat.setter
-            def repeat(this, value):
-                prop = 'repeat'
-                if isinstance(value, (int, float)):
-                    this.attributes[prop] = str(value)
-                elif isinstance(value, str) and value.isnumeric():
-                    this.attributes[prop] = str
-                else:
-                    raise TypeError('Value must be a float, int or str.')
-            
-                
-        # properties
-        @property
-        def attributes(this):
-            return this._attributes
-        @attributes.setter
-        def attributes(this, value):
-            this._attributes = value
-            
-        @property
-        def name(this):
-            if 'name' in this.attributes:
-                return this.attributes['name']
-            else:
-                return 'NO_TEX.png'
-        @name.setter
-        def name(this, value):
-            this.attributes['name'] = value
-            
-        @property
-        def textureBasePath(this):
-            if 'textureBasePath' in this.attributes:
-                return this.attributes['textureBasePath']
-            else:
-                return '/Textures/'
-        @textureBasePath.setter
-        def textureBasePath(this, value):
-            this.attributes['textureBasePath'] = value
-            
-        @property
-        def atlas(this):
-            if 'atlas' in this.attributes:
-                return this.attributes['atlas']
-            else:
-                return ''
-        @atlas.setter
-        def atlas(this, value):
-            this.attributes['atlas'] = value
-            
-        @property
-        def fps(this):
-            return float(this.attributes['fps'])
-        @fps.setter
-        def fps(this, value):
-            this.attributes['fps'] = str(value)
-        
-        @property
-        def playbackMode(this):
-            return this.attributes['playbackMode']
-        @playbackMode.setter
-        def playbackMode(this, value):
-            this.attributes['playbackMode'] = value
-        
-        @property
-        def loopCount(this):
-            return int(this.attributes['loopCount'])
-        @loopCount.setter
-        def loopCount(this, value):
-            this.attributes['loopCount'] = value
-
-        
+            def applyEffects(this):
+                this.image = this._image.image.copy()
+                this.image = this.image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                this.image = this.image.rotate(this.angleDeg)
