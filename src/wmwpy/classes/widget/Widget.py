@@ -1,7 +1,6 @@
 import lxml
 from lxml import etree
 from PIL import Image, ImageTk
-from ..Utils import WaltexImage
 
 # main widget class
 class Widget():
