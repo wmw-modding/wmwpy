@@ -1,4 +1,4 @@
-from ..Utils import ImageUtils
+from . import Imagelist
 from lxml import etree
 from PIL import Image
 
@@ -48,7 +48,7 @@ class Sprite():
             
         # Frame
         class Frame():
-            def __init__(this, attributes : dict, atlas : ImageUtils.Imagelist = None, textureBasePath : str = None) -> None:
+            def __init__(this, attributes : dict, atlas : Imagelist.Imagelist = None, textureBasePath : str = None) -> None:
                 this.atlas = atlas
                 this.textueBasePath = textureBasePath
                 this.attributes = attributes
