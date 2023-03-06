@@ -1,4 +1,4 @@
-from ..Utils import ImageUtils
+from ..Utils import Texture
 from . import Sprite
 from ..Utils import XMLTools
 import lxml

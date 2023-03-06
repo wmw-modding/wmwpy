@@ -6,7 +6,7 @@ import natsort
 import zipfile
 
 from .Utils import Filesystem
-from .Utils import ImageUtils
+from .Utils import textures
 from .Utils.path import joinPath
 from .classes import Level
 from .classes import Layout

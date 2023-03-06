@@ -1,10 +1,10 @@
 from ..Utils.textures import getHDFile, getTextueSettings, getTexture
 from ..Utils.filesystem import *
-from ..Utils import joinPath
+from ..Utils import joinPath, Texture
 
 
 import numpy
-from PIL import Image
+import PIL.Image
 from lxml import etree
 
 
@@ -109,8 +109,8 @@ class Imagelist():
     def getAtlas(this):
         if this.filesystem.exists(this.atlasFile):
             file = this.filesystem.get(this.atlasFile)
-            file.read()
-            this.atlas = file.content.image.copy()
+            image = Texture(file.read())
+            this.atlas = image.image.copy()
         else:
             this.textureSettings = getTextueSettings(
                 this.gamepath,
@@ -125,8 +125,11 @@ class Imagelist():
         for image in this.xml:
             if not image.tag is etree.Comment:
                 if image.tag == 'Image':
-                    texture = this.Texture(this.atlas, image.attrib)
+                    texture = this.Image(this.atlas, properties = image.attrib)
                     this.images[image.get('name')] = texture
+                    
+                    # print(f'{this.textureBasePath = }')
+                    # print(f'{texture.name = }')
 
                     this.filesystem.add(joinPath(this.textureBasePath, texture.name), texture.rawdata.getvalue())
 
@@ -143,25 +146,33 @@ class Imagelist():
             joinPath(os.path.dirname(os.path.dirname(this.textureBasePath)), 'Data/textureSettings.xml'),
             os.path.join(this.textureBasePath, 'NO_TEX.png')
         )
-        NO_TEX_image = Image.open(joinPath(this.gamepath, this.assets, this.textureBasePath, 'NO_TEX.png')).convert('RGBA')
-        this.NO_TEX = this.Texture(NO_TEX_image, {
+        NO_TEX_image = PIL.Image.open(joinPath(this.gamepath, this.assets, this.textureBasePath, 'NO_TEX.png')).convert('RGBA')
+        this.NO_TEX = this.Image(NO_TEX_image, {
             'size': ' '.join([str(x) for x in NO_TEX_image.size]),
             'rect': ' '.join([str(x) for x in (0,0) + NO_TEX_image.size]),
             'name': 'NO_TEX.png',
         })
         # this.Image(this.atlas, image.attrib)
 
-    class Texture():
-        def __init__(this, atlas : Image.Image, attributes : dict) -> None:
+    class Image():
+        def __init__(this, atlas : PIL.Image.Image, properties : dict) -> None:
+            """Image for Imagelist
+
+            Args:
+                this (_type_): _description_
+                atlas (PIL.Image.Image): Atlas file containing all images
+                properties (dict): Properties for Image
+            """
+            
             this.atlas = atlas
-            this.attributes = attributes
+            this.properties = properties
 
             this.size = (1,1)
             this.offset = (0,0)
             this.rect = (0,0,0,0)
-            this.name = None
+            this.name = ''
 
-            this.image = Image.new('RGBA', this.size)
+            this.image = PIL.Image.new('RGBA', this.size)
 
             this.rawdata = io.BytesIO()
 
@@ -169,20 +180,20 @@ class Imagelist():
             this.getImage()
 
         def getData(this):
-            if 'size' in this.attributes:
-                this.size = tuple([int(v) for v in this.attributes['size'].split(' ')])
-            if 'offset' in this.attributes:
-                this.offset = tuple([int(v) for v in this.attributes['offset'].split(' ')])
-            if 'rect' in this.attributes:
-                this.rect = tuple([int(v) for v in this.attributes['rect'].split(' ')])
-            if 'name' in this.attributes:
-                this.name = this.attributes['name']
+            if 'size' in this.properties:
+                this.size = tuple([int(v) for v in this.properties['size'].split(' ')])
+            if 'offset' in this.properties:
+                this.offset = tuple([int(v) for v in this.properties['offset'].split(' ')])
+            if 'rect' in this.properties:
+                this.rect = tuple([int(v) for v in this.properties['rect'].split(' ')])
+            if 'name' in this.properties:
+                this.name = this.properties['name']
 
         def getImage(this):
             this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
             this.image = this.image.resize(this.size)
 
-            this.image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::])
+            # this.image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::])
             return this.image
 
         def show(this):

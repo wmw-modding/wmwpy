@@ -12,6 +12,21 @@ from .filesystem import Filesystem, Folder, File
 
 _cachedWaltextImages = {}
 
+class Texture():
+    def __init__(this, image : Image.Image | Waltex) -> None:
+        this._image = image
+        
+        if isinstance(this._image, Waltex):
+            this.image = this._image.image
+        elif isinstance(this._image, Image.Image):
+            this.image = this._image
+        else:
+            raise TypeError('image must be PIL.Image.Image or Waltex')
+        
+    @property
+    def size(this):
+        return this.image.size
+
 def getHDFile(file):
     split = os.path.splitext(file)
     split = list(split)

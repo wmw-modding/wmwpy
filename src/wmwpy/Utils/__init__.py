@@ -1,6 +1,6 @@
-from .Waltex import WaltexImage, Waltex
-from .Widgets import Widgets
-from . import ImageUtils
+from .textures import Texture
+from . import textures
+from .waltex import WaltexImage, Waltex
 from . import XMLTools
 from .path import joinPath
 from . import filesystem
