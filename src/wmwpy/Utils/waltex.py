@@ -1,10 +1,14 @@
 # Thanks to @campbellsonic for the wrapRawData script. It was originally written in C#, I just rewrote it in python. I couldn't have done it without them.
 
+# usage:
+# waltex.py --help
+
 # import numpy
 from PIL import Image, ImageFile
 import math
 import struct
 import io
+import sys
 # import json
 
 # try:
@@ -396,13 +400,29 @@ def GenerateBinaryMask(numOnes):
 # test code
 
 if __name__ == "__main__":
-    path = "Carl.waltex"
-    # with open(path, 'rb') as file:
-    #     rawData = file.read()
+    help = 'usage:\n    waltex.py <input> [arguments]\n\narguments:\n    --help -h     displays this help message\n\n    --output -o   output of image\n                    --output <filename>\n\n    --show -s     shows image with default image viewer\n'
+    helpargs = ['--help', '-h']
     
-    # image = WaltexImage(path)
-    # image.show()
-    
-    # new fast method
-    image = Waltex(path)
-    image.image.show()
+    if sys.argv[1] in helpargs:
+        print(help)
+    else:
+        path = sys.argv[1]
+        # with open(path, 'rb') as file:
+        #     rawData = file.read()
+
+        # image = WaltexImage(path)
+        # image.show()
+
+        # new fast method
+        image = Waltex(path)
+        args = sys.argv[2::]
+
+        if len(args) > 0:
+            for a in range(len(args)):
+                arg = args[a]
+                if arg in ['--output', '-o']:
+                    image.image.save(args[a + 1])
+                elif arg in ['--show', '-s']:
+                    image.image.show()
+        else:
+            image.image.show()
