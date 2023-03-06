@@ -3,7 +3,7 @@ import filetype
 from PIL import Image
 
 from .. import filesystem
-from ..Waltex import Waltex
+from ..waltex import Waltex
 
 class WaltexFile(filesystem.Reader):
     MIME = 'image/waltex'

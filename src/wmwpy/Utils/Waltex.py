@@ -42,7 +42,7 @@ class _WaltexImageFile(ImageFile.ImageFile):
 
     HEADER_LENGTH = 16
     HEADER_MAGIC = '4sBBHH6s'
-    format = "Waltex"
+    format = "WALTEX"
     format_description = "Waltex walaber texture image"
 
     def _open(self):
@@ -148,6 +148,8 @@ class Waltex():
         except:
             this.image = WaltexImage(this.rawdata, byte_order = byte_order)
         
+        this.image.format = _WaltexImageFile.format
+        this.image.format_description = _WaltexImageFile.format_description
         return this.image
     
     @property
