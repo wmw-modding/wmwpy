@@ -1,11 +1,19 @@
+import lxml
+from lxml import etree
+import io
+
+from ..gameobject import GameObject
 from ..Utils import Texture
 from . import Sprite
 from ..Utils import XMLTools
-import lxml
-from lxml import etree
+from ..Utils.filesystem import *
 
-class Object():
-    def __init__(this, gamepath : str, assets : str, object : str, properties : dict = {}, position : tuple or str = (0,0)) -> None:
+class Object(GameObject):
+    def __init__(this, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets') -> None:
+        super().__init__(filesystem, gamepath, assets)
+        
+    
+    def __init__(this, file : str | bytes | File , filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets', properties : dict = {}, position : tuple | str = (0,0)) -> None:
         """Get game object. Game object is `.hs` file.
 
         Args:
@@ -16,16 +24,22 @@ class Object():
             position ((tuple, str), optional): Object position. Can be string or tuple. Defaults to (0,0).
         """
         
-        this.gamepath = gamepath
-        this.assets = assets
-        this.objectPath = object
+        super().__init__(filesystem, gamepath, assets)
+        
+        if isinstance(file, bytes):
+            this.object_xml = io.BytesIO(file)
+        elif isinstance(file, File):
+            this.object_xml = file.rawcontent
+        elif not hasattr(file, 'read') and not isinstance(file, str):
+            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
+        
         this._properties = properties
         if isinstance(position, str):
             this.position = tuple([int(a) for a in position.split(' ')])
         else:
             this.position = tuple(position)
         
-        this.xml = None
+        this.xml : etree.ElementBase = etree.parse(this.object_xml).getroot()
         this.sprites = []
         this.shapes = []
         this.UVs = []
@@ -40,7 +54,6 @@ class Object():
         
     def readXML(this):
         # specifically specifying type so it's easier to use in vscode
-        this.xml : etree.ElementBase = etree.parse(this.objectPath).getroot()
         
         this.getSprites()
         this.getProperties()

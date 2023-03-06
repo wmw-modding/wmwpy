@@ -1,6 +1,7 @@
 from ..Utils.textures import getHDFile, getTextueSettings, getTexture
 from ..Utils.filesystem import *
 from ..Utils import joinPath, Texture
+from ..gameobject import GameObject
 
 
 import numpy
@@ -12,7 +13,7 @@ import io
 import os
 
 
-class Imagelist():
+class Imagelist(GameObject):
     def __init__(this, file : str | bytes | File , filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets', HD : bool = False) -> None:
         """
         Get imagelist from file
@@ -25,28 +26,8 @@ class Imagelist():
         Raises:
             FileNotFoundError: Filesystem is not usable and no gamepath.
         """
-
-        this.gamepath = gamepath
-        this.assets = assets
-        if this.assets == None:
-            this.assets = '/assets'
-
-        try:
-            this.filesystem = filesystem
-            if isinstance(this.filesystem, Filesystem):
-                this.gamepath = this.filesystem.gamepath
-                this.assets = this.filesystem.assets
-
-            elif isinstance(this.filesystem, (File, Folder)):
-                this.filesystem = this.filesystem.filesystem
-                this.gamepath = this.filesystem.gamepath
-                this.assets = this.filesystem.assets
-
-            else:
-                this.filesystem = Filesystem(this.gamepath, this.assets)
-                this.filesystem.getAssets()
-        except:
-            raise FileNotFoundError('Must have a valid `filesystem` or `gamepath`')
+        
+        super().__init__(filesystem, gamepath, assets)
 
         if isinstance(file, str):
             with open(file, 'rb') as f:
@@ -72,6 +53,52 @@ class Imagelist():
 
         this.getData()
         this.getNO_TEX()
+        
+    class Image():
+        def __init__(this, atlas : PIL.Image.Image, properties : dict) -> None:
+            """Image for Imagelist
+
+            Args:
+                this (_type_): _description_
+                atlas (PIL.Image.Image): Atlas file containing all images
+                properties (dict): Properties for Image
+            """
+            
+            this.atlas = atlas
+            this.properties = properties
+
+            this.size = (1,1)
+            this.offset = (0,0)
+            this.rect = (0,0,0,0)
+            this.name = ''
+
+            this.image = PIL.Image.new('RGBA', this.size)
+
+            this.rawdata = io.BytesIO()
+
+            this.getData()
+            this.getImage()
+
+        def getData(this):
+            if 'size' in this.properties:
+                this.size = tuple([int(v) for v in this.properties['size'].split(' ')])
+            if 'offset' in this.properties:
+                this.offset = tuple([int(v) for v in this.properties['offset'].split(' ')])
+            if 'rect' in this.properties:
+                this.rect = tuple([int(v) for v in this.properties['rect'].split(' ')])
+            if 'name' in this.properties:
+                this.name = this.properties['name']
+
+        def getImage(this):
+            this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
+            this.image = this.image.resize(this.size)
+
+            # this.image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::])
+            return this.image
+
+        def show(this):
+            this.image.show()
+
 
     def getData(this):
 
@@ -133,7 +160,7 @@ class Imagelist():
 
                     this.filesystem.add(joinPath(this.textureBasePath, texture.name), texture.rawdata.getvalue())
 
-    def getImage(this, name : str):
+    def getImage(this, name : str) -> Image:
         if name in this.images:
             return this.images[name]
         else:
@@ -154,47 +181,3 @@ class Imagelist():
         })
         # this.Image(this.atlas, image.attrib)
 
-    class Image():
-        def __init__(this, atlas : PIL.Image.Image, properties : dict) -> None:
-            """Image for Imagelist
-
-            Args:
-                this (_type_): _description_
-                atlas (PIL.Image.Image): Atlas file containing all images
-                properties (dict): Properties for Image
-            """
-            
-            this.atlas = atlas
-            this.properties = properties
-
-            this.size = (1,1)
-            this.offset = (0,0)
-            this.rect = (0,0,0,0)
-            this.name = ''
-
-            this.image = PIL.Image.new('RGBA', this.size)
-
-            this.rawdata = io.BytesIO()
-
-            this.getData()
-            this.getImage()
-
-        def getData(this):
-            if 'size' in this.properties:
-                this.size = tuple([int(v) for v in this.properties['size'].split(' ')])
-            if 'offset' in this.properties:
-                this.offset = tuple([int(v) for v in this.properties['offset'].split(' ')])
-            if 'rect' in this.properties:
-                this.rect = tuple([int(v) for v in this.properties['rect'].split(' ')])
-            if 'name' in this.properties:
-                this.name = this.properties['name']
-
-        def getImage(this):
-            this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
-            this.image = this.image.resize(this.size)
-
-            # this.image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::])
-            return this.image
-
-        def show(this):
-            this.image.show()
