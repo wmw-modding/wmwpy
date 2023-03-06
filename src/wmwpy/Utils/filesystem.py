@@ -6,7 +6,7 @@ from PIL import Image
 import zipfile
 
 from .path import joinPath
-from . import Waltex
+# from . import Waltex
 # from . import ImageUtils
 # from ..classes import sprite
 # from ..classes import Object
