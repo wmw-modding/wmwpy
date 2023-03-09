@@ -9,11 +9,15 @@ from ..Utils import XMLTools
 from ..Utils.filesystem import *
 
 class Object(GameObject):
-    def __init__(this, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets') -> None:
-        super().__init__(filesystem, gamepath, assets)
-        
-    
-    def __init__(this, file : str | bytes | File , filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets', properties : dict = {}, position : tuple | str = (0,0)) -> None:
+    def __init__(
+        this,
+        file : str | bytes | File ,
+        filesystem : Filesystem | Folder = None,
+        gamepath : str = None,
+        assets : str = '/assets',
+        properties : dict = {},
+        position : tuple | str = (0,0)
+    ) -> None:
         """Get game object. Game object is `.hs` file.
 
         Args:
@@ -26,12 +30,7 @@ class Object(GameObject):
         
         super().__init__(filesystem, gamepath, assets)
         
-        if isinstance(file, bytes):
-            this.object_xml = io.BytesIO(file)
-        elif isinstance(file, File):
-            this.object_xml = file.rawcontent
-        elif not hasattr(file, 'read') and not isinstance(file, str):
-            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
+        this.file = super().test_file(file)
         
         this._properties = properties
         if isinstance(position, str):
@@ -39,7 +38,7 @@ class Object(GameObject):
         else:
             this.position = tuple(position)
         
-        this.xml : etree.ElementBase = etree.parse(this.object_xml).getroot()
+        this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         this.sprites = []
         this.shapes = []
         this.UVs = []
