@@ -6,10 +6,9 @@ import natsort
 import zipfile
 
 from .Utils import Filesystem
-from .Utils import textures
+from .Utils import Texture
 from .Utils.path import joinPath
-from .classes import Level
-from .classes import Layout
+from .classes import *
 
 os.path.isdir
 
@@ -32,34 +31,113 @@ class Game():
         this.updateFilesystem()
         
     def updateFilesystem(this):
-        this.files = Filesystem(this.gamepath, this.assets)
-        this.files.getAssets()
+        this.filesystem = Filesystem(this.gamepath, this.assets)
+        this.filesystem.getAssets()
         
     def loadLevel(this, xmlPath : str = None, imagePath : str = None, ):
         """
         Load level
 
         Args:
-            this (_type_): _description_
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
         """
         xml = None
         if xmlPath:
-            xml = this.files.get(xmlPath)
+            xml = this.filesystem.get(xmlPath)
         
         image = None
         if imagePath:
-            image = this.files.get(imagePath)
+            image = this.filesystem.get(imagePath)
         
         return Level(
             xml=xml,
             image=image,
-            filesystem=this.files,
+            filesystem=this.filesystem,
+        )
+    
+    def loadObject(
+        this,
+        object : str,
+        **kwargs
+    ):
+        """
+        Loads object
+
+        Args:
+            object (str): Path to `.hs` object file.
+
+        Returns:
+            classes.object.Object: Where's My Water? object.
+        """
+        
+        return Object(
+            this.filesystem.get(object),
+            filesystem = this.filesystem,
+            **kwargs
+        )
+    
+    def loadImagelist(
+        this,
+        imagelist : str,
+        HD = False,
+    ):
+        """
+        Load imagelist
+
+        Args:
+            imagelist (str): Path to `.imagelist` file.
+            HD (bool, optional): Whether to use HD textures. Defaults to False.
+
+        Returns:
+            classes.imagelist.Imagelist: Imagelist object.
+        """
+        return Imagelist(
+            this.filesystem.get(imagelist),
+            filesystem = this.filesystem,
+            HD = False,
+        )
+    
+    def loadSprite(
+        this,
+        sprite : str,
+        **kwargs
+    ):
+        """
+        Loads sprite.
+
+        Args:
+            sprite (str): Path to `.sprite` file.`
+
+        Returns:
+            classes.sprite.Sprite: Sprite object.
+        """
+        return Sprite(
+            this.filesystem.get(sprite),
+            filesystem = this.filesystem,
+            **kwargs
+        )
+    
+    def loadTexture(
+        this,
+        texture : str,
+    ):
+        """
+        Get image texture. Doesn't matter if it's a `.waltex` image or not.
+
+        Args:
+            this (_type_): _description_
+            texture (str): Path to image file.
+
+        Returns:
+            Utils.textures.Texture: Texture object.
+        """
+        return Texture(
+            this.filesystem.get(texture)
         )
     
     def loadLayout(this, layout : str):
-        pass
+        raise NotImplementedError('load layout is not implemented yet.')
     
     def generateFileManifest(this, writeFile : bool = True):
         manifest = []
