@@ -16,7 +16,8 @@ class Object(GameObject):
         gamepath : str = None,
         assets : str = '/assets',
         properties : dict = {},
-        position : tuple | str = (0,0)
+        position : tuple | str = (0,0),
+        name : str = 'Obj'
     ) -> None:
         """Get game object. Game object is `.hs` file.
 
@@ -26,6 +27,7 @@ class Object(GameObject):
             object (str): Object file relative to assets path. Must be `.hs` file.
             properties (dict, optional): Object properties that override default properties. Defaults to {}.
             position ((tuple, str), optional): Object position. Can be string or tuple. Defaults to (0,0).
+            name (str): The name of the object. Defaults to `'Obj'`
         """
         
         super().__init__(filesystem, gamepath, assets)
@@ -46,6 +48,7 @@ class Object(GameObject):
         this.defaultProperties = {}
         this.properties = {}
         this.type = None
+        this.name = 'Obj'
         
         this.image = None
         
