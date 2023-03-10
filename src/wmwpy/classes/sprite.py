@@ -2,7 +2,7 @@ from lxml import etree
 from PIL import Image
 import numpy
 
-from . import Imagelist
+from .Imagelist import Imagelist
 from ..Utils.filesystem import *
 from ..gameobject import GameObject
 

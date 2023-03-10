@@ -4,7 +4,7 @@ import io
 
 from ..gameobject import GameObject
 from ..Utils import Texture
-from . import Sprite
+from .sprite import Sprite
 from ..Utils import XMLTools
 from ..Utils.filesystem import *
 
@@ -16,7 +16,7 @@ class Object(GameObject):
         gamepath : str = None,
         assets : str = '/assets',
         properties : dict = {},
-        position : tuple | str = (0,0),
+        pos : tuple | str = (0,0),
         name : str = 'Obj'
     ) -> None:
         """Get game object. Game object is `.hs` file.
@@ -35,10 +35,10 @@ class Object(GameObject):
         this.file = super().test_file(file)
         
         this._properties = properties
-        if isinstance(position, str):
-            this.pos = tuple([int(a) for a in position.split(' ')])
+        if isinstance(pos, str):
+            this.pos = tuple([float(a) for a in pos.split(' ')])
         else:
-            this.pos = tuple(position)
+            this.pos = tuple(pos)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         this.sprites = []
@@ -70,12 +70,16 @@ class Object(GameObject):
         for sprite in spritesXML:
             if (not sprite is etree.Comment) and sprite.tag == 'Sprite':
                 attributes = sprite.attrib
-                this.sprites.append(Sprite(this.gamepath, this.assets, attributes['filename'], attributes))
+                this.sprites.append(Sprite(
+                    file = this.filesystem.get(attributes['filename']),
+                    filesystem = this.filesystem,
+                    attributes = attributes
+                ))
         
         return this.sprites
     
     def getProperties(this):
-        this._getDefaultProperties()
+        this.getDefaultProperties()
         for prop in this.defaultProperties:
             this.properties[prop] = this.defaultProperties[prop]
         for prop in this._properties:

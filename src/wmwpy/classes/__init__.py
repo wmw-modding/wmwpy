@@ -1,7 +1,7 @@
+from .object import Object
 from .level import Level
 from .layout import Layout
 from .sprite import Sprite
-from .object import Object
 from .Imagelist import Imagelist
 from .widget import Widget
 

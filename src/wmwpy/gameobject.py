@@ -9,20 +9,21 @@ class GameObject():
         if this.assets == None:
             this.assets = '/assets'
         
-        try:
-            this.filesystem = filesystem
-            if isinstance(this.filesystem, Filesystem):
-                this.gamepath = this.filesystem.gamepath
-                this.assets = this.filesystem.assets
-                
-            elif isinstance(this.filesystem, Folder):
-                pass
+        # try:
+        this.filesystem = filesystem
+        if isinstance(this.filesystem, Filesystem):
+            this.gamepath = this.filesystem.gamepath
+            this.assets = this.filesystem.assets
+            
+        elif isinstance(this.filesystem, Folder):
+            pass
 
-            else:
-                this.filesystem = Filesystem(this.gamepath, this.assets)
-                this.filesystem.getAssets()
-        except:
-            raise FileNotFoundError('Must have a valid `filesystem` or `gamepath`')
+        else:
+            this.filesystem = Filesystem(this.gamepath, this.assets)
+            this.filesystem.getAssets()
+        # except Exception as e:
+        #     print(f'Error: {str(e)}')
+        #     raise FileNotFoundError('Must have a valid `filesystem` or `gamepath`')
     
     def test_file(this, file) -> io.BytesIO | str:
         if isinstance(file, bytes):

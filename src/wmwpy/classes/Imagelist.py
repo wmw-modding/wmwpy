@@ -158,7 +158,11 @@ class Imagelist(GameObject):
                     # print(f'{this.textureBasePath = }')
                     # print(f'{texture.name = }')
 
-                    this.filesystem.add(joinPath(this.textureBasePath, texture.name), texture.rawdata.getvalue())
+                    this.filesystem.add(
+                        joinPath(this.textureBasePath, texture.name),
+                        texture.rawdata.getvalue(),
+                        replace = True
+                    )
 
     def getImage(this, name : str) -> Image:
         if name in this.images:

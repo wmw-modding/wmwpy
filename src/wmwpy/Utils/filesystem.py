@@ -65,6 +65,8 @@ class Filesystem():
         Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.
         """
         
+        print(this.gamepath)
+        print(f'{this.gamepath = }\n{this.assets = }')
         assets = joinPath(this.gamepath, this.assets)
         
         for dir, subdir, files in os.walk(assets):

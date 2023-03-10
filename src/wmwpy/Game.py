@@ -35,8 +35,28 @@ class Game():
         this.files = Filesystem(this.gamepath, this.assets)
         this.files.getAssets()
         
-    def loadLevel(this, xml : str = None, image : str = None, ):
-        Level()
+    def loadLevel(this, xmlPath : str = None, imagePath : str = None, ):
+        """
+        Load level
+
+        Args:
+            this (_type_): _description_
+            xmlPath (str, optional): Path to xml file. Defaults to None.
+            imagePath (str, optional): Path to image file. Defaults to None.
+        """
+        xml = None
+        if xmlPath:
+            xml = this.files.get(xmlPath)
+        
+        image = None
+        if imagePath:
+            image = this.files.get(imagePath)
+        
+        return Level(
+            xml=xml,
+            image=image,
+            filesystem=this.files,
+        )
     
     def loadLayout(this, layout : str):
         pass
