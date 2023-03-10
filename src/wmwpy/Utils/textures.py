@@ -13,8 +13,11 @@ from .filesystem import Filesystem, Folder, File
 _cachedWaltextImages = {}
 
 class Texture():
-    def __init__(this, image : Image.Image | Waltex) -> None:
+    def __init__(this, image : Image.Image | Waltex | File) -> None:
         this._image = image
+        
+        if isinstance(this._image, File):
+            this._image = this._image.read()
         
         if isinstance(this._image, Waltex):
             this.image = this._image.image
