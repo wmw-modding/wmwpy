@@ -36,9 +36,9 @@ class Object(GameObject):
         
         this._properties = properties
         if isinstance(position, str):
-            this.position = tuple([int(a) for a in position.split(' ')])
+            this.pos = tuple([int(a) for a in position.split(' ')])
         else:
-            this.position = tuple(position)
+            this.pos = tuple(position)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         this.sprites = []
@@ -48,7 +48,7 @@ class Object(GameObject):
         this.defaultProperties = {}
         this.properties = {}
         this.type = None
-        this.name = 'Obj'
+        this.name = name
         
         this.image = None
         
