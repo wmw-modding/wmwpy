@@ -1,4 +1,5 @@
 __version__ = "0.0.1"
+__author__ = 'ego-lay-atman-bay'
 
 from .Game import Game
 from . import classes
