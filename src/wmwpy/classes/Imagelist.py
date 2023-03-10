@@ -3,18 +3,21 @@ from ..Utils.filesystem import *
 from ..Utils import joinPath, Texture
 from ..gameobject import GameObject
 
-
 import numpy
 import PIL.Image
 from lxml import etree
 
-
 import io
 import os
 
-
 class Imagelist(GameObject):
-    def __init__(this, file : str | bytes | File , filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets', HD : bool = False) -> None:
+    def __init__(
+        this,
+        file : str | bytes | File,
+        filesystem : Filesystem | Folder = None,
+        gamepath : str = None, assets : str = '/assets',
+        HD : bool = False
+    ) -> None:
         """
         Get imagelist from file
         Args:
@@ -28,26 +31,14 @@ class Imagelist(GameObject):
         """
         
         super().__init__(filesystem, gamepath, assets)
-
-        if isinstance(file, str):
-            with open(file, 'rb') as f:
-                this.file = io.BytesIO(f.read())
-        elif isinstance(file, bytes):
-            this.file = io.BytesIO(file)
-        elif isinstance(file, File):
-            this.file = file.rawcontent
-        elif hasattr(file, 'read'):
-            this.file = file.read()
-            if isinstance(this.file, str):
-                this.file = file.encode()
-            this.file = io.BytesIO(this.file)
-        else:
-            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
-
-        this.file.seek(0)
+        
+        this.file = super().test_file(file)
 
         this.HD = HD
-        this.xml = None
+        this.xml = etree.parse(this.file).getroot()
+        this.size = (1,1)
+        this.atlasFile = ''
+        this.textureBasePath = '/Textures/'
 
         this.images = {}
 
@@ -55,7 +46,11 @@ class Imagelist(GameObject):
         this.getNO_TEX()
         
     class Image():
-        def __init__(this, atlas : PIL.Image.Image, properties : dict) -> None:
+        def __init__(
+            this,
+            atlas : PIL.Image.Image,
+            properties : dict
+        ) -> None:
             """Image for Imagelist
 
             Args:
@@ -102,16 +97,12 @@ class Imagelist(GameObject):
 
     def getData(this):
 
-        # with open(, 'r') as file:
-        this.file.seek(0)
-        this.xml = etree.parse(this.file).getroot()
-
         this.attributes = this.xml.attrib
-        if this.attributes['imgSize']:
+        if 'imgSize' in this.attributes:
             this.size = tuple([int(v) for v in this.attributes['imgSize'].split(' ')])
-        if this.attributes['textureBasePath']:
+        if 'textureBasePath' in this.attributes:
             this.textureBasePath = this.attributes['textureBasePath']
-        if this.attributes['file']:
+        if 'file' in this.attributes:
             this.atlasFile = this.attributes['file']
 
         this.name, this.type = os.path.splitext(this.atlasFile)
@@ -121,7 +112,6 @@ class Imagelist(GameObject):
             hd = getHDFile(this.atlasFile)
             if this.filesystem.exists(hd):
                 this.atlasFile = hd
-            # del split
 
         this.fullAtlasPath = ''
 
