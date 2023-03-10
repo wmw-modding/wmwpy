@@ -40,8 +40,6 @@ class Imagelist(GameObject):
 
         this.HD = HD
         this.xml = etree.parse(this.file).getroot()
-        this.size = (1,1)
-        this.atlasFile = ''
         this.textureBasePath = '/Textures/'
         this.pages = []
         this.type = this.Type.IMAGELIST
@@ -62,6 +60,7 @@ class Imagelist(GameObject):
                 page = this.Page(
                     element,
                     filesystem = this.filesystem,
+                    HD = this.HD,
                 )
                 
                 this.pages.append(page)
@@ -70,6 +69,7 @@ class Imagelist(GameObject):
             page = this.Page(
                 this.xml,
                 filesystem = this.filesystem,
+                HD = this.HD,
             )
             
             this.pages.append(page)
@@ -79,8 +79,10 @@ class Imagelist(GameObject):
             image = page.getImage(name)
             if image:
                 return image
+            
+        return None
         
-        return this.filesystem.get(os.path.join(this.textureBasePath, name))
+        # return this.filesystem.get(os.path.join(this.textureBasePath, name))
     
     class Page(GameObject):
         def __init__(
