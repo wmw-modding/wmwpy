@@ -1,0 +1,429 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>wmwpy.Utils package &#8212; wmwpy 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="wmwpy.Utils.Types package" href="wmwpy.Utils.Types.html" />
+    <link rel="prev" title="wmwpy.Font package" href="wmwpy.Font.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="wmwpy-utils-package">
+<h1>wmwpy.Utils package<a class="headerlink" href="#wmwpy-utils-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="wmwpy.Utils.Types.html">wmwpy.Utils.Types package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.Utils.Types.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.Utils.Types.html#module-wmwpy.Utils.Types.Documents">wmwpy.Utils.Types.Documents module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ImagelistFile"><code class="docutils literal notranslate"><span class="pre">ImagelistFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ImagelistFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">ImagelistFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ImagelistFile.MIME"><code class="docutils literal notranslate"><span class="pre">ImagelistFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ImagelistFile.check"><code class="docutils literal notranslate"><span class="pre">ImagelistFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ImagelistFile.read"><code class="docutils literal notranslate"><span class="pre">ImagelistFile.read()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ObjectFile"><code class="docutils literal notranslate"><span class="pre">ObjectFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ObjectFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">ObjectFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ObjectFile.MIME"><code class="docutils literal notranslate"><span class="pre">ObjectFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ObjectFile.check"><code class="docutils literal notranslate"><span class="pre">ObjectFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.ObjectFile.read"><code class="docutils literal notranslate"><span class="pre">ObjectFile.read()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.SpriteFile"><code class="docutils literal notranslate"><span class="pre">SpriteFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.SpriteFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">SpriteFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.SpriteFile.MIME"><code class="docutils literal notranslate"><span class="pre">SpriteFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.SpriteFile.check"><code class="docutils literal notranslate"><span class="pre">SpriteFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.SpriteFile.read"><code class="docutils literal notranslate"><span class="pre">SpriteFile.read()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.XMLFile"><code class="docutils literal notranslate"><span class="pre">XMLFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.XMLFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">XMLFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.XMLFile.MIME"><code class="docutils literal notranslate"><span class="pre">XMLFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.XMLFile.check"><code class="docutils literal notranslate"><span class="pre">XMLFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Documents.XMLFile.read"><code class="docutils literal notranslate"><span class="pre">XMLFile.read()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.Utils.Types.html#module-wmwpy.Utils.Types.Images">wmwpy.Utils.Types.Images module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.ImageFile"><code class="docutils literal notranslate"><span class="pre">ImageFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.ImageFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">ImageFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.ImageFile.MIME"><code class="docutils literal notranslate"><span class="pre">ImageFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.ImageFile.check"><code class="docutils literal notranslate"><span class="pre">ImageFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.ImageFile.read"><code class="docutils literal notranslate"><span class="pre">ImageFile.read()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.WaltexFile"><code class="docutils literal notranslate"><span class="pre">WaltexFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.WaltexFile.EXTENSION"><code class="docutils literal notranslate"><span class="pre">WaltexFile.EXTENSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.WaltexFile.MIME"><code class="docutils literal notranslate"><span class="pre">WaltexFile.MIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.WaltexFile.check"><code class="docutils literal notranslate"><span class="pre">WaltexFile.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="wmwpy.Utils.Types.html#wmwpy.Utils.Types.Images.WaltexFile.read"><code class="docutils literal notranslate"><span class="pre">WaltexFile.read()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.Utils.Types.html#module-wmwpy.Utils.Types">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-wmwpy.Utils.XMLTools">
+<span id="wmwpy-utils-xmltools-module"></span><h2>wmwpy.Utils.XMLTools module<a class="headerlink" href="#module-wmwpy.Utils.XMLTools" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.XMLTools.findTag">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.XMLTools.</span></span><span class="sig-name descname"><span class="pre">findTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Element</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/XMLTools.html#findTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.XMLTools.findTag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-wmwpy.Utils.filesystem">
+<span id="wmwpy-utils-filesystem-module"></span><h2>wmwpy.Utils.filesystem module<a class="headerlink" href="#module-wmwpy.Utils.filesystem" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">File</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#wmwpy.Utils.filesystem.FileBase" title="wmwpy.Utils.filesystem.FileBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.testFile">
+<span class="sig-name descname"><span class="pre">testFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.testFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.testFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests what type of file this is.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.FileBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">FileBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#FileBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.FileBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.FileBase.filesystem">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filesystem</span></span><a class="headerlink" href="#wmwpy.Utils.filesystem.FileBase.filesystem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.FileBase.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#wmwpy.Utils.filesystem.FileBase.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.FileBase.path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#wmwpy.Utils.filesystem.FileBase.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.FileBase.root">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root</span></span><a class="headerlink" href="#wmwpy.Utils.filesystem.FileBase.root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">Filesystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds file with path to Folder.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): Path to destenation of file. Must be str.
+file (str | bytes): File. This can be a path to the file to use, raw <cite>bytes</cite> of the file, or file-like object.
+replace (bool, optional): Replace any conflicting files? Defaults to False.</p>
+</dd>
+<dt>Raises:</dt><dd><p>TypeError: If file is not <cite>str</cite>, <cite>bytes</cite> or file-like object.</p>
+</dd>
+<dt>Returns:</dt><dd><p>File: File object of the added file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.getAssets">
+<span class="sig-name descname"><span class="pre">getAssets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extract_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_imagelist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.getAssets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.getAssets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">Folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#wmwpy.Utils.filesystem.FileBase" title="wmwpy.Utils.filesystem.FileBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a></span></span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-wmwpy.Utils.path">
+<span id="wmwpy-utils-path-module"></span><h2>wmwpy.Utils.path module<a class="headerlink" href="#module-wmwpy.Utils.path" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.path.getRelPath">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.path.</span></span><span class="sig-name descname"><span class="pre">getRelPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/path.html#getRelPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.path.getRelPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.path.joinPath">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.path.</span></span><span class="sig-name descname"><span class="pre">joinPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/path.html#joinPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.path.joinPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-wmwpy.Utils.textures">
+<span id="wmwpy-utils-textures-module"></span><h2>wmwpy.Utils.textures module<a class="headerlink" href="#module-wmwpy.Utils.textures" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.textures.Texture">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.textures.</span></span><span class="sig-name descname"><span class="pre">Texture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#wmwpy.Utils.waltex.Waltex" title="wmwpy.Utils.waltex.Waltex"><span class="pre">Waltex</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/textures.html#Texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.textures.Texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="wmwpy.Utils.textures.Texture.size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#wmwpy.Utils.textures.Texture.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.textures.getHDFile">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.textures.</span></span><span class="sig-name descname"><span class="pre">getHDFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/textures.html#getHDFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.textures.getHDFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.textures.getTextueSettings">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.textures.</span></span><span class="sig-name descname"><span class="pre">getTextueSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureSettings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/textures.html#getTextueSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.textures.getTextueSettings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.textures.getTexture">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.textures.</span></span><span class="sig-name descname"><span class="pre">getTexture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureSettings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/textures.html#getTexture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.textures.getTexture" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-wmwpy.Utils.waltex">
+<span id="wmwpy-utils-waltex-module"></span><h2>wmwpy.Utils.waltex module<a class="headerlink" href="#module-wmwpy.Utils.waltex" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.GenerateBinaryMask">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.waltex.</span></span><span class="sig-name descname"><span class="pre">GenerateBinaryMask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numOnes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/waltex.html#GenerateBinaryMask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.waltex.GenerateBinaryMask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.Waltex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.waltex.</span></span><span class="sig-name descname"><span class="pre">Waltex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'little'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/waltex.html#Waltex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.waltex.Waltex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.Waltex.format">
+<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'waltex'</span></em><a class="headerlink" href="#wmwpy.Utils.waltex.Waltex.format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.Waltex.format_description">
+<span class="sig-name descname"><span class="pre">format_description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Walaber</span> <span class="pre">image</span> <span class="pre">file'</span></em><a class="headerlink" href="#wmwpy.Utils.waltex.Waltex.format_description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.Waltex.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">byte_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/waltex.html#Waltex.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.waltex.Waltex.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.Waltex.size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#wmwpy.Utils.waltex.Waltex.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.WaltexImage">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.waltex.</span></span><span class="sig-name descname"><span class="pre">WaltexImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BytesIO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premultiplyAlpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dePremultiplyAlpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'little'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span></span></span><a class="reference internal" href="_modules/wmwpy/Utils/waltex.html#WaltexImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.waltex.WaltexImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>### Depracted
+Use <cite>Image.load()</cite> instead.</p>
+<p>I am only keeping this just in case you need to load RGB565 (01) or RGBA5551 (02) waltex format.</p>
+<p>—</p>
+<p>Get image from <cite>waltex</cite> file</p>
+<p>Data on image can be found in coorisponding <cite>imagelist</cite> or in <cite>Data/TextureSettings.xml</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): Path to <cite>waltex</cite> image
+premultiplyAlpha (bool, optional): Defaults to False.
+dePremultiplyAlpha (bool, optional): Defaults to False.
+endian (str, optional): Endian mode. Set to ‘big’ to use big endian. Defaults to ‘little’.</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL.Image.Image: Pillow image.</p>
+</dd>
+</dl>
+<p>—
+Thanks to &#64;campbellsonic for the <cite>WrapRawData()</cite> function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.Utils.waltex.WrapRawData">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.waltex.</span></span><span class="sig-name descname"><span class="pre">WrapRawData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rawData</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bytesPerPixel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redBits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">greenBits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blueBits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphaBits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorOrder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premultiplyAlpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dePremultiplyAlpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'little'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/waltex.html#WrapRawData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.waltex.WrapRawData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-wmwpy.Utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wmwpy.Utils" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="wmwpy.html">wmwpy package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="wmwpy.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.Font.html">wmwpy.Font package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">wmwpy.Utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils.XMLTools">wmwpy.Utils.XMLTools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils.filesystem">wmwpy.Utils.filesystem module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils.path">wmwpy.Utils.path module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils.textures">wmwpy.Utils.textures module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils.waltex">wmwpy.Utils.waltex module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.Utils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wmwpy.classes.html">wmwpy.classes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.html#module-wmwpy.Game">wmwpy.Game module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.html#module-wmwpy.gameobject">wmwpy.gameobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmwpy.html#module-wmwpy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="wmwpy.html">wmwpy package</a><ul>
+      <li>Previous: <a href="wmwpy.Font.html" title="previous chapter">wmwpy.Font package</a></li>
+      <li>Next: <a href="wmwpy.Utils.Types.html" title="next chapter">wmwpy.Utils.Types package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/wmwpy.Utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
