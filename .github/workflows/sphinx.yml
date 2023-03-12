@@ -10,7 +10,7 @@ jobs:
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
         build-command: "sphinx-build -b html doc-build docs"
@@ -19,4 +19,4 @@ jobs:
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.TOKEN }}
-        publish_dir: docs/build/html
+        publish_dir: docs/
