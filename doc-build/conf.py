@@ -12,8 +12,8 @@ sys.path.insert(0, os.path.abspath('../src'))
 import wmwpy
 
 project = 'wmwpy'
-copyright = '2023, ego-lay-atman-bay'
-author = 'ego-lay-atman-bay'
+copyright = f'2023, {wmwpy.__author__}'
+author = wmwpy.__author__
 
 version = wmwpy.__version__
 release = wmwpy.__version__
