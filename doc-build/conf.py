@@ -6,12 +6,17 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import sys, os
+
+sys.path.insert(0, os.path.abspath('../src'))
+import wmwpy
+
 project = 'wmwpy'
 copyright = '2023, ego-lay-atman-bay'
 author = 'ego-lay-atman-bay'
 
-version = '0.0.1'
-release = '0.0.1'
+version = wmwpy.__version__
+release = wmwpy.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -22,15 +27,6 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.autosummary',
 ]
-
-import sys, os
-
-sys.path.insert(0, os.path.abspath('../src'))
-# import mock
-import wmwpy
-# MOCK_MODULES = ['wmwpy']
-# for mod_name in MOCK_MODULES:
-#     sys.modules[mod_name] = mock.Mock()
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

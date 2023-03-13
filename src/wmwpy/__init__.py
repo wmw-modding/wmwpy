@@ -1,4 +1,4 @@
-__version__ = "0.0.1"
+__version__ = "0.0.1-alpha"
 __author__ = 'ego-lay-atman-bay'
 
 from .Game import Game
