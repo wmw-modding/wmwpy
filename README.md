@@ -5,6 +5,16 @@
 
  This is going to be used in Where's My Editor, a level editor for the Where's My...? series.
 
+# Building package
+ To build the package, install `build`
+ ```
+pip install build
+ ```
+ Then run
+ ```
+py -m build
+ ```
+
 # Building docs
  To build the docs, make sure sphinx is installed
  ```
