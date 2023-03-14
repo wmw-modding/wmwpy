@@ -280,7 +280,7 @@ class Folder(FileBase):
                     break
         return file
     
-    def get(this, path : str):
+    def get(this, path : str) -> File:
         parts = pathlib.Path(path).parts
         if len(parts) == 0:
             return this
