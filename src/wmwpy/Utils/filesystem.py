@@ -219,6 +219,10 @@ class File(FileBase):
     
     def exists(this, path : str):
         return this.parent.exists(path)
+    
+    def write(this, data : bytes):
+        this.rawcontent.seek(0)
+        return this.rawcontent.write(data)
 
 class Folder(FileBase):
     def __init__(this, parent = None, path: str = None):
