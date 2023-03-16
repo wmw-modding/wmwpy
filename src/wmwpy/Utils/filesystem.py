@@ -4,6 +4,7 @@ import io
 from filetype import filetype
 from PIL import Image
 import zipfile
+import natsort
 
 from .path import joinPath
 # from . import Waltex
@@ -69,6 +70,9 @@ class Filesystem():
         print(f'{this.gamepath = }\n{this.assets = }')
         assets = joinPath(this.gamepath, this.assets)
         
+        if not os.path.exists(assets):
+            raise FileNotFoundError(f'Folder {assets} does not exist')
+        
         for dir, subdir, files in os.walk(assets):
             for file in files:
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
@@ -83,6 +87,9 @@ class Filesystem():
     
     def exists(this, fp : str):
         return this.root.exists(fp)
+    
+    def listdir(this, path = '/', recursive = False):
+        return this.get(path).listdir(recursive = recursive)
     
 # Filesystem helpers
 class FileBase():
@@ -124,7 +131,8 @@ class FileBase():
         FILE = 1
         
         def __init__(this, type : int) -> None:
-            this.value = type
+            this.value = type    
+    
     
 class File(FileBase):
     def __init__(this, parent, path: str, content : bytes):
@@ -223,6 +231,9 @@ class File(FileBase):
     def write(this, data : bytes):
         this.rawcontent.seek(0)
         return this.rawcontent.write(data)
+    
+    def listdir(this, recursive = False):
+        return this.parent.listdir(recursive = recursive)
 
 class Folder(FileBase):
     def __init__(this, parent = None, path: str = None):
@@ -298,6 +309,17 @@ class Folder(FileBase):
     
     def exists(this, path : str):
         return this.get(path) != None
+    
+    def listdir(this, recursive = False):
+        files = []
+        for file in this.files:
+            files.append(file.path)
+            if recursive and file._type.value == this._Type.FOLDER:
+                files = files + file.listdir(recursive = recursive)
+        
+        files = natsort.natsorted(files)
+        
+        return files
 
 class Reader():
     MIME = 'text/'

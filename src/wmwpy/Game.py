@@ -23,7 +23,7 @@ class Game():
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
         """
         this.gamepath = os.path.abspath(gamepath)
-        print(f'{gamepath = }\n{this.gamepath = }')
+        # print(f'{gamepath = }\n{this.gamepath = }')
         this.assets = assets
         this.db = db
         this.profile = profile
@@ -140,26 +140,18 @@ class Game():
         raise NotImplementedError('load layout is not implemented yet.')
     
     def generateFileManifest(this, writeFile : bool = True):
-        manifest = []
-        assets = joinPath(this.gamepath, this.assets)
-        for dir, subdir, files in os.walk(assets):
-            for file in files:
-                # print(f'{file = }\n{dir = }\n{subdir = }')
-                
-                path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                # path = pathlib.Path(path).parts
-                # print(f'{path = }')
-                manifest.append(path)
-                
-        manifest = natsort.natsorted(manifest)
-        
-        content = '\n'.join(manifest)
-        
-        path = joinPath(this.gamepath, this.assets, 'FileManifest.txt')
-        # print(path)
+        """Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).
+
+        Args:
+            this (_type_): _description_
+            writeFile (bool, optional): Write the manifest to the `FileManifest.txt` file. Defaults to True.
+
+        Returns:
+            str: Contents of `FileManifest.txt`
+        """
+        manifest = '\n'.join(this.filesystem.listdir(recursive = True))
         
         if writeFile:
-            with open(path, 'w') as file:
-                file.write(content)
-                
+            this.filesystem.add('/FileManifest.txt', manifest, replace = True)
+        
         return manifest
