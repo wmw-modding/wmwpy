@@ -77,11 +77,13 @@ class Imagelist(GameObject):
             
             this.pages.append(page)
     
-    def export(this, path : str = None):
+    def export(this, path : str = None, exportImage : bool = False, imageFormat : str = 'webp'):
         """Export the xml of the imagelist.
 
         Args:
             path (str, optional): Path to the file in the filesystem to write to. If `None`, it will not save to a file, only report the output. Defaults to None.
+            exportImage (bool, optional): Whether to also export the atlas image(s). If there are multiple pages, it'll append `_split_#` to the end of the filenames. Defaults to False.
+            imageFormat (str, optional): What format to export the images as. Defaults to 'webp'.
 
         Raises:
             TypeError: Path is an existing folder.
@@ -89,6 +91,26 @@ class Imagelist(GameObject):
         Returns:
             bytes: The xml output as bytes.
         """
+        if path != None:
+            if exportImage:
+                if this.type == this.Type.PAGES:
+                    index = 0
+                    for page in this.pages:
+                        index += 1
+                        
+                        filename = os.path.splitext(path)[0]
+                        filename = f'{filename}_split_{str(index)}.{imageFormat}'
+                        
+                        page.file = filename
+                        page.exportAtlas(filename = filename, format = imageFormat)
+                        
+                else:
+                    page : this.Page = this.pages[0]
+                    filename = f'{filename}.{imageFormat}'
+                    
+                    page.file = filename
+                    page.exportAtlas(filename = filename, format = imageFormat)
+        
         if this.type == this.Type.IMAGELIST:
             page = this.pages[0]
             xml = page.getXML(type = this.type)
@@ -109,10 +131,32 @@ class Imagelist(GameObject):
             else:
                 file = this.filesystem.add(path, output)
         
+        
         return output
     
     def combinePages(this):
-        pass
+        if this.type == this.Type.IMAGELIST:
+            return
+        
+        main = this.pages[0]
+        for i in range(len(this.pages) - 1):
+            page : this.Page = this.pages[i + 1]
+            for name in page.images:
+                image = page.images[name]
+                main.add(
+                    image.name,
+                    image.image,
+                    image.properties,
+                    replace = False
+                )
+                
+        main.id = None
+        main.exportAtlas()
+        
+        this.type = this.Type.IMAGELIST
+        
+        this.pages = [main]
+                
     
     def getImage(this, name : str):
         """Get image from imagelist.
@@ -324,7 +368,12 @@ class Imagelist(GameObject):
             else:
                 return None
         
-        def add(this, name : str, image : PIL.Image.Image, properties : dict = {}, replace = False):
+        def add(this,
+                name : str,
+                image : PIL.Image.Image,
+                properties : dict = {},
+                replace = False
+            ):
             """Add image to imagelist.
 
             Args:
@@ -342,34 +391,37 @@ class Imagelist(GameObject):
                 if not replace:
                     raise NameError(f'Image "{name}" already exists.')
             properties['name'] = name
+            properties['rect'] = ' '.join([str(_) for _ in (0,0) + image.size])
             
             texture = this.Image(
                 image,
                 properties
             )
             this.images[name] = texture
+            
+            this._getrect()
         
-        def export(this):
-            pass
-        
-        def exportImage(this, gap : tuple = (1,1), filename = None):
+        def exportAtlas(this, filename = None, gap : tuple = (1,1), format : str = 'webp', ):
             """Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using `getXML()`.
 
             Args:
                 gap (tuple, optional): Gap between each image. Defaults to (1,1).
                 filename (str, optional): Filename of image. Defaults to `file` property.
+                format (str, optional): Format to save image as. Defaults to 'webp'.
 
             Returns:
                 PIL.Image.Image: PIL Image.
             """
-            this._getrect(offset = gap)
+            this._getrect(gap = gap)
             this._updateAtlas()
             file = io.BytesIO()
             
-            this.atlas.save(file)
+            this.atlas.save(file, format=format)
             
             if filename == None:
-                filename = this.file
+                filename = f'{os.path.splitext(this.file)[0]}.{format}'
+            
+            this.file = filename
             
             if this.filesystem.exists(filename):
                 this.filesystem.get(filename).rawcontent = file
@@ -385,14 +437,16 @@ class Imagelist(GameObject):
             this.properties['imgSize'] = ' '.join([str(n) for n in this.size])
             this.properties['file'] = this.file
             print(this.properties['file'])
-            if this.id != None:
+            if this.id == None:
+                del this.properties['id']
+            else:
                 this.properties['id'] = str(this.id)
+                
         
         def getXML(this, filename = None, type : int = 1):
             """Generates the xml for the page / imagelist.
 
             Args:
-                this (_type_): _description_
                 filename (str, optional): Name of image. Defaults to file property.
                 type (int, optional): Type of file. 0 for `Page`, 1 for `Imagelist`. Defaults to 1.
 
@@ -415,8 +469,14 @@ class Imagelist(GameObject):
             return this.xml
             
         
-        def _getrect(this, offset : tuple = (1,1)):
-            x, y = offset
+        def _getrect(this, gap : tuple = (1,1)):
+            """Update the rect for all images.
+
+            Args:
+                this (_type_): _description_
+                gap (tuple, optional): Gap between images. Defaults to (1,1).
+            """
+            x, y = gap
             maxheight = maxwidth = 0
             row = column = 0
             
@@ -427,22 +487,28 @@ class Imagelist(GameObject):
                 if x > maxwidth:
                     maxwidth = x
                 
-                x += image.size[0] + offset[0]
+                x += image.size[0] + gap[0]
                 
                 column += 1
                 if x > this.size[0]:
-                    x = offset[0]
-                    y += maxheight + offset[1]
+                    x = gap[0]
+                    y += maxheight + gap[1]
                     maxheight = 0
                     column = 0
                     row += 1
                 
                 if column == 0:
                     image.rect = (x,y) + image.size
-                    x += image.size[0] + offset[0]
+                    x += image.size[0] + gap[0]
                 
                 if image.size[1] > maxheight:
                     maxheight = image.size[1]
+            
+            y += maxheight + gap[1]
+            
+            if y > this.size[1]:
+                this.size = (this.size[0], y)
+            
                 
         def _updateAtlas(this):
             atlas : PIL.Image.Image = PIL.Image.new('RGBA', this.size)
