@@ -1,6 +1,7 @@
 from lxml import etree
 from PIL import Image
 import numpy
+from copy import deepcopy
 
 from .Imagelist import Imagelist
 from ..Utils.filesystem import *
@@ -13,7 +14,7 @@ class Sprite(GameObject):
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
-        this.attributes = attributes
+        this.attributes = deepcopy(attributes)
         this.animations = []
         
         this.readXML()
@@ -38,6 +39,10 @@ class Sprite(GameObject):
         this.xml = xml
         
         output = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
+        
+        if path == None:
+            if 'filename' in this.attributes:
+                path = this.attributes['filename']
         
         if path:
             if (file := this.filesystem.get(path)) != None:
