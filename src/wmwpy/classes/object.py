@@ -32,7 +32,7 @@ class Object(GameObject):
         
         super().__init__(filesystem, gamepath, assets)
         
-        this.file = super().test_file(file)
+        this.file = super().get_file(file)
         
         this._properties = properties
         if isinstance(pos, str):

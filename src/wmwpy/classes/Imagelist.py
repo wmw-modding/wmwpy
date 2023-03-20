@@ -37,7 +37,7 @@ class Imagelist(GameObject):
         
         super().__init__(filesystem, gamepath, assets)
         
-        this.file = super().test_file(file)
+        this.file = super().get_file(file)
 
         this.HD = HD
         this.xml = etree.parse(this.file).getroot()
@@ -106,6 +106,8 @@ class Imagelist(GameObject):
                         
                 else:
                     page : this.Page = this.pages[0]
+                    
+                    filename = os.path.splitext(path)[0]
                     filename = f'{filename}.{imageFormat}'
                     
                     page.file = filename
@@ -438,7 +440,8 @@ class Imagelist(GameObject):
             this.properties['file'] = this.file
             print(this.properties['file'])
             if this.id == None:
-                del this.properties['id']
+                if 'id' in this.properties:
+                   del this.properties['id']
             else:
                 this.properties['id'] = str(this.id)
                 
