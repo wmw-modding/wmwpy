@@ -9,7 +9,7 @@ from ..gameobject import GameObject
 class Sprite(GameObject):
     def __init__(this, file : str | bytes | File, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets', attributes : dict = {}) -> None:
         super().__init__(filesystem, gamepath, assets)
-        this.file = super().test_file(file)
+        this.file = super().get_file(file)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
@@ -28,6 +28,27 @@ class Sprite(GameObject):
                 )
                 
                 this.animations.append(animation)
+    
+    def export(this, path : str = None):
+        xml : etree.ElementBase = etree.Element('Sprite')
+        
+        for animation in this.animations:
+            xml.append(animation.getXML())
+        
+        this.xml = xml
+        
+        output = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
+        
+        if path:
+            if (file := this.filesystem.get(path)) != None:
+                if isinstance(file, File):
+                    file.write(output)
+                else:
+                    raise TypeError(f'Path {path} is not a file.')
+            else:
+                this.filesystem.add(path, output)
+        
+        return output
         
 
     class Animation(GameObject):
@@ -63,6 +84,7 @@ class Sprite(GameObject):
             if 'textureBasePath' in this.properties:
                 this.textureBasePath = this.properties['textureBasePath']
             if 'atlas' in this.properties:
+                this.atlasPath = this.properties['atlas']
                 this.atlas = Imagelist(
                     this.filesystem.get(this.properties['atlas']),
                     this.filesystem,
@@ -97,20 +119,50 @@ class Sprite(GameObject):
                     ))
             
             return this.frames
+
+        def updateProperties(this):
+            def updateProperty(property : str, value, default = None):
+                if default != None and value == default:
+                    if property in this.properties:
+                        del this.properties[property]
+                else:
+                    this.properties[property] = value
+            
+            updateProperty('name', this.name)
+            updateProperty('textureBasePath', this.textureBasePath)
+            this.atlas.export(this.atlasPath, exportImage=True)
+            updateProperty('atlas', this.atlasPath)
+            updateProperty('fps', str(this.fps))
+            updateProperty('playbackMode', this.playbackMode)
+            updateProperty('loopCount', str(this.loopCount))
+        
+        def getXML(this):
+            this.updateProperties()
+            xml : etree.ElementBase = etree.Element('Animation', **this.properties)
+            
+            for frame in this.frames:
+                xml.append(frame.getXML())
+            
+            this.xml = xml
+            return this.xml
         
         
         # Frame
         class Frame():
+            _offset = (0,0)
+            _scale = (1,1)
+            _angleDeg = 0
+            _repeat = 1
             def __init__(this, properties : dict, atlas : Imagelist = None, textureBasePath : str = None) -> None:
                 this.atlas = atlas
                 this.textueBasePath = textureBasePath
                 this.properties = properties
                 
                 this.name = ''
-                this.offset = (0,0)
-                this.scale = (1,1)
-                this.angleDeg = 0
-                this.repeat = 0
+                this.offset = this._offset
+                this.scale = this._scale
+                this.angleDeg = this._angleDeg
+                this.repeat = this._repeat
                 
                 this.image = None
                 
@@ -137,3 +189,41 @@ class Sprite(GameObject):
                 this.image = this._image.image.copy()
                 this.image = this.image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
                 this.image = this.image.rotate(this.angleDeg)
+            
+            def updateProperties(this):
+                def updateProperty(property : str, value, default):
+                    if value == default:
+                        if property in this.properties:
+                            del this.properties[property]
+                    else:
+                        this.properties[property] = value
+                
+                this.properties['name'] = this.name
+                
+                updateProperty(
+                    'offset',
+                    ' '.join([str(_) for _ in this.offset]),
+                    ' '.join([str(_) for _ in this._offset])
+                )
+                
+                updateProperty(
+                    'scale',
+                    ' '.join([str(_) for _ in this.scale]),
+                    ' '.join([str(_) for _ in this._scale])
+                )
+                
+                updateProperty(
+                    'angleDeg',
+                    str(this.angleDeg),
+                    str(this._angleDeg)
+                )
+                
+                updateProperty(
+                    'repeat',
+                    str(this.repeat),
+                    str(this._repeat)
+                )
+
+            def getXML(this) -> etree.ElementBase:
+                this.updateProperties()
+                return etree.Element('Frame', **this.properties)
