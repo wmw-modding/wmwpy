@@ -72,6 +72,85 @@ class Object(GameObject):
         
         this.getProperties()
     
+    def export(this, path : str = None):
+        xml : etree.ElementBase = etree.Element('InteractiveObject')
+        
+        shapes = etree.Element('Shapes')
+        
+        for shape in this.shapes:
+            shape : Shape
+            shapes.append(shape.getXML())
+        
+        if len(shapes) > 0:
+            xml.append(shapes)
+        
+        sprites : etree.ElementBase = etree.Element('Sprites')
+        
+        for sprite in this.sprites:
+            sprite : Sprite
+            sprite.export()
+            etree.SubElement(sprites, 'Sprite', sprite.properties)
+        
+        if len(sprites) > 0:
+            xml.append(sprites)
+        
+        UVs : etree.ElementBase = etree.Element('UVs')
+        
+        for UV in this.UVs:
+            pos = ' '.join([str(_) for _ in UV])
+            etree.SubElement(UVs, 'UV', {'pos': pos})
+        
+        if len(UVs) > 0:
+            xml.append(UVs)
+        
+        VertIndices : etree.ElementBase = etree.Element('VertIndices')
+        
+        for index in this.VertIndices:
+            etree.SubElement(VertIndices, 'Vert', {'index': str(index)})
+        
+        if len(VertIndices) > 0:
+            xml.append(VertIndices)
+        
+        DefaultProperties : etree.ElementBase = etree.Element('DefaultProperties')
+        
+        for name in this.defaultProperties:
+            etree.SubElement(DefaultProperties, 'Property', {
+                'name': name,
+                'value': this.defaultProperties[name]
+            })
+        
+        if len(DefaultProperties) > 0:
+            xml.append(DefaultProperties)
+        
+        this.xml = xml
+        output = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
+        
+        if path == None:
+            if this.filename:
+                path = this.filename
+        
+        if path != None:
+            if (file := this.filesystem.get(path)) != None:
+                if isinstance(file, File):
+                    file.write(output)
+                else:
+                    raise TypeError(f'Path {path} is not a file.')
+                    
+            else:
+                this.filesystem.add(path, output)
+        
+        return output
+        
+    @property
+    def filename(this):
+        if 'filename' in this.properties:
+            return this.properties['filename']
+        else:
+            return None
+    @filename.setter
+    def filename(this, value : str):
+        this.properties['filename'] = value
+    
     def _getShapes(this, xml : etree.ElementBase):
         for element in xml:
             shape = Shape(element)
@@ -79,15 +158,15 @@ class Object(GameObject):
         
     def _getSprites(this, xml : etree.ElementBase):
         for element in xml:
-            element : etree.ElementBase
             if element is etree.Comment:
                 continue
+            
             if element.tag == 'Sprite':
                 attributes = element.attrib
                 sprite = Sprite(
                     file = this.filesystem.get(attributes['filename']),
                     filesystem = this.filesystem,
-                    attributes = attributes
+                    properties = attributes
                 )
                 this.sprites.append(sprite)
     
@@ -145,3 +224,10 @@ class Shape():
                 pos = element.get('pos')
                 point = tuple([float(_) for _ in pos.split(' ')])
                 this.points.append(point)
+    
+    def getXML(this):
+        xml : etree.ElementBase = etree.Element('Shape')
+        for point in this.points:
+            etree.SubElement(xml, 'Point', {'pos': ' '.join([str(_) for _ in point])})
+        this.xml = xml
+        return xml
