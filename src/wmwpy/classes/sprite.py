@@ -8,16 +8,33 @@ from ..Utils.filesystem import *
 from ..gameobject import GameObject
 
 class Sprite(GameObject):
-    def __init__(this, file : str | bytes | File, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets', attributes : dict = {}) -> None:
+    def __init__(
+        this,
+        file : str | bytes | File,
+        filesystem: Filesystem | Folder = None,
+        gamepath: str = None, assets: str = '/assets',
+        properties : dict = {}
+    ) -> None:
+        
         super().__init__(filesystem, gamepath, assets)
         this.file = super().get_file(file)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
-        this.attributes = deepcopy(attributes)
+        this.properties = deepcopy(properties)
         this.animations = []
         
         this.readXML()
+    
+    @property
+    def filename(this):
+        if 'filename' in this.properties:
+            return this.properties['filename']
+        else:
+            return None
+    @filename.setter
+    def filename(this, value):
+        this.properties['filename'] = value
         
     def readXML(this):
         this.animations = []
@@ -41,10 +58,10 @@ class Sprite(GameObject):
         output = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
         
         if path == None:
-            if 'filename' in this.attributes:
-                path = this.attributes['filename']
+            if this.filename:
+                path = this.filename
         
-        if path:
+        if path != None:
             if (file := this.filesystem.get(path)) != None:
                 if isinstance(file, File):
                     file.write(output)
