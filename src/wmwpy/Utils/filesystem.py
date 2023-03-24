@@ -169,7 +169,7 @@ class FileBase():
     
     
 class File(FileBase):
-    def __init__(this, parent, path: str, content : bytes):
+    def __init__(this, parent, path: str, data : bytes):
         """File
 
         Args:
@@ -179,11 +179,11 @@ class File(FileBase):
         """
         super().__init__(parent, path)
         this._type.value = this._Type.FILE
-        this._rawcontent = content
+        this._rawcontent = data
         
-        this.rawcontent = io.BytesIO(content)
+        this.rawdata = io.BytesIO(data)
         # seek back to the start to be able to read the data later.
-        this.rawcontent.seek(0)
+        this.rawdata.seek(0)
         
         this.content = None
         
@@ -191,7 +191,7 @@ class File(FileBase):
         
     def testFile(this):
         """Tests what type of file this is."""
-        this.type = filetype.guess(this.rawcontent.getvalue())
+        this.type = filetype.guess(this.rawdata.getvalue())
         
         if this.type == None:
             this.type = None
@@ -208,17 +208,17 @@ class File(FileBase):
         return this.mime
         
     def read(this, **kwargs):
-        this.rawcontent.seek(0)
+        this.rawdata.seek(0)
         
         reader = Reader()
         
         for r in FILE_READERS:
             print(r)
-            if r.check(this.mime, this.extension, this.rawcontent, filesystem = this.filesystem, **kwargs):
+            if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
                 reader = r
                 break
         
-        this.content = reader.read(this.mime, this.extension, this.rawcontent, **kwargs)
+        this.content = reader.read(this.mime, this.extension, this.rawdata, **kwargs)
         
         # if this.mime == 'image/waltex':
         #     this.content = Waltex(this.rawcontent.getvalue())
@@ -249,7 +249,7 @@ class File(FileBase):
         #     else:
         #         this.content = this.rawcontent.read().decode(encoding=kwargs['encoding'])
         
-        this.rawcontent.seek(0)
+        this.rawdata.seek(0)
         
         return this.content
     
@@ -263,8 +263,9 @@ class File(FileBase):
         return this.parent.exists(path)
     
     def write(this, data : bytes):
-        this.rawcontent.seek(0)
-        return this.rawcontent.write(data)
+        this.rawdata.truncate(0)
+        this.rawdata.seek(0)
+        return this.rawdata.write(data)
     
     def listdir(this, recursive = False):
         return this.parent.listdir(recursive = recursive)
@@ -309,7 +310,7 @@ class Folder(FileBase):
                 print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
-            file = File(this, parts[0], content = content)
+            file = File(this, parts[0], data = content)
             this.files.append(file)
             
             return file
