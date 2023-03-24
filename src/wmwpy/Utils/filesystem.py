@@ -5,6 +5,7 @@ from filetype import filetype
 from PIL import Image
 import zipfile
 import natsort
+import typing
 
 from .path import joinPath
 # from . import Waltex
@@ -61,11 +62,68 @@ class Filesystem():
         
         return this.root.add(path = path, content = file, replace = replace)
         
-    def getAssets(this, extract_zip = False, split_imagelist = False):
+    def getAssets(
+        this,
+        extract_zip = False,
+        split_imagelist = False,
+        hook : typing.Callable[[int, str, int], typing.Any] = None
+    ):
+        """Scans the assets directory and loads all files into the filesystem. This is so wmwpy can modify files without modifying the actual files.
+
+        Args:
+            extract_zip (bool, optional): Extrack zip files? Defaults to False.
+            split_imagelist (bool, optional): Split imagelist files? Defaults to False.
+            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
+
+        Raises:
+            FileNotFoundError: Assets folder does not exist.
+
+        Returns:
+            this: Current Filesystem object.
         """
-        Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.
-        """
+                    
+        def dirlength(path : str):
+            count = 0
+            for file in os.scandir(path):
+                if file.is_dir():
+                    count += dirlength(file.path)
+                else:
+                    count += 1
+            return count
+
         
+        print(this.gamepath)
+        print(f'{this.gamepath = }\n{this.assets = }')
+        
+        assets = pathlib.Path(joinPath(this.gamepath, this.assets))
+        
+        if not assets.exists():
+            raise FileNotFoundError(f'Folder {assets} does not exist')
+        
+        total = dirlength(assets.resolve().as_posix())
+        current = 0
+        
+        for dir, subdir, files in os.walk(assets):
+            for file in files:
+                path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
+                # print(path)
+                
+                if hook:
+                    current += 1
+                    hook(current, path, total)
+                
+                fileobj : File = this.add(path, os.path.join(dir, file))
+                
+                if fileobj.extension == 'zip' and extract_zip:
+                    fileobj.read()
+        
+        return this
+    
+    def getAssets_v0(
+        this,
+        extract_zip = False,
+        split_imagelist = False,
+    ):
         print(this.gamepath)
         print(f'{this.gamepath = }\n{this.assets = }')
         assets = joinPath(this.gamepath, this.assets)
@@ -76,14 +134,17 @@ class Filesystem():
         for dir, subdir, files in os.walk(assets):
             for file in files:
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                print(path)
+                # print(path)
                 # print(os.path.join(dir, file))
                 fileobj : File = this.add(path, os.path.join(dir, file))
                 
                 if fileobj.extension == 'zip' and extract_zip:
                     fileobj.read()
         
-        return this
+        # return this
+    
+        for x in os.scandir('test'):
+            x.path
     
     def exists(this, fp : str):
         return this.root.exists(fp)

@@ -4,6 +4,7 @@ import lxml
 from lxml import etree
 import natsort
 import zipfile
+import typing
 
 from .Utils import Filesystem
 from .Utils import Texture
@@ -13,7 +14,13 @@ from .classes import *
 os.path.isdir
 
 class Game():
-    def __init__(this, gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None) -> None:
+    def __init__(
+        this,
+        gamepath : str, assets : str = '/assets',
+        db : str = '/Data/water.db',
+        profile : str = None,
+        hook : typing.Callable[[int, str, int], typing.Any] = None
+    ) -> None:
         """load game
 
         Args:
@@ -28,11 +35,11 @@ class Game():
         this.db = db
         this.profile = profile
         
-        this.updateFilesystem()
+        this.updateFilesystem(hook = hook)
         
-    def updateFilesystem(this):
+    def updateFilesystem(this, hook : typing.Callable[[int, str, int], typing.Any] = None):
         this.filesystem = Filesystem(this.gamepath, this.assets)
-        this.filesystem.getAssets()
+        this.filesystem.getAssets(hook = hook)
         
     def loadLevel(this, xmlPath : str = None, imagePath : str = None, ):
         """
