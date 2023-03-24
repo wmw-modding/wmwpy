@@ -47,7 +47,7 @@ class GameObject():
         if isinstance(file, bytes):
             fileio = io.BytesIO(file)
         elif isinstance(file, File):
-            fileio = file.rawcontent
+            fileio = file.rawdata
         elif not hasattr(file, 'read') and not isinstance(file, str):
             raise TypeError(f"file can only be 'str', 'bytes', or file-like object.")
     
