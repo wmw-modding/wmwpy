@@ -119,33 +119,6 @@ class Filesystem():
         
         return this
     
-    def getAssets_v0(
-        this,
-        extract_zip = False,
-        split_imagelist = False,
-    ):
-        print(this.gamepath)
-        print(f'{this.gamepath = }\n{this.assets = }')
-        assets = joinPath(this.gamepath, this.assets)
-        
-        if not os.path.exists(assets):
-            raise FileNotFoundError(f'Folder {assets} does not exist')
-        
-        for dir, subdir, files in os.walk(assets):
-            for file in files:
-                path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                # print(path)
-                # print(os.path.join(dir, file))
-                fileobj : File = this.add(path, os.path.join(dir, file))
-                
-                if fileobj.extension == 'zip' and extract_zip:
-                    fileobj.read()
-        
-        # return this
-    
-        for x in os.scandir('test'):
-            x.path
-    
     def exists(this, fp : str):
         return this.root.exists(fp)
     
