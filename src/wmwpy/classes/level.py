@@ -3,35 +3,37 @@ from lxml import etree
 
 from ..Utils.filesystem import *
 from .object import Object
+from ..gameobject import GameObject
 
-class Level():
-    def __init__(this, xml : str | bytes | File | etree.ElementBase, image : str | bytes | File , filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets') -> None:
+class Level(GameObject):
+    def __init__(
+        this,
+        xml : str | bytes | File,
+        image : str | bytes | File ,
+        filesystem : Filesystem | Folder = None,
+        gamepath : str = None,
+        assets : str = '/assets'
+    ) -> None:
+        """Load level
+
+        Args:
+            this (_type_): _description_
+            xml (str | bytes | File): XML file for level.
+            image (str | bytes | File): Image file for level.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+        """
+        
         this.gamepath = gamepath
         this.assets = assets
+        this.filename = ''
         if this.assets == None:
             this.assets = '/assets'
         
-        try:
-            this.filesystem = filesystem
-            if isinstance(this.filesystem, Filesystem):
-                this.gamepath = this.filesystem.gamepath
-                this.assets = this.filesystem.assets
-                
-            elif isinstance(this.filesystem, Folder):
-                pass
-
-            else:
-                this.filesystem = Filesystem(this.gamepath, this.assets)
-                this.filesystem.getAssets()
-        except:
-            raise FileNotFoundError('Must have a valid `filesystem` or `gamepath`')
+        super().__init__(filesystem, gamepath, assets)
         
-        if isinstance(xml, bytes):
-            this.xml_file = io.BytesIO(xml)
-        elif isinstance(xml, File):
-            this.xml_file = xml.rawcontent
-        elif not hasattr(xml, 'read') and not isinstance(xml, str):
-            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
+        this.xml_file = super().get_file(xml)
         
         this.xml = etree.parse(this.xml_file).getroot()
         

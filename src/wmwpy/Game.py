@@ -57,11 +57,14 @@ class Game():
         if imagePath:
             image = this.filesystem.get(imagePath)
         
-        return Level(
+        level = Level(
             xml=xml,
             image=image,
             filesystem=this.filesystem,
         )
+        level.filename = xmlPath
+        
+        return level
     
     def loadObject(
         this,
@@ -78,11 +81,13 @@ class Game():
             classes.object.Object: Where's My Water? object.
         """
         
-        return Object(
+        obj = Object(
             this.filesystem.get(object),
             filesystem = this.filesystem,
             **kwargs
         )
+        obj.filename = object
+        return obj
     
     def loadImagelist(
         this,
@@ -99,11 +104,14 @@ class Game():
         Returns:
             classes.imagelist.Imagelist: Imagelist object.
         """
-        return Imagelist(
+        
+        imagelistObject = Imagelist(
             this.filesystem.get(imagelist),
             filesystem = this.filesystem,
             HD = False,
         )
+        imagelistObject.filename = imagelist
+        return imagelistObject
     
     def loadSprite(
         this,
@@ -119,11 +127,14 @@ class Game():
         Returns:
             classes.sprite.Sprite: Sprite object.
         """
-        return Sprite(
+        
+        spriteObject = Sprite(
             this.filesystem.get(sprite),
             filesystem = this.filesystem,
             **kwargs
         )
+        spriteObject.filename = sprite
+        return spriteObject
     
     def loadTexture(
         this,
@@ -139,6 +150,7 @@ class Game():
         Returns:
             Utils.textures.Texture: Texture object.
         """
+        
         return Texture(
             this.filesystem.get(texture)
         )

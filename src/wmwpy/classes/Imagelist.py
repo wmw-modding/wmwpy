@@ -44,6 +44,7 @@ class Imagelist(GameObject):
         this.textureBasePath = '/Textures/'
         this.pages = []
         this.type = this.Type.IMAGELIST
+        this.filename = ''
 
         this.images = {}
 
@@ -91,6 +92,12 @@ class Imagelist(GameObject):
         Returns:
             bytes: The xml output as bytes.
         """
+        if path == None:
+            if this.filename:
+                path = this.filename
+        else:
+            this.filename = path 
+        
         if path != None:
             if exportImage:
                 if this.type == this.Type.PAGES:
@@ -426,7 +433,7 @@ class Imagelist(GameObject):
             this.file = filename
             
             if this.filesystem.exists(filename):
-                this.filesystem.get(filename).rawcontent = file
+                this.filesystem.get(filename).rawdata = file
             else:
                 this.filesystem.add(filename, file.getvalue())
             
