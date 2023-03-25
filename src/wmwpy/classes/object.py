@@ -141,11 +141,11 @@ class Object(GameObject):
         return output
     
     def updateProperties(this):
-        properties = this.properties.keys()
+        properties = list(this.properties.keys())
         
         for property in properties:
             if property in this.defaultProperties:
-                if this.properties[property] == this.defaultProperties:
+                if this.properties[property] == this.defaultProperties[property]:
                     del this.properties[property]
 
     def getLevelXML(
