@@ -53,8 +53,10 @@ class Object(GameObject):
         this.readXML()
         
     def readXML(this):
-        # specifically specifying type so it's easier to use in vscode
+        """Read object XML
+        """
         
+        # specifically specifying type so it's easier to use in vscode
         tags = {
             'Shapes': this._getShapes,
             'Sprites': this._getSprites,
@@ -71,7 +73,18 @@ class Object(GameObject):
         
         this.getProperties()
     
-    def export(this, path : str = None):
+    def export(this, path : str = None) -> bytes:
+        """Export object XML
+
+        Args:
+            path (str, optional): Filename for object. Defaults to Object.filename.
+
+        Raises:
+            TypeError: Path is not a file
+
+        Returns:
+            bytes: XML file.
+        """
         xml : etree.ElementBase = etree.Element('InteractiveObject')
         
         shapes = etree.Element('Shapes')
@@ -141,6 +154,8 @@ class Object(GameObject):
         return output
     
     def updateProperties(this):
+        """Update properties. Deletes any properties that are the same as defaultProperties.
+        """
         properties = list(this.properties.keys())
         
         for property in properties:
@@ -151,7 +166,15 @@ class Object(GameObject):
     def getLevelXML(
         this,
         filename : str = None,
-    ):
+    ) -> etree.ElementBase:
+        """Gets XML to be used in levels.
+
+        Args:
+            filename (str, optional): Object filename. Defaults to Object.filename.
+
+        Returns:
+            etree.Element: lxml Element
+        """
         if filename == None:
             if this.filename:
                 filename = this.filename
@@ -254,12 +277,20 @@ class Object(GameObject):
 
 class Shape():
     def __init__(this, xml : etree.ElementBase = None) -> None:
+        """Shape for Object
+
+        Args:
+            this (_type_): _description_
+            xml (etree.Element, optional): lxml Element. Defaults to None.
+        """
         this.points = []
         this.xml = xml
         
         this.readXML()
     
     def readXML(this):
+        """Read XML if any.
+        """
         if this.xml == None:
             return
         for element in this.xml:
@@ -270,7 +301,15 @@ class Shape():
                 point = tuple([float(_) for _ in pos.split(' ')])
                 this.points.append(point)
     
-    def getXML(this):
+    def getXML(this) -> etree.ElementBase:
+        """Gets Shape XML for Object.
+
+        Args:
+            this (_type_): _description_
+
+        Returns:
+            etree.Element: lxml Element.
+        """
         xml : etree.ElementBase = etree.Element('Shape')
         for point in this.points:
             etree.SubElement(xml, 'Point', {'pos': ' '.join([str(_) for _ in point])})

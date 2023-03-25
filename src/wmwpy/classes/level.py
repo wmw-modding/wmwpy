@@ -17,7 +17,6 @@ class Level(GameObject):
         """Load level
 
         Args:
-            this (_type_): _description_
             xml (str | bytes | File): XML file for level.
             image (str | bytes | File): Image file for level.
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
@@ -44,6 +43,8 @@ class Level(GameObject):
         this.read()
     
     def read(this):
+        """Read level XML
+        """
         this.objects : list[Object] = []
         this.properties = {}
         
@@ -97,8 +98,19 @@ class Level(GameObject):
         this,
         filename : str = None,
         exportObjects : bool = False,
-        
     ) -> bytes:
+        """Export level
+
+        Args:
+            filename (str, optional): Path to level. Defaults to Level.filename.
+            exportObjects (bool, optional): Whether to export objects. Defaults to False.
+
+        Raises:
+            TypeError: Path is not a file.
+
+        Returns:
+            bytes: XML file.
+        """
         if filename == None:
             if this.filename:
                 filename = this.filename
@@ -107,6 +119,9 @@ class Level(GameObject):
         
         xml : etree.ElementBase = etree.Element('Objects')
         for object in this.objects:
+            if exportObjects:
+                object.export()
+            
             xml.append(object.getLevelXML())
         
         room = etree.Element('Room')
