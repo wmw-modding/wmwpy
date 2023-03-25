@@ -44,7 +44,7 @@ class Level(GameObject):
         this.read()
     
     def read(this):
-        this.objects = []
+        this.objects : list[Object] = []
         this.properties = {}
         
         for element in this.xml:
@@ -92,6 +92,49 @@ class Level(GameObject):
                     
                     if el.tag == 'AbsoluteLocation':
                         this.room = tuple([float(_) for _ in el.get('value').split(' ')])
+    
+    def export(
+        this,
+        filename : str = None,
+        exportObjects : bool = False,
+        
+    ) -> bytes:
+        if filename == None:
+            if this.filename:
+                filename = this.filename
+        else:
+            this.filename = filename
+        
+        xml : etree.ElementBase = etree.Element('Objects')
+        for object in this.objects:
+            xml.append(object.getLevelXML())
+        
+        room = etree.Element('Room')
+        etree.SubElement(room, 'AbsoluteLocation', value = ' '.join([str(_) for _ in this.room]))
+
+        properties = etree.Element('Properties')
+        for name in this.properties:
+            value = this.properties[name]
+            etree.SubElement(properties, 'Property', name = name, value = value)
+        
+        if len(properties):
+            xml.append(properties)
+        
+        this.xml = xml
+        
+        output = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
+        
+        if (file := this.filesystem.get(filename)) != None:
+            if isinstance(file, File):
+                file.write(output)
+            else:
+                raise TypeError(f'Path {filename} is not a file.')
+                
+        else:
+            this.filesystem.add(filename, output)
+        
+        return output
+    
     
     def getObject(this, name : str):
         """
