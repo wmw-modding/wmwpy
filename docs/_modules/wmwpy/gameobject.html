@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.gameobject &#8212; wmwpy 0.0.1 documentation</title>
+    <title>wmwpy.gameobject &#8212; wmwpy 0.0.1-alpha documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -36,6 +36,13 @@
 
 <div class="viewcode-block" id="GameObject"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gameobject.GameObject">[docs]</a><span class="k">class</span> <span class="nc">GameObject</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">filesystem</span> <span class="p">:</span> <span class="n">Filesystem</span> <span class="o">|</span> <span class="n">Folder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gamepath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">assets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load filesystem</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.</span>
+<span class="sd">            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.</span>
+<span class="sd">            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to &#39;/assets&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span>
         <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span>
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
@@ -57,15 +64,26 @@
         <span class="c1">#     print(f&#39;Error: {str(e)}&#39;)</span>
         <span class="c1">#     raise FileNotFoundError(&#39;Must have a valid `filesystem` or `gamepath`&#39;)</span>
     
-<div class="viewcode-block" id="GameObject.test_file"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gameobject.GameObject.test_file">[docs]</a>    <span class="k">def</span> <span class="nf">test_file</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GameObject.get_file"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gameobject.GameObject.get_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_file</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">file</span> <span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">File</span> <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (bytes | wmwpy.Utils.filesystem.File | io.BytesIO | str): Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: File can only be &#39;str&#39;, &#39;bytes&#39;, or file-like object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            io.BytesIO | str: New file object or str.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">fileio</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">rawcontent</span>
+            <span class="n">fileio</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">rawdata</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file can only &#39;str&#39;, &#39;bytes&#39;, or file-like object.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file can only be &#39;str&#39;, &#39;bytes&#39;, or file-like object.&quot;</span><span class="p">)</span>
     
-        <span class="k">return</span> <span class="n">file</span></div></div>
+        <span class="k">return</span> <span class="n">fileio</span></div></div>
     
 </pre></div>
 

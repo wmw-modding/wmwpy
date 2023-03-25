@@ -109,7 +109,7 @@
 <span id="wmwpy-utils-filesystem-module"></span><h2>wmwpy.Utils.filesystem module<a class="headerlink" href="#module-wmwpy.Utils.filesystem" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">File</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.Utils.filesystem.</span></span><span class="sig-name descname"><span class="pre">File</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#wmwpy.Utils.filesystem.FileBase" title="wmwpy.Utils.filesystem.FileBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileBase</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.add">
@@ -127,6 +127,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.listdir">
+<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.listdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.listdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.read">
 <span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.read" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -136,6 +141,11 @@
 <span class="sig-name descname"><span class="pre">testFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.testFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.testFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests what type of file this is.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.File.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#File.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.File.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -197,9 +207,24 @@ replace (bool, optional): Replace any conflicting files? Defaults to False.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.getAssets">
-<span class="sig-name descname"><span class="pre">getAssets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extract_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_imagelist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.getAssets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.getAssets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.</p>
+<span class="sig-name descname"><span class="pre">getAssets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extract_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_imagelist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.getAssets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.getAssets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans the assets directory and loads all files into the filesystem. This is so wmwpy can modify files without modifying the actual files.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>extract_zip (bool, optional): Extrack zip files? Defaults to False.
+split_imagelist (bool, optional): Split imagelist files? Defaults to False.
+hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters <cite>(progress : int, current : str, max : int)</cite>. Defaults to None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>FileNotFoundError: Assets folder does not exist.</p>
+</dd>
+<dt>Returns:</dt><dd><p>this: Current Filesystem object.</p>
+</dd>
+</dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Filesystem.listdir">
+<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Filesystem.listdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Filesystem.listdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -219,7 +244,12 @@ replace (bool, optional): Replace any conflicting files? Defaults to False.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.get" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a></span></span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.Utils.filesystem.Folder.listdir">
+<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Utils/filesystem.html#Folder.listdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Utils.filesystem.Folder.listdir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
