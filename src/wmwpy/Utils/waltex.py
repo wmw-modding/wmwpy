@@ -86,8 +86,23 @@ Image.register_extensions(
 class Waltex():
     format = 'waltex'
     format_description = "Walaber image file"
-    
-    def __init__(this, file : str | bytes, byte_order : str = 'little') -> None:
+
+    def __init__(
+        this,
+        file : str | bytes,
+        byte_order : str = 'little'
+    ) -> None:
+        """Waltex image
+
+        Args:
+            this (_type_): _description_
+            file (str | bytes): Waltex file. Can be path to file, contents of file as bytes, or file-like object.
+            byte_order (str, optional): 'little' or 'big'. Defaults to 'little'.
+
+        Raises:
+            TypeError: file has to be a 'str', 'bytes' or file-like object.
+        """
+        
         this._colorspecs = [
             {
                 'order': 'rgba',

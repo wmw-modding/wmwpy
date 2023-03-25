@@ -1,13 +1,21 @@
 __version__ = "0.0.1-alpha"
 __author__ = 'ego-lay-atman-bay'
 
+import typing
+
 from .Game import Game
 from . import classes
 from . import Font
 from .classes import widget
 from . import Utils
 
-def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None):
+def load(
+    gamepath : str,
+    assets : str = '/assets',
+    db : str = '/Data/water.db',
+    profile : str = None,
+    hook : typing.Callable[[int, str, int], typing.Any] = None,
+):
     """load game
 
     Args:
@@ -17,4 +25,4 @@ def load(gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', 
         profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
     """
     
-    return Game(gamepath=gamepath, assets=assets, db=db, profile=profile)
+    return Game(gamepath=gamepath, assets=assets, db=db, profile=profile, hook = hook)

@@ -3,7 +3,7 @@ from PIL import Image
 import numpy
 from copy import deepcopy
 
-from .Imagelist import Imagelist
+from .imagelist import Imagelist
 from ..Utils.filesystem import *
 from ..gameobject import GameObject
 

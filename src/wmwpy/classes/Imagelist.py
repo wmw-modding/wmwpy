@@ -96,7 +96,7 @@ class Imagelist(GameObject):
             if this.filename:
                 path = this.filename
         else:
-            this.filename = path 
+            this.filename = path
         
         if path != None:
             if exportImage:
