@@ -22,12 +22,26 @@ FILE_READERS = []
 
 class Filesystem():
     def __init__(this, gamepath : str, assets : str) -> None:
+        """wmwpy filesystem
+
+        Args:
+            gamepath (str): Path to game directory.
+            assets (str): Path to assets folder relative to gamepath.
+        """
         this.gamepath = gamepath
         this.assets = assets
         this.parent = this
         this.root = Folder(this, '/')
     
     def get(this, path : str):
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
         return this.root.get(path)
     
     def add(this, path : str, file : str | bytes, replace = False):
@@ -119,10 +133,28 @@ class Filesystem():
         
         return this
     
-    def exists(this, fp : str):
+    def exists(this, fp : str) -> bool:
+        """Test if file path exists.
+
+        Args:
+            this (_type_): _description_
+            fp (str): File path.
+
+        Returns:
+            bool: Whether the path exists.
+        """
         return this.root.exists(fp)
     
-    def listdir(this, path = '/', recursive = False):
+    def listdir(this, path = '/', recursive = False) -> list:
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
         return this.get(path).listdir(recursive = recursive)
     
 # Filesystem helpers
@@ -208,6 +240,11 @@ class File(FileBase):
         return this.mime
         
     def read(this, **kwargs):
+        """Read file.
+
+        Returns:
+            Any: Object for file.
+        """
         this.rawdata.seek(0)
         
         reader = Reader()
@@ -254,20 +291,67 @@ class File(FileBase):
         return this.content
     
     def get(this, path : str):
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
         return this.parent.get(path)
     
     def add(this, path : str, file : bytes, replace = False):
+        """Add file to folder.
+
+        Args:
+            path (str): New file path.
+            content (bytes): Content of file in bytes.
+            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.
+
+        Raises:
+            NotADirectoryError: Path to file contains file, not folder.
+            FileExistsError: File already exists.
+
+        Returns:
+            File: Newly added File.
+        """
         return this.parent.add(path, file, replace = replace)
     
     def exists(this, path : str):
+        """Tests whether path exists.
+
+        Args:
+            path (str): Path to check.
+
+        Returns:
+            bool: Does path exist?
+        """
         return this.parent.exists(path)
     
-    def write(this, data : bytes):
+    def write(this, data : bytes) -> int:
+        """Write data to file.
+
+        Args:
+            data (bytes): New data.
+
+        Returns:
+            int: bytes written.
+        """
         this.rawdata.truncate(0)
         this.rawdata.seek(0)
         return this.rawdata.write(data)
     
     def listdir(this, recursive = False):
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
         return this.parent.listdir(recursive = recursive)
 
 class Folder(FileBase):
@@ -291,6 +375,20 @@ class Folder(FileBase):
         this.files = []
         
     def add(this, path : str, content : bytes, replace = False) -> File:
+        """Add file to folder.
+
+        Args:
+            path (str): New file path.
+            content (bytes): Content of file in bytes.
+            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.
+
+        Raises:
+            NotADirectoryError: Path to file contains file, not folder.
+            FileExistsError: File already exists.
+
+        Returns:
+            File: Newly added File.
+        """
         parts = pathlib.Path(path).parts
         
         file = this._getPath(pathlib.Path(*parts).as_posix())
@@ -317,6 +415,15 @@ class Folder(FileBase):
             
         
     def _getPath(this, path : str):
+        """Get File or Folder with this path.
+
+        Args:
+            this (_type_): _description_
+            path (str): Path to File or Folder.
+
+        Returns:
+            File or Folder: File or Folder.
+        """
         parts = pathlib.Path(path).parts
         file = None
         if parts[0] == '\\':
@@ -331,6 +438,14 @@ class Folder(FileBase):
         return file
     
     def get(this, path : str) -> File:
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
         parts = pathlib.Path(path).parts
         if len(parts) == 0:
             return this
@@ -342,10 +457,27 @@ class Folder(FileBase):
             file = file.get(pathlib.Path(*parts[1::]))
         return file
     
-    def exists(this, path : str):
+    def exists(this, path : str) -> bool:
+        """Tests whether path exists.
+
+        Args:
+            path (str): Path to check.
+
+        Returns:
+            bool: Does path exist?
+        """
         return this.get(path) != None
     
     def listdir(this, recursive = False):
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
         files = []
         for file in this.files:
             files.append(file.path)
