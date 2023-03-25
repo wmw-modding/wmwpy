@@ -274,11 +274,18 @@
 <dt class="sig sig-object py" id="wmwpy.Game.Game.generateFileManifest">
 <span class="sig-name descname"><span class="pre">generateFileManifest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writeFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.generateFileManifest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.generateFileManifest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the <cite>FileManifest.txt</cite> file needed for some games, such as WMM. This just generates a text file with the paths to every file in the <cite>assets</cite> folder (which includes the <cite>FileManifest.txt</cite> file).</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-writeFile (bool, optional): Write the manifest to the <cite>FileManifest.txt</cite> file. Defaults to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>writeFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – Write the manifest to the <cite>FileManifest.txt</cite> file. Defaults to True.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>str: Contents of <cite>FileManifest.txt</cite></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Contents of <cite>FileManifest.txt</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -287,11 +294,18 @@ writeFile (bool, optional): Write the manifest to the <cite>FileManifest.txt</ci
 <dt class="sig sig-object py" id="wmwpy.Game.Game.loadImagelist">
 <span class="sig-name descname"><span class="pre">loadImagelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imagelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.loadImagelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.loadImagelist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load imagelist</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>imagelist (str): Path to <cite>.imagelist</cite> file.
-HD (bool, optional): Whether to use HD textures. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>imagelist</strong> (<em>str</em>) – Path to <cite>.imagelist</cite> file.</p></li>
+<li><p><strong>HD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use HD textures. Defaults to False.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>classes.imagelist.Imagelist: Imagelist object.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Imagelist object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist" title="wmwpy.classes.imagelist.Imagelist">classes.imagelist.Imagelist</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,9 +319,12 @@ HD (bool, optional): Whether to use HD textures. Defaults to False.</p>
 <dt class="sig sig-object py" id="wmwpy.Game.Game.loadLevel">
 <span class="sig-name descname"><span class="pre">loadLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imagePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.loadLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.loadLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load level</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>xmlPath (str, optional): Path to xml file. Defaults to None.
-imagePath (str, optional): Path to image file. Defaults to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xmlPath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to xml file. Defaults to None.</p></li>
+<li><p><strong>imagePath</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to image file. Defaults to None.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -316,10 +333,15 @@ imagePath (str, optional): Path to image file. Defaults to None.</p>
 <dt class="sig sig-object py" id="wmwpy.Game.Game.loadObject">
 <span class="sig-name descname"><span class="pre">loadObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.loadObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.loadObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads object</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>object (str): Path to <cite>.hs</cite> object file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>object</strong> (<em>str</em>) – Path to <cite>.hs</cite> object file.</p>
 </dd>
-<dt>Returns:</dt><dd><p>classes.object.Object: Where’s My Water? object.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Where’s My Water? object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object">classes.object.Object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -328,10 +350,15 @@ imagePath (str, optional): Path to image file. Defaults to None.</p>
 <dt class="sig sig-object py" id="wmwpy.Game.Game.loadSprite">
 <span class="sig-name descname"><span class="pre">loadSprite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.loadSprite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.loadSprite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads sprite.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>sprite (str): Path to <cite>.sprite</cite> file.`</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sprite</strong> (<em>str</em>) – Path to <cite>.sprite</cite> file.`</p>
 </dd>
-<dt>Returns:</dt><dd><p>classes.sprite.Sprite: Sprite object.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sprite object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.sprite.Sprite" title="wmwpy.classes.sprite.Sprite">classes.sprite.Sprite</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,11 +367,18 @@ imagePath (str, optional): Path to image file. Defaults to None.</p>
 <dt class="sig sig-object py" id="wmwpy.Game.Game.loadTexture">
 <span class="sig-name descname"><span class="pre">loadTexture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/Game.html#Game.loadTexture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.Game.Game.loadTexture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get image texture. Doesn’t matter if it’s a <cite>.waltex</cite> image or not.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-texture (str): Path to image file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>texture</strong> (<em>str</em>) – Path to image file.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Utils.textures.Texture: Texture object.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Texture object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.textures.Texture" title="wmwpy.Utils.textures.Texture">Utils.textures.Texture</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -367,12 +401,18 @@ texture (str): Path to image file.</p>
 <dt class="sig sig-object py" id="wmwpy.gameobject.GameObject.get_file">
 <span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BytesIO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BytesIO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="_modules/wmwpy/gameobject.html#GameObject.get_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.gameobject.GameObject.get_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get file</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>file (bytes | wmwpy.Utils.filesystem.File | io.BytesIO | str): Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>bytes</em><em> | </em><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><em>wmwpy.Utils.filesystem.File</em></a><em> | </em><em>io.BytesIO</em><em> | </em><em>str</em>) – Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.</p>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: File can only be ‘str’, ‘bytes’, or file-like object.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – File can only be ‘str’, ‘bytes’, or file-like object.</p>
 </dd>
-<dt>Returns:</dt><dd><p>io.BytesIO | str: New file object or str.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>New file object or str.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>io.BytesIO | str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -386,11 +426,15 @@ texture (str): Path to image file.</p>
 <dt class="sig sig-object py" id="wmwpy.load">
 <span class="sig-prename descclassname"><span class="pre">wmwpy.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/assets'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/Data/water.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>load game</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>gamepath (str): Folder to extracted game.
-assets (str, optional): Relative path to assets folder. Defaults to ‘/assets’.
-db (str, optional): Relative path to database file from assets folder. Defaults to ‘/Data/water.db’.
-profile (str, optional): Relative path to profile file in WMW2. Defaults to <cite>None</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gamepath</strong> (<em>str</em>) – Folder to extracted game.</p></li>
+<li><p><strong>assets</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to assets folder. Defaults to ‘/assets’.</p></li>
+<li><p><strong>db</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to database file from assets folder. Defaults to ‘/Data/water.db’.</p></li>
+<li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to profile file in WMW2. Defaults to <cite>None</cite></p></li>
+<li><p><strong>hook</strong> (<em>Callable</em><em>[</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Hook for loading assets, useful for guis. The function gets called with the paramaters <cite>(progress : int, current : str, max : int)</cite>. Defaults to None.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

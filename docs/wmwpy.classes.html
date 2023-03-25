@@ -130,10 +130,15 @@
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get image from atlas.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>this</strong> (<em>_type_</em>) – _description_</p>
 </dd>
-<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PIL Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PIL.Image.Image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -142,8 +147,12 @@
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.getXML">
 <span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.getXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get xml for image.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lxml element</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml.etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -166,14 +175,18 @@
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add image to imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-name (str): Name of image file used in-game.
-image (PIL.Image.Image): Image to use.
-properties (dict, optional): Additional properties for image. Defaults to {}.
-replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of image file used in-game.</p></li>
+<li><p><strong>image</strong> (<em>PIL.Image.Image</em>) – Image to use.</p></li>
+<li><p><strong>properties</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional properties for image. Defaults to {}.</p></li>
+<li><p><strong>replace</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to replace existing image if there is a conflict. Defaults to False.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>NameError: Image already exists.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NameError</strong> – Image already exists.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,12 +195,19 @@ replace (bool, optional): Whether to replace existing image if there is a confli
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.exportAtlas">
 <span class="sig-name descname"><span class="pre">exportAtlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.exportAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.exportAtlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using <cite>getXML()</cite>.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>gap (tuple, optional): Gap between each image. Defaults to (1,1).
-filename (str, optional): Filename of image. Defaults to <cite>file</cite> property.
-format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gap</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Gap between each image. Defaults to (1,1).</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename of image. Defaults to <cite>file</cite> property.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – Format to save image as. Defaults to ‘webp’.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PIL Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PIL.Image.Image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -207,11 +227,18 @@ format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an image from the imagelist</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-name (str): Name of image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of image.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Imagelist Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image">Imagelist.Page.Image</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -231,11 +258,18 @@ name (str): Name of image.</p>
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getXML">
 <span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the xml for the page / imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Name of image. Defaults to file property.
-type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of image. Defaults to file property.</p></li>
+<li><p><strong>type</strong> (<em>int</em><em>, </em><em>optional</em>) – Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml Element.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml Element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lxml.etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -294,14 +328,22 @@ type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imageli
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportImage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageFormat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the xml of the imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path (str, optional): Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.
-exportImage (bool, optional): Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.
-imageFormat (str, optional): What format to export the images as. Defaults to ‘webp’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.</p></li>
+<li><p><strong>exportImage</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.</p></li>
+<li><p><strong>imageFormat</strong> (<em>str</em><em>, </em><em>optional</em>) – What format to export the images as. Defaults to ‘webp’.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is an existing folder.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is an existing folder.</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: The xml output as bytes.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The xml output as bytes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,10 +352,15 @@ imageFormat (str, optional): What format to export the images as. Defaults to �
 <dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get image from imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name (str): Name of image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of image.</p>
 </dd>
-<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Imagelist Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image">Imagelist.Page.Image</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,13 +417,21 @@ imageFormat (str, optional): What format to export the images as. Defaults to �
 <dt class="sig sig-object py" id="wmwpy.classes.level.Level.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportObjects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/level.html#Level.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.level.Level.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export level</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Path to level. Defaults to Level.filename.
-exportObjects (bool, optional): Whether to export objects. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to level. Defaults to Level.filename.</p></li>
+<li><p><strong>exportObjects</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to export objects. Defaults to False.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is not a file.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is not a file.</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: XML file.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -385,8 +440,9 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.level.Level.getObject">
 <span class="sig-name descname"><span class="pre">getObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/level.html#Level.getObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.level.Level.getObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get object by name</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name (str): Object name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Object name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -410,12 +466,18 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.object.Object.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/object.html#Object.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.object.Object.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export object XML</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path (str, optional): Filename for object. Defaults to Object.filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename for object. Defaults to Object.filename.</p>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is not a file</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is not a file</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: XML file.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -429,10 +491,15 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.object.Object.getLevelXML">
 <span class="sig-name descname"><span class="pre">getLevelXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElementBase</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/object.html#Object.getLevelXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.object.Object.getLevelXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets XML to be used in levels.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Object filename. Defaults to Object.filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Object filename. Defaults to Object.filename.</p>
 </dd>
-<dt>Returns:</dt><dd><p>etree.Element: lxml Element</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml Element</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -469,10 +536,15 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.object.Shape.getXML">
 <span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElementBase</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/object.html#Shape.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.object.Shape.getXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets Shape XML for Object.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>this</strong> (<em>_type_</em>) – _description_</p>
 </dd>
-<dt>Returns:</dt><dd><p>etree.Element: lxml Element.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml Element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -615,10 +687,15 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get image from atlas.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>this</strong> (<em>_type_</em>) – _description_</p>
 </dd>
-<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PIL Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PIL.Image.Image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -627,8 +704,12 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.getXML">
 <span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.getXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get xml for image.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lxml element</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml.etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -651,14 +732,18 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add image to imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-name (str): Name of image file used in-game.
-image (PIL.Image.Image): Image to use.
-properties (dict, optional): Additional properties for image. Defaults to {}.
-replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of image file used in-game.</p></li>
+<li><p><strong>image</strong> (<em>PIL.Image.Image</em>) – Image to use.</p></li>
+<li><p><strong>properties</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional properties for image. Defaults to {}.</p></li>
+<li><p><strong>replace</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to replace existing image if there is a conflict. Defaults to False.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>NameError: Image already exists.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NameError</strong> – Image already exists.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -667,12 +752,19 @@ replace (bool, optional): Whether to replace existing image if there is a confli
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.exportAtlas">
 <span class="sig-name descname"><span class="pre">exportAtlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.exportAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.exportAtlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using <cite>getXML()</cite>.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>gap (tuple, optional): Gap between each image. Defaults to (1,1).
-filename (str, optional): Filename of image. Defaults to <cite>file</cite> property.
-format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gap</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Gap between each image. Defaults to (1,1).</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename of image. Defaults to <cite>file</cite> property.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – Format to save image as. Defaults to ‘webp’.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PIL Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PIL.Image.Image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -692,11 +784,18 @@ format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an image from the imagelist</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>this (_type_): _description_
-name (str): Name of image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>this</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of image.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Imagelist Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#wmwpy.classes.Imagelist.Page.Image" title="wmwpy.classes.Imagelist.Page.Image">Imagelist.Page.Image</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -716,11 +815,18 @@ name (str): Name of image.</p>
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getXML">
 <span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the xml for the page / imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Name of image. Defaults to file property.
-type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of image. Defaults to file property.</p></li>
+<li><p><strong>type</strong> (<em>int</em><em>, </em><em>optional</em>) – Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml Element.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml Element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lxml.etree.Element</p>
 </dd>
 </dl>
 </dd></dl>
@@ -779,14 +885,22 @@ type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imageli
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportImage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageFormat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the xml of the imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path (str, optional): Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.
-exportImage (bool, optional): Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.
-imageFormat (str, optional): What format to export the images as. Defaults to ‘webp’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.</p></li>
+<li><p><strong>exportImage</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.</p></li>
+<li><p><strong>imageFormat</strong> (<em>str</em><em>, </em><em>optional</em>) – What format to export the images as. Defaults to ‘webp’.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is an existing folder.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is an existing folder.</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: The xml output as bytes.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The xml output as bytes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -795,10 +909,15 @@ imageFormat (str, optional): What format to export the images as. Defaults to �
 <dt class="sig sig-object py" id="wmwpy.classes.Imagelist.getImage">
 <span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.getImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get image from imagelist.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name (str): Name of image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of image.</p>
 </dd>
-<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Imagelist Image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#wmwpy.classes.Imagelist.Page.Image" title="wmwpy.classes.Imagelist.Page.Image">Imagelist.Page.Image</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -825,13 +944,21 @@ imageFormat (str, optional): What format to export the images as. Defaults to �
 <dt class="sig sig-object py" id="wmwpy.classes.Level.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportObjects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/level.html#Level.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Level.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export level</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Path to level. Defaults to Level.filename.
-exportObjects (bool, optional): Whether to export objects. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to level. Defaults to Level.filename.</p></li>
+<li><p><strong>exportObjects</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to export objects. Defaults to False.</p></li>
+</ul>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is not a file.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is not a file.</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: XML file.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -840,8 +967,9 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Level.getObject">
 <span class="sig-name descname"><span class="pre">getObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/level.html#Level.getObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Level.getObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get object by name</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name (str): Object name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Object name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -862,12 +990,18 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Object.export">
 <span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/object.html#Object.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Object.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export object XML</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path (str, optional): Filename for object. Defaults to Object.filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Filename for object. Defaults to Object.filename.</p>
 </dd>
-<dt>Raises:</dt><dd><p>TypeError: Path is not a file</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Path is not a file</p>
 </dd>
-<dt>Returns:</dt><dd><p>bytes: XML file.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -881,10 +1015,15 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dt class="sig sig-object py" id="wmwpy.classes.Object.getLevelXML">
 <span class="sig-name descname"><span class="pre">getLevelXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElementBase</span></span></span><a class="reference internal" href="_modules/wmwpy/classes/object.html#Object.getLevelXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Object.getLevelXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets XML to be used in levels.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename (str, optional): Object filename. Defaults to Object.filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Object filename. Defaults to Object.filename.</p>
 </dd>
-<dt>Returns:</dt><dd><p>etree.Element: lxml Element</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lxml Element</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>etree.Element</p>
 </dd>
 </dl>
 </dd></dl>

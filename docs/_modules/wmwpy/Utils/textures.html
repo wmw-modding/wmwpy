@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.Utils.textures &#8212; wmwpy 0.0.1 documentation</title>
+    <title>wmwpy.Utils.textures &#8212; wmwpy 0.0.1-alpha documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -31,12 +31,9 @@
             
   <h1>Source code for wmwpy.Utils.textures</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">from</span> <span class="nn">.waltex</span> <span class="kn">import</span> <span class="n">WaltexImage</span><span class="p">,</span> <span class="n">Waltex</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">import</span> <span class="nn">io</span>
 
 <span class="kn">from</span> <span class="nn">.path</span> <span class="kn">import</span> <span class="n">joinPath</span>
 <span class="kn">from</span> <span class="nn">.XMLTools</span> <span class="kn">import</span> <span class="n">findTag</span>
@@ -46,6 +43,14 @@
 
 <div class="viewcode-block" id="Texture"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.textures.Texture">[docs]</a><span class="k">class</span> <span class="nc">Texture</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">image</span> <span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span> <span class="o">|</span> <span class="n">Waltex</span> <span class="o">|</span> <span class="n">File</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Texture for image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image (Image.Image | Waltex | File): Image object. Can be PIL.Image.Image, Waltex image, or file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: image must be PIL.Image.Image, Waltex, or filesystem.File.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">image</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
@@ -56,19 +61,38 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
             <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;image must be PIL.Image.Image or Waltex&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;image must be PIL.Image.Image, Waltex, or filesystem.File.&#39;</span><span class="p">)</span>
         
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span></div>
 
-<div class="viewcode-block" id="getHDFile"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.textures.getHDFile">[docs]</a><span class="k">def</span> <span class="nf">getHDFile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<div class="viewcode-block" id="getHDFile"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.textures.getHDFile">[docs]</a><span class="k">def</span> <span class="nf">getHDFile</span><span class="p">(</span><span class="n">file</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get HD filename.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file (str): Filename</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: HD filename.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">split</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">split</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
     <span class="n">split</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;-HD&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split</span><span class="p">)</span></div>
             
 <div class="viewcode-block" id="getTexture"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.textures.getTexture">[docs]</a><span class="k">def</span> <span class="nf">getTexture</span><span class="p">(</span><span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">textureSettings</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">size</span> <span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get image.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to Image.</span>
+<span class="sd">        textureSettings (dict): Texture settings.</span>
+<span class="sd">        size (tuple[width,height]): Size of image.</span>
+<span class="sd">        cache (bool, optional): Whether to cache waltex images. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Image.Image: PIL Image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
     <span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;waltex&#39;</span><span class="p">:</span>

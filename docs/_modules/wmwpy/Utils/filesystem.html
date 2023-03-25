@@ -54,12 +54,26 @@
 
 <div class="viewcode-block" id="Filesystem"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem">[docs]</a><span class="k">class</span> <span class="nc">Filesystem</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">gamepath</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">assets</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;wmwpy filesystem</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gamepath (str): Path to game directory.</span>
+<span class="sd">            assets (str): Path to assets folder relative to gamepath.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span>
         <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span>
         <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">this</span>
         <span class="n">this</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
     
 <div class="viewcode-block" id="Filesystem.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="Filesystem.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
@@ -151,10 +165,28 @@
         
         <span class="k">return</span> <span class="n">this</span></div>
     
-<div class="viewcode-block" id="Filesystem.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">fp</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Filesystem.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">fp</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test if file path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            this (_type_): _description_</span>
+<span class="sd">            fp (str): File path.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the path exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Filesystem.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Filesystem.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="n">recursive</span><span class="p">)</span></div></div>
     
 <span class="c1"># Filesystem helpers</span>
@@ -240,6 +272,11 @@
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">mime</span></div>
         
 <div class="viewcode-block" id="File.read"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: Object for file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         
         <span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">()</span>
@@ -286,20 +323,67 @@
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">content</span></div>
     
 <div class="viewcode-block" id="File.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="File.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add file to folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): New file path.</span>
+<span class="sd">            content (bytes): Content of file in bytes.</span>
+<span class="sd">            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotADirectoryError: Path to file contains file, not folder.</span>
+<span class="sd">            FileExistsError: File already exists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File: Newly added File.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="n">replace</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="File.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests whether path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Does path exist?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="File.write"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="File.write"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write data to file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (bytes): New data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: bytes written.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="File.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="n">recursive</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Folder"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder">[docs]</a><span class="k">class</span> <span class="nc">Folder</span><span class="p">(</span><span class="n">FileBase</span><span class="p">):</span>
@@ -323,6 +407,20 @@
         <span class="n">this</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
         
 <div class="viewcode-block" id="Folder.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add file to folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): New file path.</span>
+<span class="sd">            content (bytes): Content of file in bytes.</span>
+<span class="sd">            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotADirectoryError: Path to file contains file, not folder.</span>
+<span class="sd">            FileExistsError: File already exists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File: Newly added File.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
         
         <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_getPath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
@@ -349,6 +447,15 @@
             
         
     <span class="k">def</span> <span class="nf">_getPath</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get File or Folder with this path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            this (_type_): _description_</span>
+<span class="sd">            path (str): Path to File or Folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
         <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">:</span>
@@ -363,6 +470,14 @@
         <span class="k">return</span> <span class="n">file</span>
     
 <div class="viewcode-block" id="Folder.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">this</span>
@@ -374,10 +489,27 @@
             <span class="n">file</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::]))</span>
         <span class="k">return</span> <span class="n">file</span></div>
     
-<div class="viewcode-block" id="Folder.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Folder.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests whether path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Does path exist?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span></div>
     
 <div class="viewcode-block" id="Folder.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
             <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
