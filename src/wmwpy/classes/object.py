@@ -46,7 +46,6 @@ class Object(GameObject):
         this.VertIndices = []
         this.defaultProperties = {}
         this.properties = {}
-        this.type = None
         this.name = name
         
         this.image = None
@@ -140,16 +139,65 @@ class Object(GameObject):
                 this.filesystem.add(path, output)
         
         return output
+    
+    def updateProperties(this):
+        properties = this.properties.keys()
         
+        for property in properties:
+            if property in this.defaultProperties:
+                if this.properties[property] == this.defaultProperties:
+                    del this.properties[property]
+
+    def getLevelXML(
+        this,
+        filename : str = None,
+    ):
+        if filename == None:
+            if this.filename:
+                filename = this.filename
+        else:
+            this.filename = filename
+        
+        xml = etree.Element('Object', name = this.name)
+        etree.SubElement(xml, 'AbsoluteLocation', value = ' '.join([str(_) for _ in this.pos]))
+        
+        properties = etree.SubElement(xml, 'Properties')
+        
+        this.updateProperties()
+        
+        for name in this.properties:
+            value = this.properties[name]
+            
+            etree.SubElement(properties, 'Property', name = name, value = value)
+        
+        return xml
+    
     @property
     def filename(this):
-        if 'filename' in this.properties:
-            return this.properties['filename']
+        if 'Filename' in this.properties:
+            return this.properties['Filename']
         else:
             return None
     @filename.setter
     def filename(this, value : str):
-        this.properties['filename'] = value
+        this.properties['Filename'] = value
+    
+    @property
+    def type(this):
+        if 'Type' in this.properties:
+            return this.properties['Type']
+        elif 'Type' in this.defaultProperties:
+            return this.defaultProperties['Type']
+        else:
+            return None
+    @type.setter
+    def type(this, value : str):
+        if not isinstance(value, str):
+            raise TypeError('type is not a string')
+        
+        if not 'Type' in this.defaultProperties:
+            this.defaultProperties['Type'] = value
+        this.properties['Type'] = value
     
     def _getShapes(this, xml : etree.ElementBase):
         for element in xml:
@@ -202,9 +250,6 @@ class Object(GameObject):
                 value = element.get('value')
                 
                 this.defaultProperties[name] = value
-                
-                if name == 'Type':
-                    this.type = value
         
 
 class Shape():
