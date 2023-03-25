@@ -153,12 +153,12 @@ class Game():
     def loadLayout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
     
-    def generateFileManifest(this, writeFile : bool = True):
+    def generateFileManifest(this, writeFile : bool = True, filename : str = '/FileManifest.txt'):
         """Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).
 
         Args:
-            this (_type_): _description_
             writeFile (bool, optional): Write the manifest to the `FileManifest.txt` file. Defaults to True.
+            filename (str, optional): Filename for FileManifest.txt. Defaults to 'filename'.
 
         Returns:
             str: Contents of `FileManifest.txt`
@@ -166,6 +166,6 @@ class Game():
         manifest = '\n'.join(this.filesystem.listdir(recursive = True))
         
         if writeFile:
-            this.filesystem.add('/FileManifest.txt', manifest, replace = True)
+            this.filesystem.add(filename, manifest, replace = True)
         
         return manifest
