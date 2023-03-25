@@ -101,8 +101,231 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-wmwpy.classes.Imagelist">
-<span id="wmwpy-classes-imagelist-module"></span><h2>wmwpy.classes.Imagelist module<a class="headerlink" href="#module-wmwpy.classes.Imagelist" title="Permalink to this heading">¶</a></h2>
+<section id="module-wmwpy.classes.imagelist">
+<span id="wmwpy-classes-imagelist-module"></span><h2>wmwpy.classes.imagelist module<a class="headerlink" href="#module-wmwpy.classes.imagelist" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.classes.imagelist.</span></span><span class="sig-name descname"><span class="pre">Imagelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem" title="wmwpy.Utils.filesystem.Filesystem"><span class="pre">Filesystem</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder" title="wmwpy.Utils.filesystem.Folder"><span class="pre">Folder</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/assets'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem" title="wmwpy.Utils.filesystem.Filesystem"><span class="pre">Filesystem</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder" title="wmwpy.Utils.filesystem.Folder"><span class="pre">Folder</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/assets'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.HD">
+<span class="sig-name descname"><span class="pre">HD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.HD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.getData">
+<span class="sig-name descname"><span class="pre">getData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get properties from xml.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image from atlas.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.getXML">
+<span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.getXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get xml for image.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show image with default image viewer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.Image.updateProperties">
+<span class="sig-name descname"><span class="pre">updateProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.updateProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.Image.updateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update properties dict.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add image to imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_
+name (str): Name of image file used in-game.
+image (PIL.Image.Image): Image to use.
+properties (dict, optional): Additional properties for image. Defaults to {}.
+replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.</p>
+</dd>
+<dt>Raises:</dt><dd><p>NameError: Image already exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.exportAtlas">
+<span class="sig-name descname"><span class="pre">exportAtlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.exportAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.exportAtlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using <cite>getXML()</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>gap (tuple, optional): Gap between each image. Defaults to (1,1).
+filename (str, optional): Filename of image. Defaults to <cite>file</cite> property.
+format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.file">
+<span class="sig-name descname"><span class="pre">file</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getAtlas">
+<span class="sig-name descname"><span class="pre">getAtlas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getAtlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get atlas image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an image from the imagelist</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_
+name (str): Name of image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getImages">
+<span class="sig-name descname"><span class="pre">getImages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getImages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get images from xml.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getNO_TEX">
+<span class="sig-name descname"><span class="pre">getNO_TEX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getNO_TEX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getNO_TEX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.getXML">
+<span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.getXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the xml for the page / imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>filename (str, optional): Name of image. Defaults to file property.
+type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml Element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.imgSize">
+<span class="sig-name descname"><span class="pre">imgSize</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1,</span> <span class="pre">1)</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.imgSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read xml.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.textureBasePath">
+<span class="sig-name descname"><span class="pre">textureBasePath</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Textures/'</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.textureBasePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Page.updateProperties">
+<span class="sig-name descname"><span class="pre">updateProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.updateProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Page.updateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates all the properties dict.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Type">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Type.IMAGELIST">
+<span class="sig-name descname"><span class="pre">IMAGELIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Type.IMAGELIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.Type.PAGES">
+<span class="sig-name descname"><span class="pre">PAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.Type.PAGES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.combinePages">
+<span class="sig-name descname"><span class="pre">combinePages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.combinePages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.combinePages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportImage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageFormat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the xml of the imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str, optional): Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.
+exportImage (bool, optional): Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.
+imageFormat (str, optional): What format to export the images as. Defaults to ‘webp’.</p>
+</dd>
+<dt>Raises:</dt><dd><p>TypeError: Path is an existing folder.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bytes: The xml output as bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image from imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (str): Name of image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.imagelist.Imagelist.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.imagelist.Imagelist.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the imagelist xml.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-wmwpy.classes.curves">
 <span id="wmwpy-classes-curves-module"></span><h2>wmwpy.classes.curves module<a class="headerlink" href="#module-wmwpy.classes.curves" title="Permalink to this heading">¶</a></h2>
@@ -275,7 +498,7 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="wmwpy.classes.sprite.Sprite.Animation.Frame">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Imagelist</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureBasePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/sprite.html#Sprite.Animation.Frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.sprite.Sprite.Animation.Frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist" title="wmwpy.classes.imagelist.Imagelist"><span class="pre">Imagelist</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureBasePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/sprite.html#Sprite.Animation.Frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.sprite.Sprite.Animation.Frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.classes.sprite.Sprite.Animation.Frame.applyEffects">
@@ -365,6 +588,229 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 </section>
 <section id="module-wmwpy.classes">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wmwpy.classes" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.classes.</span></span><span class="sig-name descname"><span class="pre">Imagelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.File" title="wmwpy.Utils.filesystem.File"><span class="pre">File</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem" title="wmwpy.Utils.filesystem.Filesystem"><span class="pre">Filesystem</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder" title="wmwpy.Utils.filesystem.Folder"><span class="pre">Folder</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/assets'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem" title="wmwpy.Utils.filesystem.Filesystem"><span class="pre">Filesystem</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder" title="wmwpy.Utils.filesystem.Folder"><span class="pre">Folder</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/assets'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.HD">
+<span class="sig-name descname"><span class="pre">HD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.HD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#module-wmwpy.classes.object" title="wmwpy.classes.object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.getData">
+<span class="sig-name descname"><span class="pre">getData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get properties from xml.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image from atlas.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.getXML">
+<span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.getXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get xml for image.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show image with default image viewer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.Image.updateProperties">
+<span class="sig-name descname"><span class="pre">updateProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.Image.updateProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.Image.updateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update properties dict.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add image to imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_
+name (str): Name of image file used in-game.
+image (PIL.Image.Image): Image to use.
+properties (dict, optional): Additional properties for image. Defaults to {}.
+replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.</p>
+</dd>
+<dt>Raises:</dt><dd><p>NameError: Image already exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.exportAtlas">
+<span class="sig-name descname"><span class="pre">exportAtlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.exportAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.exportAtlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using <cite>getXML()</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>gap (tuple, optional): Gap between each image. Defaults to (1,1).
+filename (str, optional): Filename of image. Defaults to <cite>file</cite> property.
+format (str, optional): Format to save image as. Defaults to ‘webp’.</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL.Image.Image: PIL Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.file">
+<span class="sig-name descname"><span class="pre">file</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getAtlas">
+<span class="sig-name descname"><span class="pre">getAtlas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getAtlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getAtlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get atlas image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist.Page.Image" title="wmwpy.classes.imagelist.Imagelist.Page.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an image from the imagelist</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>this (_type_): _description_
+name (str): Name of image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getImages">
+<span class="sig-name descname"><span class="pre">getImages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getImages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getImages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get images from xml.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getNO_TEX">
+<span class="sig-name descname"><span class="pre">getNO_TEX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getNO_TEX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getNO_TEX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.getXML">
+<span class="sig-name descname"><span class="pre">getXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.getXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.getXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the xml for the page / imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>filename (str, optional): Name of image. Defaults to file property.
+type (int, optional): Type of file. 0 for <cite>Page</cite>, 1 for <cite>Imagelist</cite>. Defaults to 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>lxml.etree.Element: lxml Element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.imgSize">
+<span class="sig-name descname"><span class="pre">imgSize</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1,</span> <span class="pre">1)</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.imgSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read xml.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.textureBasePath">
+<span class="sig-name descname"><span class="pre">textureBasePath</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Textures/'</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.textureBasePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Page.updateProperties">
+<span class="sig-name descname"><span class="pre">updateProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Page.updateProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Page.updateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates all the properties dict.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Type">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.Type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#module-wmwpy.classes.object" title="wmwpy.classes.object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Type.IMAGELIST">
+<span class="sig-name descname"><span class="pre">IMAGELIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Type.IMAGELIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.Type.PAGES">
+<span class="sig-name descname"><span class="pre">PAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#wmwpy.classes.Imagelist.Type.PAGES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.combinePages">
+<span class="sig-name descname"><span class="pre">combinePages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.combinePages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.combinePages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportImage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageFormat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'webp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the xml of the imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str, optional): Path to the file in the filesystem to write to. If <cite>None</cite>, it will not save to a file, only report the output. Defaults to None.
+exportImage (bool, optional): Whether to also export the atlas image(s). If there are multiple pages, it’ll append <cite>_split_#</cite> to the end of the filenames. Defaults to False.
+imageFormat (str, optional): What format to export the images as. Defaults to ‘webp’.</p>
+</dd>
+<dt>Raises:</dt><dd><p>TypeError: Path is an existing folder.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bytes: The xml output as bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.getImage">
+<span class="sig-name descname"><span class="pre">getImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.getImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image from imagelist.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (str): Name of image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Imagelist.Page.Image: Imagelist Image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.classes.Imagelist.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/imagelist.html#Imagelist.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Imagelist.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the imagelist xml.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="wmwpy.classes.Layout">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.classes.</span></span><span class="sig-name descname"><span class="pre">Layout</span></span><a class="reference internal" href="_modules/wmwpy/classes/layout.html#Layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Layout" title="Permalink to this definition">¶</a></dt>
@@ -477,7 +923,7 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <dd><p>Bases: <a class="reference internal" href="wmwpy.html#wmwpy.gameobject.GameObject" title="wmwpy.gameobject.GameObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameObject</span></code></a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="wmwpy.classes.Sprite.Animation.Frame">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Imagelist</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureBasePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/sprite.html#Sprite.Animation.Frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Sprite.Animation.Frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#wmwpy.classes.imagelist.Imagelist" title="wmwpy.classes.imagelist.Imagelist"><span class="pre">Imagelist</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textureBasePath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/classes/sprite.html#Sprite.Animation.Frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.classes.Sprite.Animation.Frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#module-wmwpy.classes.object" title="wmwpy.classes.object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="wmwpy.classes.Sprite.Animation.Frame.applyEffects">
@@ -596,7 +1042,7 @@ exportObjects (bool, optional): Whether to export objects. Defaults to False.</p
 <li class="toctree-l3 current"><a class="current reference internal" href="#">wmwpy.classes package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.classes.Imagelist">wmwpy.classes.Imagelist module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.classes.imagelist">wmwpy.classes.imagelist module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.classes.curves">wmwpy.classes.curves module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.classes.layout">wmwpy.classes.layout module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-wmwpy.classes.level">wmwpy.classes.level module</a></li>

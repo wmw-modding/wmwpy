@@ -12,10 +12,10 @@ Subpackages
 Submodules
 ----------
 
-wmwpy.classes.Imagelist module
+wmwpy.classes.imagelist module
 ------------------------------
 
-.. automodule:: wmwpy.classes.Imagelist
+.. automodule:: wmwpy.classes.imagelist
    :members:
    :undoc-members:
    :show-inheritance:
