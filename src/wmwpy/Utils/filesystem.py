@@ -75,7 +75,10 @@ class Filesystem():
             raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
         return this.root.add(path = path, content = file, replace = replace)
-        
+    
+    def remove(this, path : str):
+        return this.root.remove(path)
+    
     def getAssets(
         this,
         extract_zip = False,
@@ -170,11 +173,49 @@ class FileBase():
         """
         this._type = this._Type(None)
         this.name = pathlib.Path(path).parts[0]
-        this.parent = parent
+        this.parent : Folder = parent
+    
+    def get(this, path : str):
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
+        path = pathlib.Path(path).as_posix()
+        if path == '.':
+            return this
+        return this.parent.get(path)
+    
+    def remove(this, path : str = '.'):
+        """Remove file or folder.
+
+        Args:
+            path (str, optional): Path to file or folder. If '.', it removes itself. Defaults to '.'.
+        """
+        path = pathlib.Path(path).as_posix()
+        
+        file = this.get(path)
+        if file == None:
+            return
+
+        file.detatch()
+    
+    def detatch(self):
+        """Detatch this file or folder from it's parent.
+        """
+        if self.parent == None:
+            return
+        self.parent.files.remove(self)
+        self.parent = None
         
     @property
     def path(this):
         if this.parent == None or isinstance(this.parent, Filesystem):
+            if isinstance(this, File) and not isinstance(this.parent, Filesystem):
+                return this.name
             return '/'
         return pathlib.Path(this.parent.path, this.name).as_posix()
     
@@ -290,17 +331,6 @@ class File(FileBase):
         
         return this.content
     
-    def get(this, path : str):
-        """Get file in filesystem.
-
-        Args:
-            path (str): Path to file or folder.
-
-        Returns:
-            File or Folder: File or Folder object.
-        """
-        return this.parent.get(path)
-    
     def add(this, path : str, file : bytes, replace = False):
         """Add file to folder.
 
@@ -353,6 +383,7 @@ class File(FileBase):
             list: List of files and subfolders.
         """
         return this.parent.listdir(recursive = recursive)
+    
 
 class Folder(FileBase):
     def __init__(this, parent = None, path: str = None):
@@ -412,7 +443,6 @@ class Folder(FileBase):
             this.files.append(file)
             
             return file
-            
         
     def _getPath(this, path : str):
         """Get File or Folder with this path.
@@ -496,9 +526,29 @@ class Reader():
         pass
     
     def check(this, mime : str, extension : str, rawdata : io.BytesIO, **kwargs):
+        """Check file type.
+
+        Args:
+            mime (str): File mime.
+            extension (str): File extension
+            rawdata (io.BytesIO): Contents of file as file-like object.
+
+        Returns:
+            bool: Whether the file is of this type.
+        """
         return mime.startswith(this.MIME)
     
     def read(this, mime : str, extension : str, rawdata : io.BytesIO, **kwargs):
+        """Read file.
+
+        Args:
+            mime (str): Mime of file.
+            extension (str): File extension.
+            rawdata (io.BytesIO): File data as file-like object.
+
+        Returns:
+            Any: File data.
+        """
         if 'endoding' in kwargs:
             encoding = kwargs['encoding']
         else:
