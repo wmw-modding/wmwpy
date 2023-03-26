@@ -150,6 +150,50 @@ class Level(GameObject):
         
         return output
     
+    def addObject(
+        this,
+        filename : str | Object,
+        properties : dict = {},
+        pos : tuple[float,float] = (0,0),
+        name : str = 'Obj'
+    ):
+        """Add object to level.
+
+        Args:
+            filename (str | Object): Filename for object. If it's a wmwpy.classes.Object class, then it will use that instead.
+            properties (dict, optional): Object properties. Defaults to {}.
+            pos (tuple[x,y], optional): Position of object in level. Defaults to (0,0).
+            name (str, optional): Name of object. May get renamed if object with name alread exists. Defaults to 'Obj'.
+
+        Returns:
+            Object: wmwpy Object.
+        """
+        if not isinstance(filename, Object):
+            filename = Object(
+                this.filesystem.get(filename),
+                filesystem = this.filesystem,
+                properties = properties,
+                pos = pos,
+                name = name,
+            )
+        else:
+            filename.name = name
+            filename.pos = pos
+            filename.setProperty(properties)
+        
+        obj = filename
+        
+        if this.getObject(obj.name) != None:
+            objnum = 0
+            name = obj.name
+            
+            while this.getObject(obj.name) != None:
+                objnum += 1
+                obj.name = f'{name}{str(objnum)}'
+        
+        this.objects.append(obj)
+        
+        return obj
     
     def getObject(this, name : str):
         """
