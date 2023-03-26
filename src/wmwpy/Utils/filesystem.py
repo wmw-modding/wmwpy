@@ -140,7 +140,6 @@ class Filesystem():
         """Test if file path exists.
 
         Args:
-            this (_type_): _description_
             fp (str): File path.
 
         Returns:
@@ -390,7 +389,6 @@ class Folder(FileBase):
         """Folder
 
         Args:
-            this (_type_): _description_
             parent (Folder): Parent. Use `None` for root.
             path (str): Folder path.
         """
@@ -448,7 +446,6 @@ class Folder(FileBase):
         """Get File or Folder with this path.
 
         Args:
-            this (_type_): _description_
             path (str): Path to File or Folder.
 
         Returns:

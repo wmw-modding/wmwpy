@@ -139,7 +139,6 @@ class Game():
         Get image texture. Doesn't matter if it's a `.waltex` image or not.
 
         Args:
-            this (_type_): _description_
             texture (str): Path to image file.
 
         Returns:

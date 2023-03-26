@@ -95,7 +95,6 @@ class Waltex():
         """Waltex image
 
         Args:
-            this (_type_): _description_
             file (str | bytes): Waltex file. Can be path to file, contents of file as bytes, or file-like object.
             byte_order (str, optional): 'little' or 'big'. Defaults to 'little'.
 

@@ -280,7 +280,6 @@ class Shape():
         """Shape for Object
 
         Args:
-            this (_type_): _description_
             xml (etree.Element, optional): lxml Element. Defaults to None.
         """
         this.points = []
@@ -303,9 +302,6 @@ class Shape():
     
     def getXML(this) -> etree.ElementBase:
         """Gets Shape XML for Object.
-
-        Args:
-            this (_type_): _description_
 
         Returns:
             etree.Element: lxml Element.
