@@ -273,7 +273,19 @@ class Object(GameObject):
                 value = element.get('value')
                 
                 this.defaultProperties[name] = value
-        
+    
+    def setProperty(this, property : str | dict, value : str = ''):
+        """Set object property.
+
+        Args:
+            property (str | dict): Property name to set. If value is dict, it will combine the properties in the dict with the current properties.
+            value (str, optional): Property value. Defaults to ''.
+        """
+        if isinstance(property, dict):
+            for name in property:
+                this.properties[name] = property[name]
+            return
+        this.properties[property] = value
 
 class Shape():
     def __init__(this, xml : etree.ElementBase = None) -> None:
