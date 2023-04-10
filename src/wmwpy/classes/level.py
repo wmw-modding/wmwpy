@@ -1,15 +1,24 @@
 import io
 from lxml import etree
+from PIL import Image
 
 from ..Utils.filesystem import *
 from .object import Object
 from ..gameobject import GameObject
 
 class Level(GameObject):
+    XML_TEMPLATE = b"""<?xml version="1.0"?>
+    <Objects>
+    </Objects>
+    """
+    
+    IMAGE_TEMPLATE = Image.new('P', (90,127), 'white').quantize(colors=256)
+    IMAGE_FORMAT = 'PNG'
+    
     def __init__(
         this,
-        xml : str | bytes | File,
-        image : str | bytes | File ,
+        xml : str | bytes | File = None,
+        image : str | bytes | File = None,
         filesystem : Filesystem | Folder = None,
         gamepath : str = None,
         assets : str = '/assets'
@@ -32,9 +41,15 @@ class Level(GameObject):
         
         super().__init__(filesystem, gamepath, assets)
         
-        this.xml_file = super().get_file(xml)
+        this.xml_file = super().get_file(xml, template = this.XML_TEMPLATE)
         
         this.xml = etree.parse(this.xml_file).getroot()
+        
+        this.image_file = super().get_file(image)
+        if this.image_file == None:
+            this.image = this.IMAGE_TEMPLATE.copy()
+        else:
+            this.image = Image.open(this.image_file).quantize(colors=256)
         
         this.objects = []
         this.properties = {}

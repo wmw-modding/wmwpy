@@ -12,7 +12,7 @@ import io
 import os
 
 class Imagelist(GameObject):
-    TEMPLATE = """<?xml version="1.0"?>
+    TEMPLATE = b"""<?xml version="1.0"?>
     <ImageList imgSize="512 512" file="" textureBasePath="/Textures/">
     </ImageList>
     """

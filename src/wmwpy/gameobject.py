@@ -35,7 +35,7 @@ class GameObject():
     def get_file(
         this,
         file : bytes | File | io.BytesIO | str,
-        template : str | io.BytesIO = '',
+        template : str | io.BytesIO = None,
         ) -> io.BytesIO | str:
         """Get file
 
@@ -54,12 +54,14 @@ class GameObject():
         elif isinstance(file, File):
             fileio = file.rawdata
         elif file == None:
-            if isinstance(template, io.BytesIO):
-                return template
+            if template != None:
+                return this.get_file(template)
             else:
-                return io.BytesIO(template.encode())
+                return None
         elif not hasattr(file, 'read') and not isinstance(file, str):
             raise TypeError(f"file can only be 'str', 'bytes', or file-like object.")
+        else:
+            return file
     
         return fileio
     

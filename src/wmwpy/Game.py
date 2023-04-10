@@ -44,6 +44,11 @@ class Game():
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
         """
+        split = os.path.splitext(xmlPath)
+        if split[1] == '':
+            imagePath = '.'.join([split[0], 'png'])
+            xmlPath = '.'.join([split[0], 'xml'])
+        
         xml = None
         if xmlPath:
             xml = this.filesystem.get(xmlPath)
