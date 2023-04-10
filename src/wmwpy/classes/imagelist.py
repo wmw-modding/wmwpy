@@ -12,13 +12,18 @@ import io
 import os
 
 class Imagelist(GameObject):
+    TEMPLATE = """<?xml version="1.0"?>
+    <ImageList imgSize="512 512" file="" textureBasePath="/Textures/">
+    </ImageList>
+    """
+    
     class Type():
         IMAGELIST = 0
         PAGES = 1
     
     def __init__(
         this,
-        file : str | bytes | File,
+        file : str | bytes | File = None,
         filesystem : Filesystem | Folder = None,
         gamepath : str = None, assets : str = '/assets',
         HD : bool = False
@@ -37,7 +42,7 @@ class Imagelist(GameObject):
         
         super().__init__(filesystem, gamepath, assets)
         
-        this.file = super().get_file(file)
+        this.file = super().get_file(file, template = this.TEMPLATE)
 
         this.HD = HD
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
@@ -376,6 +381,10 @@ class Imagelist(GameObject):
         def getAtlas(this):
             """Get atlas image.
             """
+            if not this.file:
+                image = Texture(PIL.Image.new('RGBA', this.size))
+                this.atlas = image.image.copy()
+                return
             if this.filesystem.exists(this.file):
                 file = this.filesystem.get(this.file)
                 image = Texture(file.read())

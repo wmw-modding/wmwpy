@@ -36,7 +36,7 @@ class Game():
         this.filesystem = Filesystem(this.gamepath, this.assets)
         this.filesystem.getAssets(hook = hook)
         
-    def loadLevel(this, xmlPath : str = None, imagePath : str = None, ):
+    def Level(this, xmlPath : str = None, imagePath : str = None, ):
         """
         Load level
 
@@ -61,7 +61,7 @@ class Game():
         
         return level
     
-    def loadObject(
+    def Object(
         this,
         object : str,
         **kwargs
@@ -84,16 +84,16 @@ class Game():
         obj.filename = object
         return obj
     
-    def loadImagelist(
+    def Imagelist(
         this,
-        imagelist : str,
+        imagelist : str = None,
         HD = False,
     ):
         """
         Load imagelist
 
         Args:
-            imagelist (str): Path to `.imagelist` file.
+            imagelist (str): Path to `.imagelist` file. Defaults to None
             HD (bool, optional): Whether to use HD textures. Defaults to False.
 
         Returns:
@@ -108,7 +108,7 @@ class Game():
         imagelistObject.filename = imagelist
         return imagelistObject
     
-    def loadSprite(
+    def Sprite(
         this,
         sprite : str,
         **kwargs
@@ -131,7 +131,7 @@ class Game():
         spriteObject.filename = sprite
         return spriteObject
     
-    def loadTexture(
+    def Texture(
         this,
         texture : str,
     ):
@@ -149,7 +149,7 @@ class Game():
             this.filesystem.get(texture)
         )
     
-    def loadLayout(this, layout : str):
+    def Layout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
     
     def generateFileManifest(this, writeFile : bool = True, filename : str = '/FileManifest.txt'):
