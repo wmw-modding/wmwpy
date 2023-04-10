@@ -473,6 +473,9 @@ class Folder(FileBase):
         Returns:
             File or Folder: File or Folder object.
         """
+        if path == None:
+            return None
+        
         parts = pathlib.Path(path).parts
         if len(parts) == 0:
             return this
