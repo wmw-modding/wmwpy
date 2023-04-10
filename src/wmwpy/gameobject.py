@@ -32,11 +32,16 @@ class GameObject():
         #     print(f'Error: {str(e)}')
         #     raise FileNotFoundError('Must have a valid `filesystem` or `gamepath`')
     
-    def get_file(this, file : bytes | File | io.BytesIO | str) -> io.BytesIO | str:
+    def get_file(
+        this,
+        file : bytes | File | io.BytesIO | str,
+        template : str | io.BytesIO = '',
+        ) -> io.BytesIO | str:
         """Get file
 
         Args:
             file (bytes | wmwpy.Utils.filesystem.File | io.BytesIO | str): Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.
+            template (str | io.BytesIO, optional): Fallback for file if file == None. Defaults to ''
 
         Raises:
             TypeError: File can only be 'str', 'bytes', or file-like object.
@@ -48,6 +53,11 @@ class GameObject():
             fileio = io.BytesIO(file)
         elif isinstance(file, File):
             fileio = file.rawdata
+        elif file == None:
+            if isinstance(template, io.BytesIO):
+                return template
+            else:
+                return io.BytesIO(template.encode())
         elif not hasattr(file, 'read') and not isinstance(file, str):
             raise TypeError(f"file can only be 'str', 'bytes', or file-like object.")
     
