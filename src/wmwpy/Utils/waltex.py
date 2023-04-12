@@ -19,9 +19,9 @@ try:
         EXTENSION = 'waltex'
 
         def __init__(self):
-    t__(
+            super(_WaltexFile, self).__init__(
                 mime=_WaltexFile.MIME,
-    NSION,
+                extension=_WaltexFile.EXTENSION,
             )
 
         def match(self, buf):
@@ -32,7 +32,7 @@ try:
                     buf[3] == 0x54)
 
     filetype.add_type(_WaltexFile())
-    # filetype.guess()
+# filetype.guess()
 except:
     # optional filetype addition
     pass
