@@ -11,31 +11,31 @@ import io
 import sys
 # import json
 
-# try:
-import filetype
+try:
+    import filetype
 
-class _WaltexFile(filetype.Type):
-    MIME = 'image/waltex'
-    EXTENSION = 'waltex'
+    class _WaltexFile(filetype.Type):
+        MIME = 'image/waltex'
+        EXTENSION = 'waltex'
 
-    def __init__(self):
-        super(_WaltexFile, self).__init__(
-            mime=_WaltexFile.MIME,
-            extension=_WaltexFile.EXTENSION,
-        )
+        def __init__(self):
+    t__(
+                mime=_WaltexFile.MIME,
+    NSION,
+            )
 
-    def match(self, buf):
-        return (len(buf) > 3 and
-                buf[0] == 0x57 and
-                buf[1] == 0x41 and
-                buf[2] == 0x4C and
-                buf[3] == 0x54)
+        def match(self, buf):
+            return (len(buf) > 3 and
+                    buf[0] == 0x57 and
+                    buf[1] == 0x41 and
+                    buf[2] == 0x4C and
+                    buf[3] == 0x54)
 
-filetype.add_type(_WaltexFile())
-# filetype.guess()
-# except:
+    filetype.add_type(_WaltexFile())
+    # filetype.guess()
+except:
     # optional filetype addition
-    # pass
+    pass
 
 # add waltex image to PIL
 # Thanks to Mark Setchell for most of this code https://stackoverflow.com/a/75511423/17129659
