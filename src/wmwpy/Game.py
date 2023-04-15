@@ -8,13 +8,20 @@ from .classes import *
 os.path.isdir
 
 class Game():
+    _DB = '/Data/water.db'
+    _BASEASSETS = '/'
+    _PROFILE = None
+    
+    game = 'WMW'
+    
     def __init__(
         this,
         gamepath : str, assets : str = '/assets',
         db : str = '/Data/water.db',
         profile : str = None,
         baseassets : str = '/',
-        hook : typing.Callable[[int, str, int], typing.Any] = None
+        platform : typing.Literal['android', 'ios'] = 'android',
+        hook : typing.Callable[[int, str, int], typing.Any] = None,
     ) -> None:
         """load game
 
@@ -24,14 +31,20 @@ class Game():
             db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
             hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
         """
+        if gamepath == None:
+            return
+        
         this.gamepath = os.path.abspath(gamepath)
         # print(f'{gamepath = }\n{this.gamepath = }')
         this.assets = assets
-        this.db = db
-        this.profile = profile
-        this.baseassets = baseassets
+        this.db = db or this._DB
+        this.profile = profile or this._PROFILE
+        this.baseassets = baseassets or this._BASEASSETS
+        this.platform = platform
+        
         
         this.updateFilesystem(hook = hook)
         

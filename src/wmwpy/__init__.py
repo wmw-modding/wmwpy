@@ -8,19 +8,24 @@ from . import classes
 from . import Font
 from .classes import widget
 from . import Utils
+from .gametemplate import GAMES
 
 def load(
     gamepath : str,
-    assets : str = '/assets',
-    db : str = '/Data/water.db',
+    platform : typing.Literal['android', 'ios'] = 'android',
+    game : str = 'WMW',
+    assets : str = None,
+    db : str = None,
     profile : str = None,
-    baseassets : str = '/',
+    baseassets : str = None,
     hook : typing.Callable[[int, str, int], typing.Any] = None,
 ):
     """load game
 
     Args:
         gamepath (str): Folder to extracted game.
+        platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
+        game (str, optional): Which game is being loaded. A full list of games is in the `gametemplate.GAMES` variable. Defaults to 'WMW'. 
         assets (str, optional): Relative path to assets folder. Defaults to '/assets'.
         db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
         profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
@@ -28,4 +33,36 @@ def load(
         hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
     """
     
-    return Game(gamepath=gamepath, assets=assets, db=db, profile=profile, hook = hook, baseassets=baseassets)
+    game = game.upper()
+    platform = platform.lower()
+    
+    platforms = {
+        'android': {
+            'assets': '/assets',
+        },
+        'ios': {
+            'assets': '/Content',
+        },
+    }
+    
+    if assets == None:
+        assets = platforms[platform]['assets']
+    
+    try:
+        return GAMES[game](
+            gamepath=gamepath,
+            assets=assets,
+            db=db,
+            profile=profile,
+            hook = hook,
+            baseassets=baseassets
+        )
+    except:
+        return Game(
+            gamepath=gamepath,
+            assets=assets,
+            db=db,
+            profile=profile,
+            hook = hook,
+            baseassets=baseassets
+        )
