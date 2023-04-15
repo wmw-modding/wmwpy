@@ -21,7 +21,8 @@ class Level(GameObject):
         image : str | bytes | File = None,
         filesystem : Filesystem | Folder = None,
         gamepath : str = None,
-        assets : str = '/assets'
+        assets : str = '/assets',
+        baseassets : str = '/',
     ) -> None:
         """Load level
 
@@ -31,6 +32,7 @@ class Level(GameObject):
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
         """
         
         this.gamepath = gamepath
@@ -39,7 +41,7 @@ class Level(GameObject):
         if this.assets == None:
             this.assets = '/assets'
         
-        super().__init__(filesystem, gamepath, assets)
+        super().__init__(filesystem, gamepath, assets, baseassets)
         
         this.xml_file = super().get_file(xml, template = this.XML_TEMPLATE)
         

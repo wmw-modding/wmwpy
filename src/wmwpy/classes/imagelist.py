@@ -26,7 +26,8 @@ class Imagelist(GameObject):
         file : str | bytes | File = None,
         filesystem : Filesystem | Folder = None,
         gamepath : str = None, assets : str = '/assets',
-        HD : bool = False
+        baseassets : str = '/',
+        HD : bool = False,
     ) -> None:
         """
         Get imagelist from file
@@ -35,12 +36,13 @@ class Imagelist(GameObject):
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             HD (bool, optional): Whether to use HD textures. Defaults to False.
             gamepath (str, optional): Path to game. Only is used when filesystem is `Folder` or `None`. Defaults to None.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             assets (str, optional): Path to assets relative to gamepath. Defaults to '/assets'.
         Raises:
             FileNotFoundError: Filesystem is not usable and no gamepath.
         """
         
-        super().__init__(filesystem, gamepath, assets)
+        super().__init__(filesystem, gamepath, assets, baseassets)
         
         this.file = super().get_file(file, template = this.TEMPLATE)
 

@@ -21,15 +21,22 @@ FILE_READERS = []
 # Filesystem object.
 
 class Filesystem():
-    def __init__(this, gamepath : str, assets : str) -> None:
+    def __init__(
+        this,
+        gamepath : str,
+        assets : str,
+        baseassets : str = '/'
+    ) -> None:
         """wmwpy filesystem
 
         Args:
             gamepath (str): Path to game directory.
             assets (str): Path to assets folder relative to gamepath.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
         """
         this.gamepath = gamepath
         this.assets = assets
+        this.baseassets = baseassets
         this.parent = this
         this.root = Folder(this, '/')
     

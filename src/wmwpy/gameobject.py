@@ -3,18 +3,26 @@ from .Utils.filesystem import *
 import io
 
 class GameObject():
-    def __init__(this, filesystem : Filesystem | Folder = None, gamepath : str = None, assets : str = '/assets') -> None:
+    def __init__(
+        this,
+        filesystem : Filesystem | Folder = None,
+        gamepath : str = None,
+        assets : str = '/assets',
+        baseassets : str = '/',
+    ) -> None:
         """Load filesystem
 
         Args:
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
         """
         this.gamepath = gamepath
         this.assets = assets
         if this.assets == None:
             this.assets = '/assets'
+        this.baseassets = baseassets
         
         # try:
         this.filesystem = filesystem

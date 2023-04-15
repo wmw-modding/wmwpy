@@ -14,6 +14,7 @@ class Object(GameObject):
         filesystem : Filesystem | Folder = None,
         gamepath : str = None,
         assets : str = '/assets',
+        baseassets : str = '/',
         properties : dict = {},
         pos : tuple | str = (0,0),
         name : str = 'Obj'
@@ -23,13 +24,14 @@ class Object(GameObject):
         Args:
             gamepath (str): Game path
             assets (str): Assets path, relative to game path
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             object (str): Object file relative to assets path. Must be `.hs` file.
             properties (dict, optional): Object properties that override default properties. Defaults to {}.
             position ((tuple, str), optional): Object position. Can be string or tuple. Defaults to (0,0).
             name (str): The name of the object. Defaults to `'Obj'`
         """
         
-        super().__init__(filesystem, gamepath, assets)
+        super().__init__(filesystem, gamepath, assets, baseassets)
         
         this.file = super().get_file(file)
         

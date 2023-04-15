@@ -13,10 +13,11 @@ class Sprite(GameObject):
         file : str | bytes | File,
         filesystem: Filesystem | Folder = None,
         gamepath: str = None, assets: str = '/assets',
+        baseassets : str = '/',
         properties : dict = {}
     ) -> None:
         
-        super().__init__(filesystem, gamepath, assets)
+        super().__init__(filesystem, gamepath, assets, baseassets)
         this.file = super().get_file(file)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
