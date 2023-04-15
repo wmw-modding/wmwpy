@@ -28,4 +28,4 @@ def load(
         hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
     """
     
-    return Game(gamepath=gamepath, assets=assets, db=db, profile=profile, hook = hook)
+    return Game(gamepath=gamepath, assets=assets, db=db, profile=profile, hook = hook, baseassets=baseassets)
