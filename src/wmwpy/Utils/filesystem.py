@@ -166,6 +166,35 @@ class Filesystem():
         """
         return this.get(path).listdir(recursive = recursive)
     
+    def dump(this, output : str = None):
+        if output == None:
+            output = joinPath(this.gamepath, this.assets)
+        
+        print(f'output: {output}')
+        
+        files = this.listdir(recursive=True)
+        for path in files:
+            file = this.get(path)
+            if file.is_dir():
+                continue
+            parts = pathlib.Path(path).parts
+            
+            if parts[0] in ['/', '\\', '']:
+                parts = parts[1::]
+            
+            print(f'new: {parts}')
+            
+            newpath = pathlib.Path(output, *parts)
+            
+            print(f'writing: {newpath.as_posix()}')
+            
+            newpath.parent.mkdir(exist_ok=True)
+            
+            with open(newpath, 'wb') as f:
+                f.write(file.rawdata.getvalue())
+        
+        
+    
 # Filesystem helpers
 class FileBase():
     name = ''
@@ -216,6 +245,9 @@ class FileBase():
             return
         self.parent.files.remove(self)
         self.parent = None
+    
+    def is_dir(this):
+        return this._type.value == this._Type.FOLDER
         
     @property
     def path(this):
