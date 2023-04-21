@@ -5,8 +5,6 @@ from .Utils import Filesystem
 from .Utils import Texture
 from .classes import *
 
-os.path.isdir
-
 class Game():
     _DB = '/Data/water.db'
     _BASEASSETS = '/'
