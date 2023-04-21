@@ -66,20 +66,20 @@ class Filesystem():
         Returns:
             File: File object of the added file.
         """
-        if isinstance(file, str):
-            with open(file, 'rb') as f:
-                file = f.read()
-            # print('file')
-        elif isinstance(file, bytes):
-            # print('bytes')
-            pass
-        elif hasattr(file, 'read'):
-            file = file.read()
-            if isinstance(file, str):
-                file = file.encode()
-            # print('file-like')
-        else:
-            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
+        # if isinstance(file, str):
+        #     with open(file, 'rb') as f:
+        #         file = f.read()
+        #     # print('file')
+        # elif isinstance(file, bytes):
+        #     # print('bytes')
+        #     pass
+        # elif hasattr(file, 'read'):
+        #     file = file.read()
+        #     if isinstance(file, str):
+        #         file = file.encode()
+        #     # print('file-like')
+        # else:
+        #     raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
         return this.root.add(path = path, content = file, replace = replace)
     
@@ -190,8 +190,10 @@ class Filesystem():
             
             newpath.parent.mkdir(exist_ok=True)
             
+            data = file.rawdata.getvalue()
+            
             with open(newpath, 'wb') as f:
-                f.write(file.rawdata.getvalue())
+                f.write(data)
         
         
     
@@ -280,7 +282,12 @@ class FileBase():
     
     
 class File(FileBase):
-    def __init__(this, parent, path: str, data : bytes):
+    def __init__(
+        this,
+        parent,
+        path: str,
+        data : bytes | str | io.BytesIO,
+    ):
         """File
 
         Args:
@@ -290,13 +297,43 @@ class File(FileBase):
         """
         super().__init__(parent, path)
         this._type.value = this._Type.FILE
-        this._rawcontent = data
         
-        this.rawdata = io.BytesIO(data)
-        # seek back to the start to be able to read the data later.
-        this.rawdata.seek(0)
+        this._datatype = 'raw'
+        
+        if isinstance(data, bytes):
+            this._rawcontent = data
+        elif isinstance(data, str):
+            if os.path.exists(data):
+                this._rawcontent = data
+                this._datatype = 'path'
+            else:
+                this._rawcontent = data.encode()
+        elif isinstance(data, io.BytesIO):
+            this._rawcontent = data.getvalue()
+        elif isinstance(data, File):
+            this._rawcontent = data._rawcontent
+            this._datatype = data._datatype
+        elif hasattr(data, 'read'):
+            this._rawcontent = data.read()
+            if isinstance(this._rawcontent, str):
+                this._rawcontent = this._rawcontent.encode()
+        else:
+            this._rawcontent = bytes(data)
         
         this.content = None
+        
+        if this._datatype == 'raw':
+            this._getdata()
+        
+    def _getdata(this):
+        if this._datatype == 'path':
+            with open(this._rawcontent, 'rb') as file:
+                this._rawcontent = file.read()
+            this._datatype = 'raw'
+        
+        this.rawdata = io.BytesIO(this._rawcontent)
+        # seek back to the start to be able to read the data later.
+        this.rawdata.seek(0)
         
         this.testFile()
         
@@ -317,6 +354,26 @@ class File(FileBase):
             this.extension = this.type.extension
             
         return this.mime
+    
+    @property
+    def rawdata(this) -> io.BytesIO:
+        if this._datatype == 'path':
+            this._getdata()
+        
+        return this._rawdata
+    @rawdata.setter
+    def rawdata(this, value : io.BytesIO):
+        this._rawdata : io.BytesIO = value
+    
+    @property
+    def extension(this):
+        if this._datatype == 'path':
+            return os.path.splitext(this._rawcontent)[1::]
+        else:
+            this._extension
+    @extension.setter
+    def extension(this, value):
+        this._extension = value
         
     def read(this, **kwargs):
         """Read file.
@@ -324,6 +381,10 @@ class File(FileBase):
         Returns:
             Any: Object for file.
         """
+        
+        if this._datatype == 'path':
+            this._getdata()
+        
         this.rawdata.seek(0)
         
         reader = Reader()
