@@ -32,6 +32,9 @@ class GameObject():
             
         elif isinstance(this.filesystem, Folder):
             pass
+        
+        elif hasattr(this.filesystem, 'filesystem'):
+            this.filesystem = this.filesystem.filesystem
 
         else:
             this.filesystem = Filesystem(this.gamepath, this.assets)
@@ -72,4 +75,3 @@ class GameObject():
             return file
     
         return fileio
-    
