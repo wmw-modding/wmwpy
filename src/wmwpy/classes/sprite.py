@@ -1,10 +1,12 @@
 from lxml import etree
-from PIL import Image
+from PIL import Image, ImageTk
 import numpy
 from copy import deepcopy
+import math
 
 from .imagelist import Imagelist
 from ..Utils.filesystem import *
+from ..Utils.XMLTools import strbool
 from ..gameobject import GameObject
 
 class Sprite(GameObject):
@@ -23,9 +25,50 @@ class Sprite(GameObject):
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
         this.properties = deepcopy(properties)
-        this.animations = []
+        this.animations : list[Sprite.Animation] = []
+        
+        this.scale = 4
         
         this.readXML()
+        this.animation = 0
+    
+    def setAnimation(this, animation : str | int):
+        this.animation = animation
+    
+    @property
+    def image(this):
+        image = this.animation.image.copy()
+        gridSize = numpy.array(this.gridSize)
+        size = gridSize * this.scale
+        size = [abs(math.floor(x)) for x in size]
+        image = image.resize(size)
+        
+        image = image.rotate(this.angle, Image.BILINEAR, expand=True)
+        
+        return image
+    
+    @property
+    def animation(this) -> 'Sprite.Animation':
+        return this._currentAnimation
+    @animation.setter
+    def animation(this, animation : str | int):
+        if isinstance(animation, (int, float)):
+            animation = int(animation)
+            this._currentAnimation = this.animations[animation]
+        elif isinstance(animation, str):
+            for a in this.animations:
+                if a.name == animation:
+                    this._currentAnimation = a
+                    break
+        elif isinstance(animation, this.Animation):
+            this._currentAnimation = animation
+    
+    @property
+    def frame(this):
+        return this.animation.frame
+    @frame.setter
+    def frame(this, value : int):
+        this.animation.frame = value
     
     @property
     def filename(this):
@@ -72,7 +115,57 @@ class Sprite(GameObject):
                 this.filesystem.add(path, output)
         
         return output
-        
+    
+    @property
+    def visible(this):
+        if 'visible' in this.properties:
+            return strbool(this.properties['visible'])
+        return False
+    @visible.setter
+    def visible(this, value : bool | str):
+        this.properties['visible'] = str(strbool(value)).lower()
+    
+    @property
+    def isBackground(this):
+        if 'isBackground' in this.properties:
+            return strbool(this.properties['isBackground'])
+        return False
+    @isBackground.setter
+    def isBackground(this, value : bool | str):
+        this.properties['isBackground'] = str(strbool(value)).lower()
+    
+    @property
+    def gridSize(this):
+        if 'gridSize' in this.properties:
+            return tuple([float(x) for x in this.properties['gridSize'].split(' ')])
+        return (1,1)
+    @gridSize.setter
+    def gridSize(this, value : tuple[int,int] | str):
+        if isinstance(value, str):
+            this.properties['gridSize'] = value
+        elif isinstance(value, (tuple, list)):
+            this.properties['gridSize'] = ' '.join([str(x) for x in value])
+    
+    @property
+    def pos(this):
+        if 'pos' in this.properties:
+            return tuple([float(x) for x in this.properties['pos'].split(' ')])
+        return (0,0)
+    @pos.setter
+    def pos(this, value : tuple[int,int] | str):
+        if isinstance(value, str):
+            this.properties['pos'] = value
+        elif isinstance(value, (tuple, list)):
+            this.properties['pos'] = ' '.join([str(x) for x in value])
+    
+    @property
+    def angle(this):
+        if 'angle' in this.properties:
+            return float(this.properties['angle'])
+        return 0
+    @angle.setter
+    def angle(this, value : int | float):
+        this.properties['angle'] = str(value)
 
     class Animation(GameObject):
         def __init__(this, xml : str | etree.ElementBase, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets') -> None:
@@ -91,9 +184,27 @@ class Sprite(GameObject):
             this.playbackMode = 'ONCE'
             this.loopCount = 1
             
-            this.frames = []
+            this._PhotoImage = None
+            
+            this.frame = 0
+            
+            this.frames : list[Sprite.Animation.Frame] = []
             
             this.readXML()
+        
+        @property
+        def image(this):
+            if this.frame > len(this.frames):
+                this.frame = 0
+            if this.frame < 0:
+                this.frame = len(this.frames)
+            
+            return this.frames[this.frame].image
+        
+        @property
+        def PhotoImage(this):
+            this._PhotoImage = ImageTk.PhotoImage(this.image)
+            return this._PhotoImage
             
         def readXML(this):
             this.getAttributes()
@@ -187,7 +298,7 @@ class Sprite(GameObject):
                 this.angleDeg = this._angleDeg
                 this.repeat = this._repeat
                 
-                this.image = None
+                
                 
                 this.getData()
                 this.getImage()
@@ -206,12 +317,16 @@ class Sprite(GameObject):
                 
             def getImage(this):
                 this._image = this.atlas.getImage(this.name)
-                this.image = this._image.image.copy()
-                
-            def applyEffects(this):
-                this.image = this._image.image.copy()
-                this.image = this.image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
-                this.image = this.image.rotate(this.angleDeg)
+            
+            @property
+            def image(this):
+                image = this._image.image.copy()
+                image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                image = image.rotate(this.angleDeg)
+                return image
+            @image.setter
+            def image(this, image : Image.Image):
+                this._image = image
             
             def updateProperties(this):
                 def updateProperty(property : str, value, default):

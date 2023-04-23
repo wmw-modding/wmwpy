@@ -12,3 +12,9 @@ def findTag(root : etree.ElementBase, tag : str) -> etree.Element:
             return e
         
     return None
+
+def strbool(value : str):
+    if isinstance(value, bool):
+        return value
+    else:
+        return value.lower() in ("yes", "true", "t", "1")

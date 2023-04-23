@@ -2,15 +2,19 @@ import lxml
 from lxml import etree
 import io
 from copy import deepcopy
+from PIL import Image
+import numpy
+import math
 
 from ..gameobject import GameObject
 from .sprite import Sprite
 from ..Utils.filesystem import *
 
+from ..Utils.XMLTools import strbool
 class Object(GameObject):
     def __init__(
         this,
-        file : str | bytes | File ,
+        file : str | bytes | File,
         filesystem : Filesystem | Folder = None,
         gamepath : str = None,
         assets : str = '/assets',
@@ -42,17 +46,86 @@ class Object(GameObject):
             this.pos = tuple(pos)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
-        this.sprites = []
-        this.shapes = []
-        this.UVs = []
-        this.VertIndices = []
+        this.sprites : list[Sprite] = []
+        this.shapes : list[Shape] = []
+        this.UVs : list[tuple[int,int]] = []
+        this.VertIndices : list[int] = []
         this.defaultProperties = {}
         this.properties = {}
         this.name = name
         
-        this.image = None
-        
         this.readXML()
+        
+        this.scale = 5
+    
+    @property
+    def image(this):
+        
+        rects = []
+        
+        image = Image.new('RGBA', (1,1), (0,0,0,0))
+        for sprite in this.sprites:
+            if 'visible' in sprite.properties:
+                if not strbool(sprite.properties['visible']):
+                    continue
+            if 'isBackground' in sprite.properties:
+                if strbool(sprite.properties['isBackground']):
+                    pass
+                
+            pos = numpy.array(sprite.pos)
+            size = numpy.array(sprite.gridSize)
+            
+            rects.append(
+                tuple(pos - (size / 2))
+            )
+            rects.append(
+                tuple(pos + (size / 2))
+            )
+            
+        rects = numpy.array(rects).swapaxes(0,1)
+        
+        min = numpy.array([int(v.min()) for v in rects])
+        max = numpy.array([int(v.max()) for v in rects])
+        
+        maxSize = max - min
+        
+        center = [a.mean() * -1 for a in numpy.array([min,max]).swapaxes(0,1)]
+        
+        print(f'{min = }')
+        print(f'{max = }')
+        print(rects)
+        print(maxSize)
+        print(f'{center = }')
+        
+        
+        image = Image.new('RGBA', tuple(maxSize * this.scale), (0,0,0,0))
+        
+        for sprite in this.sprites:
+            pos = this.truePos(
+                sprite.pos,
+                sprite.gridSize,
+                maxSize,
+                scale = this.scale,
+                offset = center
+            )
+            
+            print(f'{pos = }')
+            
+            image.alpha_composite(
+                sprite.image,
+                tuple([int(x) for x in pos]),
+            )
+            
+        return image
+    
+    @property
+    def scale(this):
+        return this._scale
+    @scale.setter
+    def scale(this, value : int):
+        this._scale = value
+        for sprite in this.sprites:
+            sprite.scale = this._scale
         
     def readXML(this):
         """Read object XML

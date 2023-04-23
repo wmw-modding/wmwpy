@@ -1,6 +1,9 @@
 from .Utils.filesystem import *
 
 import io
+import typing
+import numpy
+import math
 
 class GameObject():
     def __init__(
@@ -75,3 +78,64 @@ class GameObject():
             return file
     
         return fileio
+    
+    def truePos(
+        this,
+        pos : tuple[int,int] = (0,0),
+        obj_size : tuple[int,int] = (0,0),
+        parent_size : tuple[int,int] = (0,0),
+        offset : tuple[int,int] = (0,0),
+        obj_anchor : typing.Literal['center', 'c', 'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] = 'center',
+        parent_anchor : typing.Literal['center', 'c', 'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] = 'center',
+        scale : int = 1,
+    ) -> tuple[int,int]:
+        """Get the true position of an object inside a larger object.
+
+        Args:
+            pos (tuple[x,y], optional): The position of the object. Defaults to (0,0).
+            obj_size (tuple[width,height], optional): The size of the object. Defaults to (0,0).
+            parent_size (tuple[width,height], optional): The size of the parent. Defaults to (0,0).
+            offset (tuple[x,y], optional): An offset. Defaults to (0,0).
+            obj_anchor (typing.Literal["center", "c", "n", "ne", "e", "se", "s", "sw", "w", "nw"], optional): The object anchor. Defaults to 'center'.
+            parent_anchor (typing.Literal["center", "c", "n", "ne", "e", "se", "s", "sw", "w", "nw"], optional): The parent anchor. Defaults to 'center'.
+            scale (int, optional): A scale for the position. Defaults to 1.
+
+        Raises:
+            TypeError: Invalid anchor.
+
+        Returns:
+            tuple[int,int]: The new position.
+        """
+        pos = numpy.array(pos)
+        obj_size = numpy.array(obj_size)
+        parent_size = numpy.array(parent_size)
+        offset = numpy.array(offset)
+        
+        anchors = {
+            'center': numpy.array((0.5,0.5)),
+            'c': numpy.array((0.5,0.5)),
+            'nw': numpy.array((0,0)),
+            'n': numpy.array((0.5,0)),
+            'ne': numpy.array((1,0)),
+            'e': numpy.array((1,0.5)),
+            'se': numpy.array((1,1)),
+            's': numpy.array((0.5,1)),
+            'sw': numpy.array((0,1)),
+            'w': numpy.array((0,0.5)),
+        }
+        
+        obj_anchor = obj_anchor.lower()
+        parent_anchor = parent_anchor.lower()
+        
+        if not obj_anchor in anchors:
+            raise TypeError(f"Anchor '{obj_anchor}' not supported")
+        if not parent_anchor in anchors:
+            raise TypeError(f"Anchor '{parent_anchor}' not supported")
+        
+        obj_anchor = anchors[obj_anchor]
+        parent_anchor = anchors[parent_anchor]
+        
+        pos = pos * [1,-1]
+        pos = ((pos - ((obj_size * obj_anchor) - (parent_size * parent_anchor))) + offset) * scale
+        
+        return tuple(pos)
