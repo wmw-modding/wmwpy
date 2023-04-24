@@ -16,8 +16,21 @@ class Sprite(GameObject):
         filesystem: Filesystem | Folder = None,
         gamepath: str = None, assets: str = '/assets',
         baseassets : str = '/',
-        properties : dict = {}
+        properties : dict = {},
+        scale : int = 10,
     ) -> None:
+        """Game sprite.
+
+        Args:
+            this (_type_): _description_
+            file (str | bytes | File): Sprite file.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            properties (dict, optional): Sprite properties. Defaults to {}.
+            scale (int, optional): Sprite image scale. Defaults to 10.
+        """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
         this.file = super().get_file(file)
@@ -27,7 +40,7 @@ class Sprite(GameObject):
         this.properties = deepcopy(properties)
         this.animations : list[Sprite.Animation] = []
         
-        this.scale = 4
+        this.scale = scale
         
         this.readXML()
         this.animation = 0
@@ -36,7 +49,7 @@ class Sprite(GameObject):
         this.animation = animation
     
     @property
-    def image(this):
+    def image(this) -> Image.Image:
         image = this.animation.image.copy()
         gridSize = numpy.array(this.gridSize)
         size = gridSize * this.scale
@@ -64,14 +77,14 @@ class Sprite(GameObject):
             this._currentAnimation = animation
     
     @property
-    def frame(this):
+    def frame(this) -> int:
         return this.animation.frame
     @frame.setter
     def frame(this, value : int):
         this.animation.frame = value
     
     @property
-    def filename(this):
+    def filename(this) -> str:
         if 'filename' in this.properties:
             return this.properties['filename']
         else:
@@ -92,6 +105,17 @@ class Sprite(GameObject):
                 this.animations.append(animation)
     
     def export(this, path : str = None):
+        """_summary_
+
+        Args:
+            path (str, optional): Path to export into the filesystem. Defaults to None.
+
+        Raises:
+            TypeError: Path is not a file.
+
+        Returns:
+            str: Contents of saved file.
+        """
         xml : etree.ElementBase = etree.Element('Sprite')
         
         for animation in this.animations:
@@ -135,9 +159,9 @@ class Sprite(GameObject):
         this.properties['isBackground'] = str(strbool(value)).lower()
     
     @property
-    def gridSize(this):
+    def gridSize(this) -> tuple[float,float]:
         if 'gridSize' in this.properties:
-            return tuple([float(x) for x in this.properties['gridSize'].split(' ')])
+            return tuple([float(x) for x in this.properties['gridSize'].split()])
         return (1,1)
     @gridSize.setter
     def gridSize(this, value : tuple[int,int] | str):
@@ -147,9 +171,9 @@ class Sprite(GameObject):
             this.properties['gridSize'] = ' '.join([str(x) for x in value])
     
     @property
-    def pos(this):
+    def pos(this) -> tuple[float,float]:
         if 'pos' in this.properties:
-            return tuple([float(x) for x in this.properties['pos'].split(' ')])
+            return tuple([float(x) for x in this.properties['pos'].split()])
         return (0,0)
     @pos.setter
     def pos(this, value : tuple[int,int] | str):
@@ -159,7 +183,7 @@ class Sprite(GameObject):
             this.properties['pos'] = ' '.join([str(x) for x in value])
     
     @property
-    def angle(this):
+    def angle(this) -> float:
         if 'angle' in this.properties:
             return float(this.properties['angle'])
         return 0
@@ -168,8 +192,25 @@ class Sprite(GameObject):
         this.properties['angle'] = str(value)
 
     class Animation(GameObject):
-        def __init__(this, xml : str | etree.ElementBase, filesystem: Filesystem | Folder = None, gamepath: str = None, assets: str = '/assets') -> None:
-            super().__init__(filesystem, gamepath, assets)
+        def __init__(
+            this,
+            xml : str | etree.ElementBase,
+            filesystem: Filesystem | Folder = None,
+            gamepath: str = None,
+            assets: str = '/assets',
+            baseassets: str = '/',
+        ) -> None:
+            """Animation for Sprite.
+
+            Args:
+                this (_type_): _description_
+                xml (str | etree.Element): lxml.etree Element xml element for sprite.
+                filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+                gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+                assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+                baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            """
+            super().__init__(filesystem, gamepath, assets, baseassets)
             
             if isinstance(xml, str):
                 this.xml : etree.ElementBase = etree.parse(xml).getroot()
@@ -287,7 +328,20 @@ class Sprite(GameObject):
             _scale = (1,1)
             _angleDeg = 0
             _repeat = 1
-            def __init__(this, properties : dict, atlas : Imagelist = None, textureBasePath : str = None) -> None:
+            def __init__(
+                this,
+                properties : dict,
+                atlas : Imagelist = None,
+                textureBasePath : str = None,
+            ) -> None:
+                """Frame for Sprite.Animation.
+
+                Args:
+                    this (_type_): _description_
+                    properties (dict): Image properties.
+                    atlas (Imagelist, optional): Image atlas for Image. Defaults to None.
+                    textureBasePath (str, optional): Directory to put image in. Defaults to None.
+                """
                 this.atlas = atlas
                 this.textueBasePath = textureBasePath
                 this.properties = properties
@@ -307,9 +361,9 @@ class Sprite(GameObject):
                 if 'name' in this.properties:
                     this.name = this.properties['name']
                 if 'offset' in this.properties:
-                    this.offset = tuple([float(x) for x in this.properties['offset'].split(' ')])
+                    this.offset = tuple([float(x) for x in this.properties['offset'].split()])
                 if 'scale' in this.properties:
-                    this.scale = tuple([float(x) for x in this.properties['scale'].split(' ')])
+                    this.scale = tuple([float(x) for x in this.properties['scale'].split()])
                 if 'angleDeg' in this.properties:
                     this.angleDeg = float(this.properties['angleDeg'])
                 if 'repeat' in this.properties:

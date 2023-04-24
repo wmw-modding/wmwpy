@@ -284,11 +284,11 @@ class Imagelist(GameObject):
                 """Get properties from xml.
                 """
                 if 'size' in this.properties:
-                    this.size = tuple([int(v) for v in this.properties['size'].split(' ')])
+                    this.size = tuple([int(v) for v in this.properties['size'].split()])
                 if 'offset' in this.properties:
-                    this.offset = tuple([int(v) for v in this.properties['offset'].split(' ')])
+                    this.offset = tuple([int(v) for v in this.properties['offset'].split()])
                 if 'rect' in this.properties:
-                    this.rect = tuple([int(v) for v in this.properties['rect'].split(' ')])
+                    this.rect = tuple([int(v) for v in this.properties['rect'].split()])
                 if 'name' in this.properties:
                     this.name = this.properties['name']
 
@@ -358,7 +358,7 @@ class Imagelist(GameObject):
             """
             this.properties = deepcopy(this.xml.attrib)
             if 'imgSize' in this.properties:
-                this.size = tuple([int(v) for v in this.properties['imgSize'].split(' ')])
+                this.size = tuple([int(v) for v in this.properties['imgSize'].split()])
             if 'textureBasePath' in this.properties:
                 this.textureBasePath = this.properties['textureBasePath']
             if 'file' in this.properties:

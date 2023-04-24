@@ -13,7 +13,7 @@ def findTag(root : etree.ElementBase, tag : str) -> etree.Element:
         
     return None
 
-def strbool(value : str):
+def strbool(value : str) -> bool:
     if isinstance(value, bool):
         return value
     else:

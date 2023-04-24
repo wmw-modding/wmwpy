@@ -2,7 +2,7 @@ import lxml
 from lxml import etree
 import io
 from copy import deepcopy
-from PIL import Image
+from PIL import Image, ImageTk
 import numpy
 import math
 
@@ -21,18 +21,21 @@ class Object(GameObject):
         baseassets : str = '/',
         properties : dict = {},
         pos : tuple | str = (0,0),
-        name : str = 'Obj'
+        name : str = 'Obj',
+        scale : int = 10,
     ) -> None:
         """Get game object. Game object is `.hs` file.
 
         Args:
-            gamepath (str): Game path
-            assets (str): Assets path, relative to game path
+            file (str | bytes | File): Object file.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
-            object (str): Object file relative to assets path. Must be `.hs` file.
             properties (dict, optional): Object properties that override default properties. Defaults to {}.
-            position ((tuple, str), optional): Object position. Can be string or tuple. Defaults to (0,0).
-            name (str): The name of the object. Defaults to `'Obj'`
+            pos (tuple | str, optional): Position of object. Defaults to (0,0).
+            name (str, optional): Name of object. Defaults to 'Obj'.
+            scale (int, optional): The image scale. Defaults to 10.
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
@@ -41,7 +44,7 @@ class Object(GameObject):
         
         this._properties = deepcopy(properties)
         if isinstance(pos, str):
-            this.pos = tuple([float(a) for a in pos.split(' ')])
+            this.pos = tuple([float(a) for a in pos.split()])
         else:
             this.pos = tuple(pos)
         
@@ -55,13 +58,13 @@ class Object(GameObject):
         this.name = name
         
         this.offset = [0,0]
+        this.scale = scale
         
         this.readXML()
         
-        this.scale = 5
     
     @property
-    def image(this):
+    def image(this) -> Image.Image:
         
         rects = []
         background = []
@@ -125,6 +128,11 @@ class Object(GameObject):
             )
             
         return image
+    
+    @property
+    def PhotoImage(this):
+        this._PhotoImage = ImageTk.PhotoImage(this.image)
+        return this._PhotoImage
     
     @property
     def scale(this):
@@ -320,7 +328,8 @@ class Object(GameObject):
                 sprite = Sprite(
                     file = this.filesystem.get(attributes['filename']),
                     filesystem = this.filesystem,
-                    properties = attributes
+                    properties = attributes,
+                    scale = this.scale,
                 )
                 this.sprites.append(sprite)
     
@@ -330,7 +339,7 @@ class Object(GameObject):
                 continue
             if element.tag == 'UV':
                 pos = element.get('pos')
-                this.UVs.append(tuple([float(_) for _ in pos.split(' ')]))
+                this.UVs.append(tuple([float(_) for _ in pos.split()]))
     
     def _getVertIndices(this, xml : etree.ElementBase):
         for element in xml:
@@ -391,8 +400,8 @@ class Shape():
             if element is etree.Comment:
                 continue
             if element.tag == 'Point':
-                pos = element.get('pos')
-                point = tuple([float(_) for _ in pos.split(' ')])
+                pos : str = element.get('pos')
+                point = tuple([float(_) for _ in pos.split()])
                 this.points.append(point)
     
     def getXML(this) -> etree.ElementBase:

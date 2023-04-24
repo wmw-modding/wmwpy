@@ -109,7 +109,7 @@ class Level(GameObject):
                         continue
                     
                     if el.tag == 'AbsoluteLocation':
-                        this.room = tuple([float(_) for _ in el.get('value').split(' ')])
+                        this.room = tuple([float(_) for _ in el.get('value').split()])
     
     def export(
         this,
