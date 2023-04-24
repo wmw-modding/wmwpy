@@ -2,7 +2,7 @@ import lxml
 from lxml import etree
 import io
 from copy import deepcopy
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
 import numpy
 import math
 
@@ -95,8 +95,8 @@ class Object(GameObject):
         min = numpy.array([math.floor(v.min()) for v in rects])
         max = numpy.array([math.ceil(v.max()) for v in rects])
         
-        maxSize = max - min
         
+        maxSize = max - min
         this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
         print(f'{min = }')
@@ -379,14 +379,14 @@ class Object(GameObject):
             return
         this.properties[property] = value
 
-class Shape():
+class Shape(GameObject):
     def __init__(this, xml : etree.ElementBase = None) -> None:
         """Shape for Object
 
         Args:
             xml (etree.Element, optional): lxml Element. Defaults to None.
         """
-        this.points = []
+        this.points : list[tuple[float,float]] = []
         this.xml = xml
         
         this.readXML()
@@ -415,3 +415,44 @@ class Shape():
             etree.SubElement(xml, 'Point', {'pos': ' '.join([str(_) for _ in point])})
         this.xml = xml
         return xml
+    
+    @property
+    def image(this):
+        points = numpy.array(this.points).swapaxes(0,1)
+        
+        min = numpy.array([math.floor(v.min()) for v in points])
+        max = numpy.array([math.ceil(v.max()) for v in points])
+        
+        offset = numpy.array([a.mean() for a in numpy.array([min,max]).swapaxes(0,1)])
+        # offset = offset * [1,-1]
+        print(f'{offset = }')
+        
+        size = max - min
+        
+        image = Image.new('1', tuple([math.ceil(x) + 1 for x in size]), 1)
+        draw = ImageDraw.Draw(image)
+        
+        # size = size * [1,-1]
+        print(f'{size = }')
+        for n in range(len(this.points)):
+            point = this.points[n]
+            previous = (this.points[(n - 1) % len(this.points)])
+            
+            line = numpy.array([point, previous])
+            # line = line * [1,-1]
+            line = numpy.array(this.truePos(
+                line,
+                (1,1),
+                size,
+                offset,
+            ))
+            
+            print(line)
+            
+            line = line.flatten()
+            line = tuple([round(x) for x in line])
+            
+            
+            draw.line(line, fill=0, width=1)
+        
+        return image
