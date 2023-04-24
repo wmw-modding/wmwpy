@@ -34,6 +34,29 @@
             
   <section id="wmwpy-package">
 <h1>wmwpy package<a class="headerlink" href="#wmwpy-package" title="Permalink to this heading">¶</a></h1>
+<section id="module-wmwpy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wmwpy" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.load">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'android'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ios'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'android'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'WMW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseassets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>load game</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gamepath</strong> (<em>str</em>) – Folder to extracted game.</p></li>
+<li><p><strong>platform</strong> (<em>Literal</em><em>[</em><em>'android'</em><em>, </em><em>'ios'</em><em>]</em><em>, </em><em>optional</em>) – What platform this game is for. Can be ‘android’ or ‘ios’. Defaults to ‘android’.</p></li>
+<li><p><strong>game</strong> (<em>str</em><em>, </em><em>optional</em>) – Which game is being loaded. A full list of games is in the <cite>gametemplate.GAMES</cite> variable. Defaults to ‘WMW’.</p></li>
+<li><p><strong>assets</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to assets folder. Defaults to ‘/assets’.</p></li>
+<li><p><strong>db</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to database file from assets folder. Defaults to ‘/Data/water.db’.</p></li>
+<li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to profile file in WMW2. Defaults to <cite>None</cite></p></li>
+<li><p><strong>baseassets</strong> (<em>str</em><em>, </em><em>optional</em>) – Base assets path within the assets folder, e.g. <cite>/perry/</cite> in wmp. Defaults to <cite>/</cite></p></li>
+<li><p><strong>hook</strong> (<em>Callable</em><em>[</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Hook for loading assets, useful for guis. The function gets called with the paramaters <cite>(progress : int, current : str, max : int)</cite>. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -505,29 +528,6 @@
 </dd></dl>
 
 </section>
-<section id="module-wmwpy">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wmwpy" title="Permalink to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="wmwpy.load">
-<span class="sig-prename descclassname"><span class="pre">wmwpy.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'android'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ios'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'android'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'WMW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseassets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>load game</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gamepath</strong> (<em>str</em>) – Folder to extracted game.</p></li>
-<li><p><strong>platform</strong> (<em>Literal</em><em>[</em><em>'android'</em><em>, </em><em>'ios'</em><em>]</em><em>, </em><em>optional</em>) – What platform this game is for. Can be ‘android’ or ‘ios’. Defaults to ‘android’.</p></li>
-<li><p><strong>game</strong> (<em>str</em><em>, </em><em>optional</em>) – Which game is being loaded. A full list of games is in the <cite>gametemplate.GAMES</cite> variable. Defaults to ‘WMW’.</p></li>
-<li><p><strong>assets</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to assets folder. Defaults to ‘/assets’.</p></li>
-<li><p><strong>db</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to database file from assets folder. Defaults to ‘/Data/water.db’.</p></li>
-<li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to profile file in WMW2. Defaults to <cite>None</cite></p></li>
-<li><p><strong>baseassets</strong> (<em>str</em><em>, </em><em>optional</em>) – Base assets path within the assets folder, e.g. <cite>/perry/</cite> in wmp. Defaults to <cite>/</cite></p></li>
-<li><p><strong>hook</strong> (<em>Callable</em><em>[</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Hook for loading assets, useful for guis. The function gets called with the paramaters <cite>(progress : int, current : str, max : int)</cite>. Defaults to None.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 </section>
 
 
@@ -550,6 +550,10 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">wmwpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-wmwpy">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wmwpy.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="wmwpy.Font.html">wmwpy.Font package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wmwpy.Utils.html">wmwpy.Utils package</a></li>
@@ -578,10 +582,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#wmwpy.gameobject.GameObject.truePos"><code class="docutils literal notranslate"><span class="pre">GameObject.truePos()</span></code></a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-wmwpy">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#wmwpy.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 </ul>
 </li>
 </ul>
