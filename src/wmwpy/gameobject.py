@@ -136,6 +136,8 @@ class GameObject():
         parent_anchor = anchors[parent_anchor]
         
         pos = pos * [1,-1]
-        pos = ((pos - ((obj_size * obj_anchor) - (parent_size * parent_anchor))) + offset) * scale
+        obj_size = obj_size * [1,-1]
+        offset = offset * [1,-1]
+        pos = ((pos - offset) - ((obj_size * obj_anchor) - (parent_size * parent_anchor))) * scale
         
         return tuple(pos)

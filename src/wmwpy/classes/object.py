@@ -54,6 +54,8 @@ class Object(GameObject):
         this.properties = {}
         this.name = name
         
+        this.offset = [0,0]
+        
         this.readXML()
         
         this.scale = 5
@@ -62,18 +64,21 @@ class Object(GameObject):
     def image(this):
         
         rects = []
+        background = []
+        foreground = []
         
         image = Image.new('RGBA', (1,1), (0,0,0,0))
         for sprite in this.sprites:
             if 'visible' in sprite.properties:
                 if not strbool(sprite.properties['visible']):
                     continue
-            if 'isBackground' in sprite.properties:
-                if strbool(sprite.properties['isBackground']):
-                    pass
+            if ('isBackground' in sprite.properties) and strbool(sprite.properties['isBackground']):
+                background.append(sprite)
+            else:
+                foreground.append(sprite)
                 
             pos = numpy.array(sprite.pos)
-            size = numpy.array(sprite.gridSize)
+            size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
             
             rects.append(
                 tuple(pos - (size / 2))
@@ -84,36 +89,39 @@ class Object(GameObject):
             
         rects = numpy.array(rects).swapaxes(0,1)
         
-        min = numpy.array([int(v.min()) for v in rects])
-        max = numpy.array([int(v.max()) for v in rects])
+        min = numpy.array([math.floor(v.min()) for v in rects])
+        max = numpy.array([math.ceil(v.max()) for v in rects])
         
         maxSize = max - min
         
-        center = [a.mean() * -1 for a in numpy.array([min,max]).swapaxes(0,1)]
+        this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
         print(f'{min = }')
         print(f'{max = }')
         print(rects)
         print(maxSize)
-        print(f'{center = }')
+        print(f'{this.offset = }')
         
         
         image = Image.new('RGBA', tuple(maxSize * this.scale), (0,0,0,0))
         
-        for sprite in this.sprites:
+        sprites = list(reversed(background)) + foreground
+        
+        for sprite in sprites:
+            size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
             pos = this.truePos(
                 sprite.pos,
-                sprite.gridSize,
+                size,
                 maxSize,
                 scale = this.scale,
-                offset = center
+                offset = this.offset
             )
             
             print(f'{pos = }')
             
             image.alpha_composite(
                 sprite.image,
-                tuple([int(x) for x in pos]),
+                tuple([round(x) for x in pos]),
             )
             
         return image
