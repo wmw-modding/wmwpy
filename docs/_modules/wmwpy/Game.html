@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.Game &#8212; wmwpy 0.0.1-alpha documentation</title>
+    <title>wmwpy.Game &#8212; wmwpy 0.1.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -37,15 +37,21 @@
 <span class="kn">from</span> <span class="nn">.Utils</span> <span class="kn">import</span> <span class="n">Texture</span>
 <span class="kn">from</span> <span class="nn">.classes</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span>
-
 <div class="viewcode-block" id="Game"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">():</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">_PROFILE</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMW&#39;</span>
+    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">gamepath</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">assets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
         <span class="n">db</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span><span class="p">,</span>
         <span class="n">profile</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">hook</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">baseassets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+        <span class="n">platform</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;ios&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span>
+        <span class="n">hook</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;load game</span>
 
@@ -54,13 +60,21 @@
 <span class="sd">            assets (str, optional): Relative path to assets folder. Defaults to &#39;/assets&#39;.</span>
 <span class="sd">            db (str, optional): Relative path to database file from assets folder. Defaults to &#39;/Data/water.db&#39;.</span>
 <span class="sd">            profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`</span>
+<span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
+<span class="sd">            platform (Literal[&#39;android&#39;, &#39;ios&#39;], optional): What platform this game is for. Can be &#39;android&#39; or &#39;ios&#39;. Defaults to &#39;android&#39;.</span>
 <span class="sd">            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">gamepath</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        
         <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">gamepath</span><span class="p">)</span>
         <span class="c1"># print(f&#39;{gamepath = }\n{this.gamepath = }&#39;)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span>
-        <span class="n">this</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span>
-        <span class="n">this</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_DB</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_PROFILE</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_BASEASSETS</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="n">platform</span>
+        
         
         <span class="n">this</span><span class="o">.</span><span class="n">updateFilesystem</span><span class="p">(</span><span class="n">hook</span> <span class="o">=</span> <span class="n">hook</span><span class="p">)</span>
         
@@ -68,7 +82,7 @@
         <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span> <span class="o">=</span> <span class="n">Filesystem</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">getAssets</span><span class="p">(</span><span class="n">hook</span> <span class="o">=</span> <span class="n">hook</span><span class="p">)</span></div>
         
-<div class="viewcode-block" id="Game.loadLevel"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadLevel">[docs]</a>    <span class="k">def</span> <span class="nf">loadLevel</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xmlPath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">imagePath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
+<div class="viewcode-block" id="Game.Level"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Level">[docs]</a>    <span class="k">def</span> <span class="nf">Level</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xmlPath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">imagePath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load level</span>
 
@@ -76,6 +90,11 @@
 <span class="sd">            xmlPath (str, optional): Path to xml file. Defaults to None.</span>
 <span class="sd">            imagePath (str, optional): Path to image file. Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">imagePath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;png&#39;</span><span class="p">])</span>
+            <span class="n">xmlPath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;xml&#39;</span><span class="p">])</span>
+        
         <span class="n">xml</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">xmlPath</span><span class="p">:</span>
             <span class="n">xml</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
@@ -93,7 +112,7 @@
         
         <span class="k">return</span> <span class="n">level</span></div>
     
-<div class="viewcode-block" id="Game.loadObject"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadObject">[docs]</a>    <span class="k">def</span> <span class="nf">loadObject</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Object"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Object">[docs]</a>    <span class="k">def</span> <span class="nf">Object</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="nb">object</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -116,16 +135,16 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="nb">object</span>
         <span class="k">return</span> <span class="n">obj</span></div>
     
-<div class="viewcode-block" id="Game.loadImagelist"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadImagelist">[docs]</a>    <span class="k">def</span> <span class="nf">loadImagelist</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Imagelist"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Imagelist">[docs]</a>    <span class="k">def</span> <span class="nf">Imagelist</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
-        <span class="n">imagelist</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">imagelist</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">HD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load imagelist</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            imagelist (str): Path to `.imagelist` file.</span>
+<span class="sd">            imagelist (str): Path to `.imagelist` file. Defaults to None</span>
 <span class="sd">            HD (bool, optional): Whether to use HD textures. Defaults to False.</span>
 
 <span class="sd">        Returns:</span>
@@ -140,7 +159,7 @@
         <span class="n">imagelistObject</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">imagelist</span>
         <span class="k">return</span> <span class="n">imagelistObject</span></div>
     
-<div class="viewcode-block" id="Game.loadSprite"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadSprite">[docs]</a>    <span class="k">def</span> <span class="nf">loadSprite</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Sprite"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Sprite">[docs]</a>    <span class="k">def</span> <span class="nf">Sprite</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">sprite</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -163,7 +182,7 @@
         <span class="n">spriteObject</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">sprite</span>
         <span class="k">return</span> <span class="n">spriteObject</span></div>
     
-<div class="viewcode-block" id="Game.loadTexture"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadTexture">[docs]</a>    <span class="k">def</span> <span class="nf">loadTexture</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Texture"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Texture">[docs]</a>    <span class="k">def</span> <span class="nf">Texture</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">texture</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
@@ -171,7 +190,6 @@
 <span class="sd">        Get image texture. Doesn&#39;t matter if it&#39;s a `.waltex` image or not.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            this (_type_): _description_</span>
 <span class="sd">            texture (str): Path to image file.</span>
 
 <span class="sd">        Returns:</span>
@@ -182,15 +200,15 @@
             <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">texture</span><span class="p">)</span>
         <span class="p">)</span></div>
     
-<div class="viewcode-block" id="Game.loadLayout"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.loadLayout">[docs]</a>    <span class="k">def</span> <span class="nf">loadLayout</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">layout</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Game.Layout"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Layout">[docs]</a>    <span class="k">def</span> <span class="nf">Layout</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">layout</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;load layout is not implemented yet.&#39;</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Game.generateFileManifest"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.generateFileManifest">[docs]</a>    <span class="k">def</span> <span class="nf">generateFileManifest</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">writeFile</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Game.generateFileManifest"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.generateFileManifest">[docs]</a>    <span class="k">def</span> <span class="nf">generateFileManifest</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">writeFile</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/FileManifest.txt&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            this (_type_): _description_</span>
 <span class="sd">            writeFile (bool, optional): Write the manifest to the `FileManifest.txt` file. Defaults to True.</span>
+<span class="sd">            filename (str, optional): Filename for FileManifest.txt. Defaults to &#39;filename&#39;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Contents of `FileManifest.txt`</span>
@@ -198,7 +216,7 @@
         <span class="n">manifest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="kc">True</span><span class="p">))</span>
         
         <span class="k">if</span> <span class="n">writeFile</span><span class="p">:</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;/FileManifest.txt&#39;</span><span class="p">,</span> <span class="n">manifest</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">manifest</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">manifest</span></div></div>
 </pre></div>
