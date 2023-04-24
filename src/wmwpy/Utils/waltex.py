@@ -11,31 +11,31 @@ import io
 import sys
 # import json
 
-# try:
-import filetype
+try:
+    import filetype
 
-class _WaltexFile(filetype.Type):
-    MIME = 'image/waltex'
-    EXTENSION = 'waltex'
+    class _WaltexFile(filetype.Type):
+        MIME = 'image/waltex'
+        EXTENSION = 'waltex'
 
-    def __init__(self):
-        super(_WaltexFile, self).__init__(
-            mime=_WaltexFile.MIME,
-            extension=_WaltexFile.EXTENSION,
-        )
+        def __init__(self):
+            super(_WaltexFile, self).__init__(
+                mime=_WaltexFile.MIME,
+                extension=_WaltexFile.EXTENSION,
+            )
 
-    def match(self, buf):
-        return (len(buf) > 3 and
-                buf[0] == 0x57 and
-                buf[1] == 0x41 and
-                buf[2] == 0x4C and
-                buf[3] == 0x54)
+        def match(self, buf):
+            return (len(buf) > 3 and
+                    buf[0] == 0x57 and
+                    buf[1] == 0x41 and
+                    buf[2] == 0x4C and
+                    buf[3] == 0x54)
 
-filetype.add_type(_WaltexFile())
+    filetype.add_type(_WaltexFile())
 # filetype.guess()
-# except:
+except:
     # optional filetype addition
-    # pass
+    pass
 
 # add waltex image to PIL
 # Thanks to Mark Setchell for most of this code https://stackoverflow.com/a/75511423/17129659
@@ -86,8 +86,22 @@ Image.register_extensions(
 class Waltex():
     format = 'waltex'
     format_description = "Walaber image file"
-    
-    def __init__(this, file : str | bytes, byte_order : str = 'little') -> None:
+
+    def __init__(
+        this,
+        file : str | bytes,
+        byte_order : str = 'little'
+    ) -> None:
+        """Waltex image
+
+        Args:
+            file (str | bytes): Waltex file. Can be path to file, contents of file as bytes, or file-like object.
+            byte_order (str, optional): 'little' or 'big'. Defaults to 'little'.
+
+        Raises:
+            TypeError: file has to be a 'str', 'bytes' or file-like object.
+        """
+        
         this._colorspecs = [
             {
                 'order': 'rgba',

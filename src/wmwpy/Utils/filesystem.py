@@ -4,6 +4,8 @@ import io
 from filetype import filetype
 from PIL import Image
 import zipfile
+import natsort
+import typing
 
 from .path import joinPath
 # from . import Waltex
@@ -19,13 +21,34 @@ FILE_READERS = []
 # Filesystem object.
 
 class Filesystem():
-    def __init__(this, gamepath : str, assets : str) -> None:
+    def __init__(
+        this,
+        gamepath : str,
+        assets : str,
+        baseassets : str = '/'
+    ) -> None:
+        """wmwpy filesystem
+
+        Args:
+            gamepath (str): Path to game directory.
+            assets (str): Path to assets folder relative to gamepath.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+        """
         this.gamepath = gamepath
         this.assets = assets
+        this.baseassets = baseassets
         this.parent = this
         this.root = Folder(this, '/')
     
     def get(this, path : str):
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
         return this.root.get(path)
     
     def add(this, path : str, file : str | bytes, replace = False):
@@ -43,37 +66,76 @@ class Filesystem():
         Returns:
             File: File object of the added file.
         """
-        if isinstance(file, str):
-            with open(file, 'rb') as f:
-                file = f.read()
-            # print('file')
-        elif isinstance(file, bytes):
-            # print('bytes')
-            pass
-        elif hasattr(file, 'read'):
-            file = file.read()
-            if isinstance(file, str):
-                file = file.encode()
-            # print('file-like')
-        else:
-            raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
+        # if isinstance(file, str):
+        #     with open(file, 'rb') as f:
+        #         file = f.read()
+        #     # print('file')
+        # elif isinstance(file, bytes):
+        #     # print('bytes')
+        #     pass
+        # elif hasattr(file, 'read'):
+        #     file = file.read()
+        #     if isinstance(file, str):
+        #         file = file.encode()
+        #     # print('file-like')
+        # else:
+        #     raise TypeError(f"file can only 'str', 'bytes', or file-like object.")
         
         return this.root.add(path = path, content = file, replace = replace)
-        
-    def getAssets(this, extract_zip = False, split_imagelist = False):
+    
+    def remove(this, path : str):
+        return this.root.remove(path)
+    
+    def getAssets(
+        this,
+        extract_zip = False,
+        split_imagelist = False,
+        hook : typing.Callable[[int, str, int], typing.Any] = None
+    ):
+        """Scans the assets directory and loads all files into the filesystem. This is so wmwpy can modify files without modifying the actual files.
+
+        Args:
+            extract_zip (bool, optional): Extrack zip files? Defaults to False.
+            split_imagelist (bool, optional): Split imagelist files? Defaults to False.
+            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
+
+        Raises:
+            FileNotFoundError: Assets folder does not exist.
+
+        Returns:
+            this: Current Filesystem object.
         """
-        Scans the assets folder and adds all the files into the filesystem. Prepare for hundreds of files being opened.
-        """
+                    
+        def dirlength(path : str):
+            count = 0
+            for file in os.scandir(path):
+                if file.is_dir():
+                    count += dirlength(file.path)
+                else:
+                    count += 1
+            return count
+
         
         print(this.gamepath)
         print(f'{this.gamepath = }\n{this.assets = }')
-        assets = joinPath(this.gamepath, this.assets)
+        
+        assets = pathlib.Path(joinPath(this.gamepath, this.assets))
+        
+        if not assets.exists():
+            raise FileNotFoundError(f'Folder {assets} does not exist')
+        
+        total = dirlength(assets.resolve().as_posix())
+        current = 0
         
         for dir, subdir, files in os.walk(assets):
             for file in files:
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                print(path)
-                # print(os.path.join(dir, file))
+                # print(path)
+                
+                if hook:
+                    current += 1
+                    hook(current, path, total)
+                
                 fileobj : File = this.add(path, os.path.join(dir, file))
                 
                 if fileobj.extension == 'zip' and extract_zip:
@@ -81,8 +143,59 @@ class Filesystem():
         
         return this
     
-    def exists(this, fp : str):
+    def exists(this, fp : str) -> bool:
+        """Test if file path exists.
+
+        Args:
+            fp (str): File path.
+
+        Returns:
+            bool: Whether the path exists.
+        """
         return this.root.exists(fp)
+    
+    def listdir(this, path = '/', recursive = False) -> list:
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
+        return this.get(path).listdir(recursive = recursive)
+    
+    def dump(this, output : str = None):
+        if output == None:
+            output = joinPath(this.gamepath, this.assets)
+        
+        print(f'output: {output}')
+        
+        files = this.listdir(recursive=True)
+        for path in files:
+            file = this.get(path)
+            if file.is_dir():
+                continue
+            parts = pathlib.Path(path).parts
+            
+            if parts[0] in ['/', '\\', '']:
+                parts = parts[1::]
+            
+            print(f'new: {parts}')
+            
+            newpath = pathlib.Path(output, *parts)
+            
+            print(f'writing: {newpath.as_posix()}')
+            
+            newpath.parent.mkdir(exist_ok=True)
+            
+            data = file.rawdata.getvalue()
+            
+            with open(newpath, 'wb') as f:
+                f.write(data)
+        
+        
     
 # Filesystem helpers
 class FileBase():
@@ -97,11 +210,52 @@ class FileBase():
         """
         this._type = this._Type(None)
         this.name = pathlib.Path(path).parts[0]
-        this.parent = parent
+        this.parent : Folder = parent
+    
+    def get(this, path : str):
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
+        path = pathlib.Path(path).as_posix()
+        if path == '.':
+            return this
+        return this.parent.get(path)
+    
+    def remove(this, path : str = '.'):
+        """Remove file or folder.
+
+        Args:
+            path (str, optional): Path to file or folder. If '.', it removes itself. Defaults to '.'.
+        """
+        path = pathlib.Path(path).as_posix()
+        
+        file = this.get(path)
+        if file == None:
+            return
+
+        file.detatch()
+    
+    def detatch(self):
+        """Detatch this file or folder from it's parent.
+        """
+        if self.parent == None:
+            return
+        self.parent.files.remove(self)
+        self.parent = None
+    
+    def is_dir(this):
+        return this._type.value == this._Type.FOLDER
         
     @property
     def path(this):
         if this.parent == None or isinstance(this.parent, Filesystem):
+            if isinstance(this, File) and not isinstance(this.parent, Filesystem):
+                return this.name
             return '/'
         return pathlib.Path(this.parent.path, this.name).as_posix()
     
@@ -124,10 +278,16 @@ class FileBase():
         FILE = 1
         
         def __init__(this, type : int) -> None:
-            this.value = type
+            this.value = type    
+    
     
 class File(FileBase):
-    def __init__(this, parent, path: str, content : bytes):
+    def __init__(
+        this,
+        parent,
+        path: str,
+        data : bytes | str | io.BytesIO,
+    ):
         """File
 
         Args:
@@ -137,19 +297,49 @@ class File(FileBase):
         """
         super().__init__(parent, path)
         this._type.value = this._Type.FILE
-        this._rawcontent = content
         
-        this.rawcontent = io.BytesIO(content)
-        # seek back to the start to be able to read the data later.
-        this.rawcontent.seek(0)
+        this._datatype = 'raw'
+        
+        if isinstance(data, bytes):
+            this._rawcontent = data
+        elif isinstance(data, str):
+            if os.path.exists(data):
+                this._rawcontent = data
+                this._datatype = 'path'
+            else:
+                this._rawcontent = data.encode()
+        elif isinstance(data, io.BytesIO):
+            this._rawcontent = data.getvalue()
+        elif isinstance(data, File):
+            this._rawcontent = data._rawcontent
+            this._datatype = data._datatype
+        elif hasattr(data, 'read'):
+            this._rawcontent = data.read()
+            if isinstance(this._rawcontent, str):
+                this._rawcontent = this._rawcontent.encode()
+        else:
+            this._rawcontent = bytes(data)
         
         this.content = None
+        
+        if this._datatype == 'raw':
+            this._getdata()
+        
+    def _getdata(this):
+        if this._datatype == 'path':
+            with open(this._rawcontent, 'rb') as file:
+                this._rawcontent = file.read()
+            this._datatype = 'raw'
+        
+        this.rawdata = io.BytesIO(this._rawcontent)
+        # seek back to the start to be able to read the data later.
+        this.rawdata.seek(0)
         
         this.testFile()
         
     def testFile(this):
         """Tests what type of file this is."""
-        this.type = filetype.guess(this.rawcontent.getvalue())
+        this.type = filetype.guess(this.rawdata.getvalue())
         
         if this.type == None:
             this.type = None
@@ -164,19 +354,48 @@ class File(FileBase):
             this.extension = this.type.extension
             
         return this.mime
+    
+    @property
+    def rawdata(this) -> io.BytesIO:
+        if this._datatype == 'path':
+            this._getdata()
+        
+        return this._rawdata
+    @rawdata.setter
+    def rawdata(this, value : io.BytesIO):
+        this._rawdata : io.BytesIO = value
+    
+    @property
+    def extension(this):
+        if this._datatype == 'path':
+            return os.path.splitext(this._rawcontent)[1::]
+        else:
+            this._extension
+    @extension.setter
+    def extension(this, value):
+        this._extension = value
         
     def read(this, **kwargs):
-        this.rawcontent.seek(0)
+        """Read file.
+
+        Returns:
+            Any: Object for file.
+        """
+        
+        if this._datatype == 'path':
+            this._getdata()
+        
+        this.rawdata.seek(0)
         
         reader = Reader()
         
         for r in FILE_READERS:
             print(r)
-            if r.check(this.mime, this.extension, this.rawcontent, filesystem = this.filesystem, **kwargs):
+            if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
                 reader = r
                 break
         
-        this.content = reader.read(this.mime, this.extension, this.rawcontent, **kwargs)
+        this.content = reader.read(this.mime, this.extension, this.rawdata, **kwargs)
         
         # if this.mime == 'image/waltex':
         #     this.content = Waltex(this.rawcontent.getvalue())
@@ -207,25 +426,69 @@ class File(FileBase):
         #     else:
         #         this.content = this.rawcontent.read().decode(encoding=kwargs['encoding'])
         
-        this.rawcontent.seek(0)
+        this.rawdata.seek(0)
         
         return this.content
     
-    def get(this, path : str):
-        return this.parent.get(path)
-    
     def add(this, path : str, file : bytes, replace = False):
+        """Add file to folder.
+
+        Args:
+            path (str): New file path.
+            content (bytes): Content of file in bytes.
+            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.
+
+        Raises:
+            NotADirectoryError: Path to file contains file, not folder.
+            FileExistsError: File already exists.
+
+        Returns:
+            File: Newly added File.
+        """
         return this.parent.add(path, file, replace = replace)
     
     def exists(this, path : str):
+        """Tests whether path exists.
+
+        Args:
+            path (str): Path to check.
+
+        Returns:
+            bool: Does path exist?
+        """
         return this.parent.exists(path)
+    
+    def write(this, data : bytes) -> int:
+        """Write data to file.
+
+        Args:
+            data (bytes): New data.
+
+        Returns:
+            int: bytes written.
+        """
+        this.rawdata.truncate(0)
+        this.rawdata.seek(0)
+        return this.rawdata.write(data)
+    
+    def listdir(this, recursive = False):
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
+        return this.parent.listdir(recursive = recursive)
+    
 
 class Folder(FileBase):
     def __init__(this, parent = None, path: str = None):
         """Folder
 
         Args:
-            this (_type_): _description_
             parent (Folder): Parent. Use `None` for root.
             path (str): Folder path.
         """
@@ -241,6 +504,20 @@ class Folder(FileBase):
         this.files = []
         
     def add(this, path : str, content : bytes, replace = False) -> File:
+        """Add file to folder.
+
+        Args:
+            path (str): New file path.
+            content (bytes): Content of file in bytes.
+            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.
+
+        Raises:
+            NotADirectoryError: Path to file contains file, not folder.
+            FileExistsError: File already exists.
+
+        Returns:
+            File: Newly added File.
+        """
         parts = pathlib.Path(path).parts
         
         file = this._getPath(pathlib.Path(*parts).as_posix())
@@ -260,13 +537,20 @@ class Folder(FileBase):
                 print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
-            file = File(this, parts[0], content = content)
+            file = File(this, parts[0], data = content)
             this.files.append(file)
             
             return file
-            
         
     def _getPath(this, path : str):
+        """Get File or Folder with this path.
+
+        Args:
+            path (str): Path to File or Folder.
+
+        Returns:
+            File or Folder: File or Folder.
+        """
         parts = pathlib.Path(path).parts
         file = None
         if parts[0] == '\\':
@@ -280,7 +564,18 @@ class Folder(FileBase):
                     break
         return file
     
-    def get(this, path : str):
+    def get(this, path : str) -> File:
+        """Get file in filesystem.
+
+        Args:
+            path (str): Path to file or folder.
+
+        Returns:
+            File or Folder: File or Folder object.
+        """
+        if path == None:
+            return None
+        
         parts = pathlib.Path(path).parts
         if len(parts) == 0:
             return this
@@ -292,8 +587,36 @@ class Folder(FileBase):
             file = file.get(pathlib.Path(*parts[1::]))
         return file
     
-    def exists(this, path : str):
+    def exists(this, path : str) -> bool:
+        """Tests whether path exists.
+
+        Args:
+            path (str): Path to check.
+
+        Returns:
+            bool: Does path exist?
+        """
         return this.get(path) != None
+    
+    def listdir(this, recursive = False):
+        """Returns a list of files and subfolders in path.
+
+        Args:
+            path (str, optional): Path to folder to list. Defaults to '/'.
+            recursive (bool, optional): Whether to include subfolders. Defaults to False.
+
+        Returns:
+            list: List of files and subfolders.
+        """
+        files = []
+        for file in this.files:
+            files.append(file.path)
+            if recursive and file._type.value == this._Type.FOLDER:
+                files = files + file.listdir(recursive = recursive)
+        
+        files = natsort.natsorted(files)
+        
+        return files
 
 class Reader():
     MIME = 'text/'
@@ -303,9 +626,29 @@ class Reader():
         pass
     
     def check(this, mime : str, extension : str, rawdata : io.BytesIO, **kwargs):
+        """Check file type.
+
+        Args:
+            mime (str): File mime.
+            extension (str): File extension
+            rawdata (io.BytesIO): Contents of file as file-like object.
+
+        Returns:
+            bool: Whether the file is of this type.
+        """
         return mime.startswith(this.MIME)
     
     def read(this, mime : str, extension : str, rawdata : io.BytesIO, **kwargs):
+        """Read file.
+
+        Args:
+            mime (str): Mime of file.
+            extension (str): File extension.
+            rawdata (io.BytesIO): File data as file-like object.
+
+        Returns:
+            Any: File data.
+        """
         if 'endoding' in kwargs:
             encoding = kwargs['encoding']
         else:

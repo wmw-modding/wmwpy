@@ -1,6 +1,14 @@
 wmwpy package
 =============
 
+Module contents
+---------------
+
+.. automodule:: wmwpy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -26,14 +34,6 @@ wmwpy.gameobject module
 -----------------------
 
 .. automodule:: wmwpy.gameobject
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: wmwpy
    :members:
    :undoc-members:
    :show-inheritance:

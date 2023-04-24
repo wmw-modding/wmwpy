@@ -12,6 +12,8 @@ def joinPath(*args : str) -> str:
     # return path
 
 def getRelPath(path : str) -> str:
+    if path == '':
+        return '.'
     parts = pathlib.Path(path).parts
     if parts[0] == '\\':
         return pathlib.Path(*parts[1::]).as_posix()

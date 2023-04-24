@@ -1,19 +1,26 @@
 import os
-import pathlib
-import lxml
-from lxml import etree
-import natsort
-import zipfile
+import typing
 
 from .Utils import Filesystem
 from .Utils import Texture
-from .Utils.path import joinPath
 from .classes import *
 
-os.path.isdir
-
 class Game():
-    def __init__(this, gamepath : str, assets : str = '/assets', db : str = '/Data/water.db', profile : str = None) -> None:
+    _DB = '/Data/water.db'
+    _BASEASSETS = '/'
+    _PROFILE = None
+    
+    game = 'WMW'
+    
+    def __init__(
+        this,
+        gamepath : str, assets : str = '/assets',
+        db : str = '/Data/water.db',
+        profile : str = None,
+        baseassets : str = '/',
+        platform : typing.Literal['android', 'ios'] = 'android',
+        hook : typing.Callable[[int, str, int], typing.Any] = None,
+    ) -> None:
         """load game
 
         Args:
@@ -21,20 +28,29 @@ class Game():
             assets (str, optional): Relative path to assets folder. Defaults to '/assets'.
             db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
+            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
         """
+        if gamepath == None:
+            return
+        
         this.gamepath = os.path.abspath(gamepath)
-        print(f'{gamepath = }\n{this.gamepath = }')
+        # print(f'{gamepath = }\n{this.gamepath = }')
         this.assets = assets
-        this.db = db
-        this.profile = profile
+        this.db = db or this._DB
+        this.profile = profile or this._PROFILE
+        this.baseassets = baseassets or this._BASEASSETS
+        this.platform = platform
         
-        this.updateFilesystem()
         
-    def updateFilesystem(this):
+        this.updateFilesystem(hook = hook)
+        
+    def updateFilesystem(this, hook : typing.Callable[[int, str, int], typing.Any] = None):
         this.filesystem = Filesystem(this.gamepath, this.assets)
-        this.filesystem.getAssets()
+        this.filesystem.getAssets(hook = hook)
         
-    def loadLevel(this, xmlPath : str = None, imagePath : str = None, ):
+    def Level(this, xmlPath : str = None, imagePath : str = None, ):
         """
         Load level
 
@@ -42,6 +58,11 @@ class Game():
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
         """
+        split = os.path.splitext(xmlPath)
+        if split[1] == '':
+            imagePath = '.'.join([split[0], 'png'])
+            xmlPath = '.'.join([split[0], 'xml'])
+        
         xml = None
         if xmlPath:
             xml = this.filesystem.get(xmlPath)
@@ -50,13 +71,16 @@ class Game():
         if imagePath:
             image = this.filesystem.get(imagePath)
         
-        return Level(
+        level = Level(
             xml=xml,
             image=image,
             filesystem=this.filesystem,
         )
+        level.filename = xmlPath
+        
+        return level
     
-    def loadObject(
+    def Object(
         this,
         object : str,
         **kwargs
@@ -71,34 +95,39 @@ class Game():
             classes.object.Object: Where's My Water? object.
         """
         
-        return Object(
+        obj = Object(
             this.filesystem.get(object),
             filesystem = this.filesystem,
             **kwargs
         )
+        obj.filename = object
+        return obj
     
-    def loadImagelist(
+    def Imagelist(
         this,
-        imagelist : str,
+        imagelist : str = None,
         HD = False,
     ):
         """
         Load imagelist
 
         Args:
-            imagelist (str): Path to `.imagelist` file.
+            imagelist (str): Path to `.imagelist` file. Defaults to None
             HD (bool, optional): Whether to use HD textures. Defaults to False.
 
         Returns:
             classes.imagelist.Imagelist: Imagelist object.
         """
-        return Imagelist(
+        
+        imagelistObject = Imagelist(
             this.filesystem.get(imagelist),
             filesystem = this.filesystem,
             HD = False,
         )
+        imagelistObject.filename = imagelist
+        return imagelistObject
     
-    def loadSprite(
+    def Sprite(
         this,
         sprite : str,
         **kwargs
@@ -112,13 +141,16 @@ class Game():
         Returns:
             classes.sprite.Sprite: Sprite object.
         """
-        return Sprite(
+        
+        spriteObject = Sprite(
             this.filesystem.get(sprite),
             filesystem = this.filesystem,
             **kwargs
         )
+        spriteObject.filename = sprite
+        return spriteObject
     
-    def loadTexture(
+    def Texture(
         this,
         texture : str,
     ):
@@ -126,40 +158,32 @@ class Game():
         Get image texture. Doesn't matter if it's a `.waltex` image or not.
 
         Args:
-            this (_type_): _description_
             texture (str): Path to image file.
 
         Returns:
             Utils.textures.Texture: Texture object.
         """
+        
         return Texture(
             this.filesystem.get(texture)
         )
     
-    def loadLayout(this, layout : str):
+    def Layout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
     
-    def generateFileManifest(this, writeFile : bool = True):
-        manifest = []
-        assets = joinPath(this.gamepath, this.assets)
-        for dir, subdir, files in os.walk(assets):
-            for file in files:
-                # print(f'{file = }\n{dir = }\n{subdir = }')
-                
-                path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
-                # path = pathlib.Path(path).parts
-                # print(f'{path = }')
-                manifest.append(path)
-                
-        manifest = natsort.natsorted(manifest)
-        
-        content = '\n'.join(manifest)
-        
-        path = joinPath(this.gamepath, this.assets, 'FileManifest.txt')
-        # print(path)
+    def generateFileManifest(this, writeFile : bool = True, filename : str = '/FileManifest.txt'):
+        """Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).
+
+        Args:
+            writeFile (bool, optional): Write the manifest to the `FileManifest.txt` file. Defaults to True.
+            filename (str, optional): Filename for FileManifest.txt. Defaults to 'filename'.
+
+        Returns:
+            str: Contents of `FileManifest.txt`
+        """
+        manifest = '\n'.join(this.filesystem.listdir(recursive = True))
         
         if writeFile:
-            with open(path, 'w') as file:
-                file.write(content)
-                
+            this.filesystem.add(filename, manifest, replace = True)
+        
         return manifest
