@@ -40,7 +40,7 @@ class Sprite(GameObject):
         image = this.animation.image.copy()
         gridSize = numpy.array(this.gridSize)
         size = gridSize * this.scale
-        size = [abs(math.floor(x)) for x in size]
+        size = [abs(round(x)) for x in size]
         image = image.resize(size)
         
         image = image.rotate(this.angle, Image.BILINEAR, expand=True)
@@ -320,9 +320,12 @@ class Sprite(GameObject):
             
             @property
             def image(this):
-                image = this._image.image.copy()
-                image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
-                image = image.rotate(this.angleDeg)
+                if this._image:
+                    image = this._image.image.copy()
+                    image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                    image = image.rotate(this.angleDeg)
+                else:
+                    image = Image.new('RGBA', (1,1), (0,0,0,0))
                 return image
             @image.setter
             def image(this, image : Image.Image):
