@@ -63,6 +63,10 @@ class Level(GameObject):
         this.scale = 5
     
     @property
+    def size(this):
+        return this._image.size
+    
+    @property
     def image(this):
         image = this._image.copy()
         
