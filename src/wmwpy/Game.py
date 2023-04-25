@@ -61,14 +61,14 @@ class Game():
         if isinstance(xmlPath, File):
             xml = xmlPath
         else:
-            split = os.path.splitext(xmlPath)
-            if split[1] == '':
-                if imagePath in ['', None]:
-                    imagePath = '.'.join([split[0], 'png'])
-                xmlPath = '.'.join([split[0], 'xml'])
-        
             xml = None
             if xmlPath:
+                split = os.path.splitext(xmlPath)
+                if split[1] == '':
+                    if imagePath in ['', None]:
+                        imagePath = '.'.join([split[0], 'png'])
+                    xmlPath = '.'.join([split[0], 'xml'])
+                
                 xml = this.filesystem.get(xmlPath)
         
         if isinstance(imagePath, File):
