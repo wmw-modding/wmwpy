@@ -1,6 +1,6 @@
 import io
 from lxml import etree
-from PIL import Image
+from PIL import Image, ImageTk
 
 from ..Utils.filesystem import *
 from .object import Object
@@ -58,6 +58,11 @@ class Level(GameObject):
         this.room = (0,0)
         
         this.read()
+    
+    @property
+    def PhotoImage(this):
+        this._PhotoImage = ImageTk.PhotoImage(this.image)
+        return this._PhotoImage
     
     def read(this):
         """Read level XML
