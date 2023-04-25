@@ -116,8 +116,8 @@ class Filesystem():
             return count
 
         
-        print(this.gamepath)
-        print(f'{this.gamepath = }\n{this.assets = }')
+        # print(this.gamepath)
+        # print(f'{this.gamepath = }\n{this.assets = }')
         
         assets = pathlib.Path(joinPath(this.gamepath, this.assets))
         
@@ -170,7 +170,7 @@ class Filesystem():
         if output == None:
             output = joinPath(this.gamepath, this.assets)
         
-        print(f'output: {output}')
+        # print(f'output: {output}')
         
         files = this.listdir(recursive=True)
         for path in files:
@@ -182,11 +182,11 @@ class Filesystem():
             if parts[0] in ['/', '\\', '']:
                 parts = parts[1::]
             
-            print(f'new: {parts}')
+            # print(f'new: {parts}')
             
             newpath = pathlib.Path(output, *parts)
             
-            print(f'writing: {newpath.as_posix()}')
+            # print(f'writing: {newpath.as_posix()}')
             
             newpath.parent.mkdir(exist_ok=True)
             
@@ -399,7 +399,7 @@ class File(FileBase):
         reader = Reader()
         
         for r in FILE_READERS:
-            print(r)
+            # print(r)
             if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
                 reader = r
                 break
@@ -543,7 +543,7 @@ class Folder(FileBase):
             if file != None:
                 if  not replace:
                     raise FileExistsError(f'File {file.path} already exists.')
-                print(f'File {file.path} already exists. Now replacing it.')
+                # print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
             file = File(this, parts[0], data = content)

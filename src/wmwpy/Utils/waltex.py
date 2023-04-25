@@ -217,7 +217,7 @@ def WaltexImage(path : str | bytes | io.BytesIO, premultiplyAlpha : bool = False
         raise TypeError(f"file has to be a 'str', 'bytes' or file-like object.")
     
         
-    print(filetype.guess(rawdata))
+    # print(filetype.guess(rawdata))
         
     if filetype.guess(rawdata).MIME != 'image/waltex':
         raise TypeError('File is not a waltex')

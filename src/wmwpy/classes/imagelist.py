@@ -375,7 +375,7 @@ class Imagelist(GameObject):
     
             if this.gamepath:
                 this.fullAtlasPath = joinPath(this.gamepath, this.assets, this.file)
-                print(this.fullAtlasPath)
+                # print(this.fullAtlasPath)
     
             this.getAtlas()
             this.getImages()
@@ -456,7 +456,7 @@ class Imagelist(GameObject):
                 NameError: Image already exists.
             """
             if name in this.images:
-                print(f'Warning: "{name}" already in imagelist.')
+                # print(f'Warning: "{name}" already in imagelist.')
                 if not replace:
                     raise NameError(f'Image "{name}" already exists.')
             properties['name'] = name
@@ -505,7 +505,7 @@ class Imagelist(GameObject):
             this.properties['textureBasePath'] = this.textureBasePath
             this.properties['imgSize'] = ' '.join([str(n) for n in this.size])
             this.properties['file'] = this.file
-            print(this.properties['file'])
+            # print(this.properties['file'])
             if this.id == None:
                 if 'id' in this.properties:
                    del this.properties['id']

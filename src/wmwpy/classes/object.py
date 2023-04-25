@@ -99,11 +99,11 @@ class Object(GameObject):
         this.size = max - min
         this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
-        print(f'{min = }')
-        print(f'{max = }')
-        print(rects)
-        print(this.size)
-        print(f'{this.offset = }')
+        # print(f'{min = }')
+        # print(f'{max = }')
+        # print(rects)
+        # print(this.size)
+        # print(f'{this.offset = }')
         
         
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
@@ -120,7 +120,7 @@ class Object(GameObject):
                 offset = this.offset
             )
             
-            print(f'{pos = }')
+            # print(f'{pos = }')
             
             image.alpha_composite(
                 sprite.image,
@@ -430,7 +430,7 @@ class Shape(GameObject):
         
         offset = numpy.array([a.mean() for a in numpy.array([min,max]).swapaxes(0,1)])
         # offset = offset * [1,-1]
-        print(f'{offset = }')
+        # print(f'{offset = }')
         
         size = max - min
         
@@ -438,7 +438,7 @@ class Shape(GameObject):
         draw = ImageDraw.Draw(image)
         
         # size = size * [1,-1]
-        print(f'{size = }')
+        # print(f'{size = }')
         for n in range(len(this.points)):
             point = this.points[n]
             previous = (this.points[(n - 1) % len(this.points)])
@@ -452,7 +452,7 @@ class Shape(GameObject):
                 offset,
             ))
             
-            print(line)
+            # print(line)
             
             line = line.flatten()
             line = tuple([round(x) for x in line])
