@@ -63,7 +63,7 @@ class Game():
         else:
             split = os.path.splitext(xmlPath)
             if split[1] == '':
-                if imagePath == None:
+                if imagePath in ['', None]:
                     imagePath = '.'.join([split[0], 'png'])
                 xmlPath = '.'.join([split[0], 'xml'])
         
