@@ -3,7 +3,7 @@ __author__ = 'ego-lay-atman-bay'
 
 import typing
 
-from .Game import Game
+from .game import Game
 from . import classes
 from . import Font
 from .classes import widget
@@ -59,7 +59,7 @@ def load(
             baseassets=baseassets
         )
     except:
-        return Game(
+        return game(
             gamepath=gamepath,
             assets=assets,
             db=db,

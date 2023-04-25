@@ -1,6 +1,6 @@
 import typing
 
-from .Game import Game
+from .game import Game
 
 # Where's My Water?
 class WMW(Game):
