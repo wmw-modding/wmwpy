@@ -56,12 +56,12 @@ class Object(GameObject):
         this.defaultProperties = {}
         this.properties = {}
         this.name = name
+        this.size = (0,0)
         
         this.offset = [0,0]
         this.scale = scale
         
         this.readXML()
-        
     
     @property
     def image(this) -> Image.Image:
@@ -96,17 +96,17 @@ class Object(GameObject):
         max = numpy.array([math.ceil(v.max()) for v in rects])
         
         
-        maxSize = max - min
+        this.size = max - min
         this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
         print(f'{min = }')
         print(f'{max = }')
         print(rects)
-        print(maxSize)
+        print(this.size)
         print(f'{this.offset = }')
         
         
-        image = Image.new('RGBA', tuple(maxSize * this.scale), (0,0,0,0))
+        image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
         
         sprites = list(reversed(background)) + foreground
         
@@ -115,7 +115,7 @@ class Object(GameObject):
             pos = this.truePos(
                 sprite.pos,
                 size,
-                maxSize,
+                this.size,
                 scale = this.scale,
                 offset = this.offset
             )
@@ -126,6 +126,11 @@ class Object(GameObject):
                 sprite.image,
                 tuple([round(x) for x in pos]),
             )
+        
+        if 'Angle' in this.properties:
+            angle = float(this.properties['Angle'])
+            
+            image = image.rotate(angle, expand = True)
             
         return image
     
