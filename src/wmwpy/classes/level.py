@@ -1,6 +1,7 @@
 import io
 from lxml import etree
 from PIL import Image, ImageTk
+import numpy
 
 from ..Utils.filesystem import *
 from .object import Object
@@ -58,11 +59,38 @@ class Level(GameObject):
         this.room = (0,0)
         
         this.read()
+        
+        this.scale = 5
+    
+    @property
+    def image(this):
+        image = this._image.copy()
+        
+        size = numpy.array(image.size)
+        size = size * this.scale
+        
+        image = image.resize(size, resample = Image.NEAREST)
+        
+        return image
+        
+    @image.setter
+    def image(this, value : Image.Image):
+        this._image = value
     
     @property
     def PhotoImage(this):
         this._PhotoImage = ImageTk.PhotoImage(this.image)
         return this._PhotoImage
+
+    @property
+    def scale(this):
+        return this._scale
+    @scale.setter
+    def scale(this, value : int):
+        this._scale = value
+        
+        for obj in this.objects:
+            obj.scale = this._scale
     
     def read(this):
         """Read level XML
