@@ -377,7 +377,7 @@ class Sprite(GameObject):
                 if this._image:
                     image = this._image.image.copy()
                     image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
-                    image = image.rotate(this.angleDeg)
+                    image = image.rotate(this.angleDeg, expand = True)
                 else:
                     image = Image.new('RGBA', (1,1), (0,0,0,0))
                 return image
