@@ -59,7 +59,7 @@ def load(
             baseassets=baseassets
         )
     except:
-        return game(
+        return Game(
             gamepath=gamepath,
             assets=assets,
             db=db,
