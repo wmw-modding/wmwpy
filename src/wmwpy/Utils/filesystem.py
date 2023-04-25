@@ -299,6 +299,7 @@ class File(FileBase):
         this._type.value = this._Type.FILE
         
         this._datatype = 'raw'
+        this._original_filename = ''
         
         if isinstance(data, bytes):
             this._rawcontent = data
@@ -306,6 +307,7 @@ class File(FileBase):
             if os.path.exists(data):
                 this._rawcontent = data
                 this._datatype = 'path'
+                this._original_filename = data
             else:
                 this._rawcontent = data.encode()
         elif isinstance(data, io.BytesIO):
@@ -313,7 +315,14 @@ class File(FileBase):
         elif isinstance(data, File):
             this._rawcontent = data._rawcontent
             this._datatype = data._datatype
+            this._original_filename = data._original_filename
         elif hasattr(data, 'read'):
+            data.seek(0)
+            if hasattr(data, 'name'):
+                this._original_filename = data.name
+            
+            data.seek(0)
+            
             this._rawcontent = data.read()
             if isinstance(this._rawcontent, str):
                 this._rawcontent = this._rawcontent.encode()
