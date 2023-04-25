@@ -1,7 +1,7 @@
 import os
 import typing
 
-from .Utils import Filesystem
+from .Utils.filesystem import *
 from .Utils import Texture
 from .classes import *
 
@@ -58,25 +58,35 @@ class Game():
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
         """
-        split = os.path.splitext(xmlPath)
-        if split[1] == '':
-            imagePath = '.'.join([split[0], 'png'])
-            xmlPath = '.'.join([split[0], 'xml'])
+        if isinstance(xmlPath, File):
+            xml = xmlPath
+        else:
+            split = os.path.splitext(xmlPath)
+            if split[1] == '':
+                if imagePath == None:
+                    imagePath = '.'.join([split[0], 'png'])
+                xmlPath = '.'.join([split[0], 'xml'])
         
-        xml = None
-        if xmlPath:
-            xml = this.filesystem.get(xmlPath)
+            xml = None
+            if xmlPath:
+                xml = this.filesystem.get(xmlPath)
         
-        image = None
-        if imagePath:
-            image = this.filesystem.get(imagePath)
+        if isinstance(imagePath, File):
+            image = imagePath
+        else:
+            image = None
+            if imagePath:
+                image = this.filesystem.get(imagePath)
         
         level = Level(
             xml=xml,
             image=image,
             filesystem=this.filesystem,
         )
-        level.filename = xmlPath
+        if isinstance(xmlPath, File):
+            level.filename = xmlPath.path
+        else:
+            level.filename = xmlPath
         
         return level
     
@@ -95,8 +105,12 @@ class Game():
             classes.object.Object: Where's My Water? object.
         """
         
+        
+        if not isinstance(object, File):
+            object = this.filesystem.get(object)
+        
         obj = Object(
-            this.filesystem.get(object),
+            object,
             filesystem = this.filesystem,
             **kwargs
         )
@@ -119,8 +133,11 @@ class Game():
             classes.imagelist.Imagelist: Imagelist object.
         """
         
+        if not isinstance(imagelist, File):
+            imagelist = this.filesystem.get(imagelist)
+        
         imagelistObject = Imagelist(
-            this.filesystem.get(imagelist),
+            imagelist,
             filesystem = this.filesystem,
             HD = False,
         )
@@ -142,8 +159,11 @@ class Game():
             classes.sprite.Sprite: Sprite object.
         """
         
+        if not isinstance(sprite, File):
+            sprite = this.filesystem.get(sprite)
+        
         spriteObject = Sprite(
-            this.filesystem.get(sprite),
+            sprite,
             filesystem = this.filesystem,
             **kwargs
         )
@@ -164,8 +184,11 @@ class Game():
             Utils.textures.Texture: Texture object.
         """
         
+        if not isinstance(texture, File):
+            texture = this.filesystem.get(texture)
+        
         return Texture(
-            this.filesystem.get(texture)
+            texture
         )
     
     def Layout(this, layout : str):
