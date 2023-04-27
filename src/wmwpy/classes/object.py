@@ -9,6 +9,7 @@ import math
 from ..gameobject import GameObject
 from .sprite import Sprite
 from ..Utils.filesystem import *
+from ..Utils.rotate import rotate
 
 from ..Utils.XMLTools import strbool
 class Object(GameObject):
@@ -129,7 +130,8 @@ class Object(GameObject):
         
         if 'Angle' in this.properties:
             angle = float(this.properties['Angle'])
-            
+            newOffset = rotate(this.offset, degrees=-angle)
+            this.offset = newOffset
             image = image.rotate(angle, expand = True)
             
         return image
