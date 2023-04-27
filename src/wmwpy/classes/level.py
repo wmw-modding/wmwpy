@@ -243,6 +243,10 @@ class Level(GameObject):
         
         obj = filename
         
+        id = 0
+        while this.getObjectById(id) != None:
+            id += 1
+        
         if this.getObject(obj.name) != None:
             objnum = 0
             name = obj.name
@@ -251,9 +255,16 @@ class Level(GameObject):
                 objnum += 1
                 obj.name = f'{name}{str(objnum)}'
         
+        obj.id = id
         this.objects.append(obj)
         
         return obj
+    
+    def getObjectById(this, id):
+        for obj in this.objects:
+            if obj.id == id:
+                return obj
+        return None
     
     def getObject(this, name : str):
         """
