@@ -102,6 +102,8 @@ class Level(GameObject):
         this.objects : list[Object] = []
         this.properties = {}
         
+        id = 0
+        
         for element in this.xml:
             # comment safe-guard
             if element is etree.Comment:
@@ -130,7 +132,11 @@ class Level(GameObject):
                     name = name,
                 )
                 
+                obj.id = id
+                
                 this.objects.append(obj)
+                
+                id += 1
             
             if element.tag == 'Properties':
                 for el in element:

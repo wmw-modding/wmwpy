@@ -58,6 +58,7 @@ class Object(GameObject):
         this.properties = {}
         this.name = name
         this.size = (0,0)
+        this.id = 0
         
         this.offset = [0,0]
         this.scale = scale
