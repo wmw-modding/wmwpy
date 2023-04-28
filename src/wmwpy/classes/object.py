@@ -60,27 +60,28 @@ class Object(GameObject):
         this.size = (0,0)
         this.id = 0
         
-        this.offset = [0,0]
+        this._background : list[Sprite] = []
+        this._foreground : list[Sprite] = []
+        this._PhotoImage : dict[str, ImageTk.PhotoImage] = {}
+        
+        this._offset = [0,0]
         this.scale = scale
         
         this.readXML()
     
-    @property
-    def image(this) -> Image.Image:
-        
+    def getOffset(this):
         rects = []
-        background = []
-        foreground = []
+        this._background : list[Sprite] = []
+        this._foreground : list[Sprite] = []
         
-        image = Image.new('RGBA', (1,1), (0,0,0,0))
         for sprite in this.sprites:
             if 'visible' in sprite.properties:
                 if not strbool(sprite.properties['visible']):
                     continue
             if ('isBackground' in sprite.properties) and strbool(sprite.properties['isBackground']):
-                background.append(sprite)
+                this._background.append(sprite)
             else:
-                foreground.append(sprite)
+                this._foreground.append(sprite)
                 
             pos = numpy.array(sprite.pos)
             size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
@@ -99,27 +100,24 @@ class Object(GameObject):
         
         
         this.size = max - min
-        this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
+        this._offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
-        # print(f'{min = }')
-        # print(f'{max = }')
-        # print(rects)
-        # print(this.size)
-        # print(f'{this.offset = }')
-        
+        return this._offset
+    
+    @property
+    def background(this) -> Image.Image:
+        this.getOffset()
         
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
         
-        sprites = list(reversed(background)) + foreground
-        
-        for sprite in sprites:
+        for sprite in this._background:
             size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
             pos = this.truePos(
                 sprite.pos,
                 size,
                 this.size,
                 scale = this.scale,
-                offset = this.offset
+                offset = this._offset
             )
             
             # print(f'{pos = }')
@@ -128,19 +126,77 @@ class Object(GameObject):
                 sprite.image,
                 tuple([round(x) for x in pos]),
             )
+        image = this.rotateImage(image)
+        
+        return image
+    
+    @property
+    def background_PhotoImage(this):
+        this._PhotoImage['background'] = ImageTk.PhotoImage(this.background)
+        return this._PhotoImage['background']
+    
+    @property
+    def foreground(this):
+        this.getOffset()
+        image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
+        
+        for sprite in this._foreground:
+            size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
+            pos = this.truePos(
+                sprite.pos,
+                size,
+                this.size,
+                scale = this.scale,
+                offset = this._offset
+            )
+            
+            # print(f'{pos = }')
+            
+            image.alpha_composite(
+                sprite.image,
+                tuple([round(x) for x in pos]),
+            )
+        image = this.rotateImage(image)
+        
+        return image
+    
+    @property
+    def foreground_PhotoImage(this):
+        this._PhotoImage['foreground'] = ImageTk.PhotoImage(this.foreground)
+        return this._PhotoImage['foreground']
+    
+    @property
+    def image(this) -> Image.Image:
+        
+        image = this.background
+        image.alpha_composite(this.foreground)
+        
+        return image
+    
+    @property
+    def offset(this):
+        this.getOffset()
+        offset = this._offset
         
         if 'Angle' in this.properties:
             angle = float(this.properties['Angle'])
-            newOffset = rotate(this.offset, degrees=-angle)
-            this.offset = newOffset
+            newOffset = rotate(this._offset, degrees=-angle)
+            offset = newOffset
+        
+        return offset
+        
+    
+    def rotateImage(this, image : Image.Image):
+        if 'Angle' in this.properties:
+            angle = float(this.properties['Angle'])
             image = image.rotate(angle, expand = True)
-            
+        
         return image
     
     @property
     def PhotoImage(this):
-        this._PhotoImage = ImageTk.PhotoImage(this.image)
-        return this._PhotoImage
+        this._PhotoImage['image'] = ImageTk.PhotoImage(this.image)
+        return this._PhotoImage['image']
     
     @property
     def scale(this):
