@@ -197,7 +197,7 @@ class Object(GameObject):
     def rotateImage(this, image : Image.Image):
         if 'Angle' in this.properties:
             angle = float(this.properties['Angle'])
-            image = image.rotate(angle, expand = True)
+            image = image.rotate(angle, expand = True, resample = Image.BILINEAR)
         
         return image
     
