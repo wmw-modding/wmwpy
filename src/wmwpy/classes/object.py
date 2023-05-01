@@ -178,13 +178,21 @@ class Object(GameObject):
         this.getOffset()
         offset = this._offset
         
-        if 'Angle' in this.properties:
-            angle = float(this.properties['Angle'])
-            newOffset = rotate(this._offset, degrees=-angle)
-            offset = newOffset
+        offset = this.rotatePoint(this._offset)
         
         return offset
+    
+    def rotatePoint(this, point : tuple = (0,0), angle : float = None, origin : tuple = (0,0)):
+        if angle == None:
+            if 'Angle' in this.properties:
+                angle = float(this.properties['Angle'])
+            else:
+                angle = 0
         
+        if angle == 0:
+            return point
+        
+        return rotate(point, degrees=-angle, origin=origin)
     
     def rotateImage(this, image : Image.Image):
         if 'Angle' in this.properties:
