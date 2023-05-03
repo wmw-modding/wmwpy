@@ -15,6 +15,6 @@ def getRelPath(path : str) -> str:
     if path == '':
         return '.'
     parts = pathlib.Path(path).parts
-    if parts[0] == '\\':
+    if parts[0] in ['\\', '/']:
         return pathlib.Path(*parts[1::]).as_posix()
     return path
