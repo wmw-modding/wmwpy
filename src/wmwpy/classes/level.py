@@ -230,7 +230,7 @@ class Level(GameObject):
         """
         if not isinstance(filename, Object):
             filename = Object(
-                this.filesystem.get(filename),
+                filename,
                 filesystem = this.filesystem,
                 properties = properties,
                 pos = pos,
@@ -257,6 +257,7 @@ class Level(GameObject):
         
         obj.id = id
         this.objects.append(obj)
+        obj.scale = this.scale
         
         return obj
     
