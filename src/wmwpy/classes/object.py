@@ -68,6 +68,9 @@ class Object(GameObject):
         this.scale = scale
         
         this.readXML()
+        
+        if isinstance(file, File):
+            this.filename = file.path
     
     def getOffset(this):
         rects = []
@@ -354,7 +357,9 @@ class Object(GameObject):
         for name in this.properties:
             value = this.properties[name]
             
-            etree.SubElement(properties, 'Property', name = name, value = value)
+            etree.SubElement(properties, 'Property', name = name, value = str(value))
+        
+        this.getProperties()
         
         return xml
     
