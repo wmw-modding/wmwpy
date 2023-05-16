@@ -84,6 +84,11 @@ class Filesystem():
         return this.root.add(path = path, content = file, replace = replace)
     
     def remove(this, path : str):
+        """Remove a file or folder
+
+        Args:
+            path (str): Path to file or folder to remove.
+        """
         return this.root.remove(path)
     
     def getAssets(
@@ -116,8 +121,8 @@ class Filesystem():
             return count
 
         
-        print(this.gamepath)
-        print(f'{this.gamepath = }\n{this.assets = }')
+        # print(this.gamepath)
+        # print(f'{this.gamepath = }\n{this.assets = }')
         
         assets = pathlib.Path(joinPath(this.gamepath, this.assets))
         
@@ -167,10 +172,15 @@ class Filesystem():
         return this.get(path).listdir(recursive = recursive)
     
     def dump(this, output : str = None):
+        """Dump the contents of the filesystem to the specified directory
+
+        Args:
+            output (str, optional): Path to output directory. Defaults to original path.
+        """
         if output == None:
             output = joinPath(this.gamepath, this.assets)
         
-        print(f'output: {output}')
+        # print(f'output: {output}')
         
         files = this.listdir(recursive=True)
         for path in files:
@@ -182,11 +192,11 @@ class Filesystem():
             if parts[0] in ['/', '\\', '']:
                 parts = parts[1::]
             
-            print(f'new: {parts}')
+            # print(f'new: {parts}')
             
             newpath = pathlib.Path(output, *parts)
             
-            print(f'writing: {newpath.as_posix()}')
+            # print(f'writing: {newpath.as_posix()}')
             
             newpath.parent.mkdir(exist_ok=True)
             
@@ -248,11 +258,21 @@ class FileBase():
         self.parent.files.remove(self)
         self.parent = None
     
-    def is_dir(this):
+    def is_dir(this) -> bool:
+        """Check whether this is a folder.
+
+        Returns:
+            bool
+        """
         return this._type.value == this._Type.FOLDER
         
     @property
-    def path(this):
+    def path(this) -> str:
+        """Path to this file or folder from the root.
+
+        Returns:
+            str: Path this file or folder.
+        """
         if this.parent == None or isinstance(this.parent, Filesystem):
             if isinstance(this, File) and not isinstance(this.parent, Filesystem):
                 return this.name
@@ -260,13 +280,23 @@ class FileBase():
         return pathlib.Path(this.parent.path, this.name).as_posix()
     
     @property
-    def root(this):
+    def root(this) -> 'Folder':
+        """Root Folder for this File or Folder.
+
+        Returns:
+            Folder: Root Folder for this File or Folder
+        """
         if this.parent == None or this.name == '':
             return this
         return this.parent.root
     
     @property
-    def filesystem(this):
+    def filesystem(this) -> Filesystem:
+        """Returns the Filesystem or root Folder for this File or Folder.
+
+        Returns:
+            Filesystem | Folder: Root Filesystem or Folder
+        """
         if isinstance(this.parent, Filesystem):
             return this.parent
         if this.parent == None or this.name == '':
@@ -299,6 +329,7 @@ class File(FileBase):
         this._type.value = this._Type.FILE
         
         this._datatype = 'raw'
+        this._original_filename = ''
         
         if isinstance(data, bytes):
             this._rawcontent = data
@@ -306,6 +337,7 @@ class File(FileBase):
             if os.path.exists(data):
                 this._rawcontent = data
                 this._datatype = 'path'
+                this._original_filename = data
             else:
                 this._rawcontent = data.encode()
         elif isinstance(data, io.BytesIO):
@@ -313,7 +345,14 @@ class File(FileBase):
         elif isinstance(data, File):
             this._rawcontent = data._rawcontent
             this._datatype = data._datatype
+            this._original_filename = data._original_filename
         elif hasattr(data, 'read'):
+            data.seek(0)
+            if hasattr(data, 'name'):
+                this._original_filename = data.name
+            
+            data.seek(0)
+            
             this._rawcontent = data.read()
             if isinstance(this._rawcontent, str):
                 this._rawcontent = this._rawcontent.encode()
@@ -326,6 +365,8 @@ class File(FileBase):
             this._getdata()
         
     def _getdata(this):
+        """Get data from file path
+        """
         if this._datatype == 'path':
             with open(this._rawcontent, 'rb') as file:
                 this._rawcontent = file.read()
@@ -357,6 +398,11 @@ class File(FileBase):
     
     @property
     def rawdata(this) -> io.BytesIO:
+        """Returns the raw data of the file as a `BytesIO` object.
+
+        Returns:
+            io.BytesIO: Raw data of file.
+        """
         if this._datatype == 'path':
             this._getdata()
         
@@ -366,7 +412,12 @@ class File(FileBase):
         this._rawdata : io.BytesIO = value
     
     @property
-    def extension(this):
+    def extension(this) -> str:
+        """The file extension
+
+        Returns:
+            str: File extension
+        """
         if this._datatype == 'path':
             return os.path.splitext(this._rawcontent)[1::]
         else:
@@ -390,7 +441,7 @@ class File(FileBase):
         reader = Reader()
         
         for r in FILE_READERS:
-            print(r)
+            # print(r)
             if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
                 reader = r
                 break
@@ -534,7 +585,7 @@ class Folder(FileBase):
             if file != None:
                 if  not replace:
                     raise FileExistsError(f'File {file.path} already exists.')
-                print(f'File {file.path} already exists. Now replacing it.')
+                # print(f'File {file.path} already exists. Now replacing it.')
                 this.files.remove(file)
             
             file = File(this, parts[0], data = content)

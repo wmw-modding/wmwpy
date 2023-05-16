@@ -1,14 +1,15 @@
-__version__ = "0.1.1-beta"
+__version__ = "0.2.0-beta"
 __author__ = 'ego-lay-atman-bay'
 
 import typing
 
-from .Game import Game
+from .game import Game
 from . import classes
 from . import Font
 from .classes import widget
 from . import Utils
 from .gametemplate import GAMES
+from .Utils import filesystem
 
 def load(
     gamepath : str,

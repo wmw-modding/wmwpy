@@ -1,6 +1,7 @@
 import io
 from lxml import etree
-from PIL import Image
+from PIL import Image, ImageTk
+import numpy
 
 from ..Utils.filesystem import *
 from .object import Object
@@ -58,12 +59,67 @@ class Level(GameObject):
         this.room = (0,0)
         
         this.read()
+        
+        this.scale = 5
+    
+    @property
+    def size(this) -> tuple[int,int]:
+        """Level image size
+
+        Returns:
+            tuple[int,int]: (width,height)
+        """
+        return this._image.size
+    
+    @property
+    def image(this) -> Image.Image:
+        """Scaled up Level image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
+        image = this._image.copy()
+        
+        size = numpy.array(image.size)
+        size = size * this.scale
+        
+        image = image.resize(size, resample = Image.NEAREST)
+        
+        return image
+        
+    @image.setter
+    def image(this, value : Image.Image):
+        this._image = value
+    
+    @property
+    def PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of the Level image
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
+        this._PhotoImage = ImageTk.PhotoImage(this.image)
+        return this._PhotoImage
+
+    @property
+    def scale(this) -> int:
+        """Level size scale
+        """
+        return this._scale
+    @scale.setter
+    def scale(this, value : int):
+        this._scale = value
+        
+        for obj in this.objects:
+            obj.scale = this._scale
     
     def read(this):
         """Read level XML
         """
         this.objects : list[Object] = []
         this.properties = {}
+        
+        id = 0
         
         for element in this.xml:
             # comment safe-guard
@@ -93,7 +149,11 @@ class Level(GameObject):
                     name = name,
                 )
                 
+                obj.id = id
+                
                 this.objects.append(obj)
+                
+                id += 1
             
             if element.tag == 'Properties':
                 for el in element:
@@ -187,7 +247,7 @@ class Level(GameObject):
         """
         if not isinstance(filename, Object):
             filename = Object(
-                this.filesystem.get(filename),
+                filename,
                 filesystem = this.filesystem,
                 properties = properties,
                 pos = pos,
@@ -200,6 +260,10 @@ class Level(GameObject):
         
         obj = filename
         
+        id = 0
+        while this.getObjectById(id) != None:
+            id += 1
+        
         if this.getObject(obj.name) != None:
             objnum = 0
             name = obj.name
@@ -208,9 +272,25 @@ class Level(GameObject):
                 objnum += 1
                 obj.name = f'{name}{str(objnum)}'
         
+        obj.id = id
         this.objects.append(obj)
+        obj.scale = this.scale
         
         return obj
+    
+    def getObjectById(this, id : int) -> Object:
+        """Get an Object by it's id
+
+        Args:
+            id (int): Object id to find
+
+        Returns:
+            Object: wmwpy Object
+        """
+        for obj in this.objects:
+            if obj.id == id:
+                return obj
+        return None
     
     def getObject(this, name : str):
         """

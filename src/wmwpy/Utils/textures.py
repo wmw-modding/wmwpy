@@ -81,6 +81,19 @@ def getTexture(path : str, textureSettings : dict, size : tuple, cache = True) -
     return image
     
 def getTextueSettings(gamepath : str, assets : str, textureSettings : str, name : str, ) -> dict:
+    """Get the texture settings of a texture.
+    
+    Really needs an update, as now I can reliably get the path to the file using the `baseassets` property in the `Game` object.
+
+    Args:
+        gamepath (str): Path to game
+        assets (str): Relative path from the gamepath to the assets folder.
+        textureSettings (str): Path to `TextureSettings.xml` file
+        name (str): Name of image to look for.
+
+    Returns:
+        dict: The texture settings as a dict.
+    """
     fullpath = joinPath(gamepath, assets, textureSettings)
     xml = etree.parse(fullpath).getroot()
     

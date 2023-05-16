@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.level &#8212; wmwpy 0.1.0-beta documentation</title>
+    <title>wmwpy.classes.level &#8212; wmwpy 0.2.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -32,7 +32,8 @@
   <h1>Source code for wmwpy.classes.level</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageTk</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">..Utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">Object</span>
@@ -90,12 +91,67 @@
         <span class="n">this</span><span class="o">.</span><span class="n">room</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="mi">5</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Level image size</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[int,int]: (width,height)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">size</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scaled up Level image</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            PIL.Image.Image: PIL Image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="n">size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span>
+        
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">resample</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">NEAREST</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">image</span>
+        
+    <span class="nd">@image</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">value</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tkinter PhotoImage of the Level image</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ImageTk.PhotoImage: Tkinter PhotoImage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Level size scale</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_scale</span>
+    <span class="nd">@scale</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="n">value</span>
+        
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_scale</span>
     
 <div class="viewcode-block" id="Level.read"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read level XML</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">objects</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
         
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">:</span>
             <span class="c1"># comment safe-guard</span>
@@ -125,7 +181,11 @@
                     <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
                 <span class="p">)</span>
                 
+                <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+                
                 <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                
+                <span class="nb">id</span> <span class="o">+=</span> <span class="mi">1</span>
             
             <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Properties&#39;</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
@@ -219,7 +279,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">Object</span><span class="p">):</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">Object</span><span class="p">(</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+                <span class="n">filename</span><span class="p">,</span>
                 <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
                 <span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span><span class="p">,</span>
                 <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span><span class="p">,</span>
@@ -232,6 +292,10 @@
         
         <span class="n">obj</span> <span class="o">=</span> <span class="n">filename</span>
         
+        <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">this</span><span class="o">.</span><span class="n">getObjectById</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">+=</span> <span class="mi">1</span>
+        
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">objnum</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span>
@@ -240,9 +304,25 @@
                 <span class="n">objnum</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="n">objnum</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         
+        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span>
         
         <span class="k">return</span> <span class="n">obj</span></div>
+    
+<div class="viewcode-block" id="Level.getObjectById"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.getObjectById">[docs]</a>    <span class="k">def</span> <span class="nf">getObjectById</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="nb">id</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Object</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an Object by it&#39;s id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): Object id to find</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Object: wmwpy Object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
     
 <div class="viewcode-block" id="Level.getObject"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.getObject">[docs]</a>    <span class="k">def</span> <span class="nf">getObject</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

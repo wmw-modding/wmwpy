@@ -29,6 +29,7 @@ dynamic = ["version"]
 [project.urls]
 "Homepage" = "https://github.com/wmw-modding/wmwpy"
 "Bug Tracker" = "https://github.com/wmw-modding/wmwpy/issues"
+"Documentation" = "https://wmw-modding.github.io/wmwpy/"
 
 [tool.setuptools.dynamic]
 version = { attr = "wmwpy.__version__" }

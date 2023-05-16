@@ -15,17 +15,16 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   wmwpy.Font
    wmwpy.Utils
    wmwpy.classes
 
 Submodules
 ----------
 
-wmwpy.Game module
+wmwpy.game module
 -----------------
 
-.. automodule:: wmwpy.Game
+.. automodule:: wmwpy.game
    :members:
    :undoc-members:
    :show-inheritance:

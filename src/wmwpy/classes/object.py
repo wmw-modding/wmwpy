@@ -2,13 +2,14 @@ import lxml
 from lxml import etree
 import io
 from copy import deepcopy
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
 import numpy
 import math
 
 from ..gameobject import GameObject
 from .sprite import Sprite
 from ..Utils.filesystem import *
+from ..Utils.rotate import rotate
 
 from ..Utils.XMLTools import strbool
 class Object(GameObject):
@@ -56,29 +57,39 @@ class Object(GameObject):
         this.defaultProperties = {}
         this.properties = {}
         this.name = name
+        this.size = (0,0)
+        this.id = 0
         
-        this.offset = [0,0]
+        this._background : list[Sprite] = []
+        this._foreground : list[Sprite] = []
+        this._PhotoImage : dict[str, ImageTk.PhotoImage] = {}
+        
+        this._offset = [0,0]
         this.scale = scale
         
         this.readXML()
         
+        if isinstance(file, File):
+            this.filename = file.path
     
-    @property
-    def image(this) -> Image.Image:
-        
+    def getOffset(this) -> tuple[float,float]:
+        """Get the center offset for the Object image
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
         rects = []
-        background = []
-        foreground = []
+        this._background : list[Sprite] = []
+        this._foreground : list[Sprite] = []
         
-        image = Image.new('RGBA', (1,1), (0,0,0,0))
         for sprite in this.sprites:
             if 'visible' in sprite.properties:
                 if not strbool(sprite.properties['visible']):
                     continue
             if ('isBackground' in sprite.properties) and strbool(sprite.properties['isBackground']):
-                background.append(sprite)
+                this._background.append(sprite)
             else:
-                foreground.append(sprite)
+                this._foreground.append(sprite)
                 
             pos = numpy.array(sprite.pos)
             size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
@@ -95,47 +106,170 @@ class Object(GameObject):
         min = numpy.array([math.floor(v.min()) for v in rects])
         max = numpy.array([math.ceil(v.max()) for v in rects])
         
-        maxSize = max - min
         
-        this.offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
+        this.size = max - min
+        this._offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
-        print(f'{min = }')
-        print(f'{max = }')
-        print(rects)
-        print(maxSize)
-        print(f'{this.offset = }')
+        return this._offset
+    
+    @property
+    def background(this) -> Image.Image:
+        """The background image of this Object
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
+        this.getOffset()
         
+        image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
         
-        image = Image.new('RGBA', tuple(maxSize * this.scale), (0,0,0,0))
-        
-        sprites = list(reversed(background)) + foreground
-        
-        for sprite in sprites:
+        for sprite in this._background:
             size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
             pos = this.truePos(
                 sprite.pos,
                 size,
-                maxSize,
+                this.size,
                 scale = this.scale,
-                offset = this.offset
+                offset = this._offset
             )
             
-            print(f'{pos = }')
+            # print(f'{pos = }')
             
             image.alpha_composite(
                 sprite.image,
                 tuple([round(x) for x in pos]),
             )
-            
+        image = this.rotateImage(image)
+        
         return image
     
     @property
-    def PhotoImage(this):
-        this._PhotoImage = ImageTk.PhotoImage(this.image)
-        return this._PhotoImage
+    def background_PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of this Object
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
+        this._PhotoImage['background'] = ImageTk.PhotoImage(this.background)
+        return this._PhotoImage['background']
     
     @property
-    def scale(this):
+    def foreground(this) -> Image.Image:
+        """The foreground of the Object image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
+        this.getOffset()
+        image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
+        
+        for sprite in this._foreground:
+            size = (numpy.array(sprite.image.size) / sprite.scale) * [1,-1]
+            pos = this.truePos(
+                sprite.pos,
+                size,
+                this.size,
+                scale = this.scale,
+                offset = this._offset
+            )
+            
+            # print(f'{pos = }')
+            
+            image.alpha_composite(
+                sprite.image,
+                tuple([round(x) for x in pos]),
+            )
+        image = this.rotateImage(image)
+        
+        return image
+    
+    @property
+    def foreground_PhotoImage(this) -> ImageTk.PhotoImage:
+        """Foregound Tkinter PhotoImage
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
+        this._PhotoImage['foreground'] = ImageTk.PhotoImage(this.foreground)
+        return this._PhotoImage['foreground']
+    
+    @property
+    def image(this) -> Image.Image:
+        """Full Object image, with both the background and foreground.
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
+        
+        image = this.background
+        image.alpha_composite(this.foreground)
+        
+        return image
+    
+    @property
+    def offset(this) -> tuple[float,float]:
+        """The center offset of the Object image
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
+        this.getOffset()
+        offset = this._offset
+        
+        offset = this.rotatePoint(this._offset)
+        
+        return offset
+    
+    def rotatePoint(this, point : tuple = (0,0), angle : float = None) -> tuple[float,float]:
+        """Rotate a point around (0,0)
+
+        Args:
+            point (tuple, optional): Point to rotate. Defaults to (0,0).
+            angle (float, optional): Angle to rotate. Defaults to Object `Angle` property.
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
+        if angle == None:
+            if 'Angle' in this.properties:
+                angle = float(this.properties['Angle'])
+            else:
+                angle = 0
+        
+        if angle == 0:
+            return point
+        
+        return rotate(point, degrees=-angle)
+    
+    def rotateImage(this, image : Image.Image) -> Image.Image:
+        """Rotate an image the amount of degrees as the Object `Angle` property
+
+        Args:
+            image (PIL.Image.Image): Image to rotate
+
+        Returns:
+            PIL.Image.Image: Rotated PIL Image
+        """
+        if 'Angle' in this.properties:
+            angle = float(this.properties['Angle'])
+            image = image.rotate(angle, expand = True, resample = Image.BILINEAR)
+        
+        return image
+    
+    @property
+    def PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of the Object image
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
+        this._PhotoImage['image'] = ImageTk.PhotoImage(this.image)
+        return this._PhotoImage['image']
+    
+    @property
+    def scale(this) -> int:
+        """Object image scale
+        """
         return this._scale
     @scale.setter
     def scale(this, value : int):
@@ -282,12 +416,16 @@ class Object(GameObject):
         for name in this.properties:
             value = this.properties[name]
             
-            etree.SubElement(properties, 'Property', name = name, value = value)
+            etree.SubElement(properties, 'Property', name = name, value = str(value))
+        
+        this.getProperties()
         
         return xml
     
     @property
-    def filename(this):
+    def filename(this) -> str | None:
+        """Object filename based on the `Filename` proprty
+        """
         if 'Filename' in this.properties:
             return this.properties['Filename']
         else:
@@ -297,7 +435,9 @@ class Object(GameObject):
         this.properties['Filename'] = value
     
     @property
-    def type(this):
+    def type(this) -> str | None:
+        """The Object type, based off the `Type` property.
+        """
         if 'Type' in this.properties:
             return this.properties['Type']
         elif 'Type' in this.defaultProperties:
@@ -379,14 +519,14 @@ class Object(GameObject):
             return
         this.properties[property] = value
 
-class Shape():
+class Shape(GameObject):
     def __init__(this, xml : etree.ElementBase = None) -> None:
         """Shape for Object
 
         Args:
             xml (etree.Element, optional): lxml Element. Defaults to None.
         """
-        this.points = []
+        this.points : list[tuple[float,float]] = []
         this.xml = xml
         
         this.readXML()
@@ -415,3 +555,49 @@ class Shape():
             etree.SubElement(xml, 'Point', {'pos': ' '.join([str(_) for _ in point])})
         this.xml = xml
         return xml
+    
+    @property
+    def image(this) -> Image.Image:
+        """Get the Shape image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
+        points = numpy.array(this.points).swapaxes(0,1)
+        
+        min = numpy.array([math.floor(v.min()) for v in points])
+        max = numpy.array([math.ceil(v.max()) for v in points])
+        
+        offset = numpy.array([a.mean() for a in numpy.array([min,max]).swapaxes(0,1)])
+        # offset = offset * [1,-1]
+        # print(f'{offset = }')
+        
+        size = max - min
+        
+        image = Image.new('1', tuple([math.ceil(x) + 1 for x in size]), 1)
+        draw = ImageDraw.Draw(image)
+        
+        # size = size * [1,-1]
+        # print(f'{size = }')
+        for n in range(len(this.points)):
+            point = this.points[n]
+            previous = (this.points[(n - 1) % len(this.points)])
+            
+            line = numpy.array([point, previous])
+            # line = line * [1,-1]
+            line = numpy.array(this.truePos(
+                line,
+                (1,1),
+                size,
+                offset,
+            ))
+            
+            # print(line)
+            
+            line = line.flatten()
+            line = tuple([round(x) for x in line])
+            
+            
+            draw.line(line, fill=0, width=1)
+        
+        return image

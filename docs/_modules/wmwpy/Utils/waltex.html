@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.Utils.waltex &#8212; wmwpy 0.1.0-beta documentation</title>
+    <title>wmwpy.Utils.waltex &#8212; wmwpy 0.2.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -51,6 +51,8 @@
         <span class="n">EXTENSION</span> <span class="o">=</span> <span class="s1">&#39;waltex&#39;</span>
 
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Waltex file extension class for the `filetype` module</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">_WaltexFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
                 <span class="n">mime</span><span class="o">=</span><span class="n">_WaltexFile</span><span class="o">.</span><span class="n">MIME</span><span class="p">,</span>
                 <span class="n">extension</span><span class="o">=</span><span class="n">_WaltexFile</span><span class="o">.</span><span class="n">EXTENSION</span><span class="p">,</span>
@@ -178,7 +180,15 @@
         
         <span class="n">this</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">byte_order</span><span class="o">=</span><span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">)</span>
     
-<div class="viewcode-block" id="Waltex.read"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.waltex.Waltex.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">byte_order</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Waltex.read"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.waltex.Waltex.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">byte_order</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the waltex image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            byte_order (str, optional): The byte order. Can be &#39;little&#39; or &#39;big&#39;. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            PIL.Image.Image: PIL Image object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">byte_order</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">byte_order</span>
             
@@ -204,6 +214,11 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return size of image</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[int,int]: tuple(width, height)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span></div>
 
 <span class="c1"># legacy functions for reading waltex image</span>
@@ -249,7 +264,7 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file has to be a &#39;str&#39;, &#39;bytes&#39; or file-like object.&quot;</span><span class="p">)</span>
     
         
-    <span class="nb">print</span><span class="p">(</span><span class="n">filetype</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">rawdata</span><span class="p">))</span>
+    <span class="c1"># print(filetype.guess(rawdata))</span>
         
     <span class="k">if</span> <span class="n">filetype</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span><span class="o">.</span><span class="n">MIME</span> <span class="o">!=</span> <span class="s1">&#39;image/waltex&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;File is not a waltex&#39;</span><span class="p">)</span>

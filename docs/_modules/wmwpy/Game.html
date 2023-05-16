@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.Game &#8212; wmwpy 0.1.0-beta documentation</title>
+    <title>wmwpy.game &#8212; wmwpy 0.2.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -29,15 +29,15 @@
 
           <div class="body" role="main">
             
-  <h1>Source code for wmwpy.Game</h1><div class="highlight"><pre>
+  <h1>Source code for wmwpy.game</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">.Utils</span> <span class="kn">import</span> <span class="n">Filesystem</span>
+<span class="kn">from</span> <span class="nn">.Utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.Utils</span> <span class="kn">import</span> <span class="n">Texture</span>
 <span class="kn">from</span> <span class="nn">.classes</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="Game"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">():</span>
+<div class="viewcode-block" id="Game"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">():</span>
     <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span>
     <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
     <span class="n">_PROFILE</span> <span class="o">=</span> <span class="kc">None</span>
@@ -78,11 +78,11 @@
         
         <span class="n">this</span><span class="o">.</span><span class="n">updateFilesystem</span><span class="p">(</span><span class="n">hook</span> <span class="o">=</span> <span class="n">hook</span><span class="p">)</span>
         
-<div class="viewcode-block" id="Game.updateFilesystem"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.updateFilesystem">[docs]</a>    <span class="k">def</span> <span class="nf">updateFilesystem</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">hook</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Game.updateFilesystem"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.updateFilesystem">[docs]</a>    <span class="k">def</span> <span class="nf">updateFilesystem</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">hook</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span> <span class="o">=</span> <span class="n">Filesystem</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">getAssets</span><span class="p">(</span><span class="n">hook</span> <span class="o">=</span> <span class="n">hook</span><span class="p">)</span></div>
         
-<div class="viewcode-block" id="Game.Level"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Level">[docs]</a>    <span class="k">def</span> <span class="nf">Level</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xmlPath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">imagePath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
+<div class="viewcode-block" id="Game.Level"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Level">[docs]</a>    <span class="k">def</span> <span class="nf">Level</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xmlPath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">imagePath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load level</span>
 
@@ -90,29 +90,39 @@
 <span class="sd">            xmlPath (str, optional): Path to xml file. Defaults to None.</span>
 <span class="sd">            imagePath (str, optional): Path to image file. Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">split</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">imagePath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;png&#39;</span><span class="p">])</span>
-            <span class="n">xmlPath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;xml&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="n">xmlPath</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">xmlPath</span><span class="p">:</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">imagePath</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+                        <span class="n">imagePath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;png&#39;</span><span class="p">])</span>
+                    <span class="n">xmlPath</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;xml&#39;</span><span class="p">])</span>
+                
+                <span class="n">xml</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
         
-        <span class="n">xml</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">xmlPath</span><span class="p">:</span>
-            <span class="n">xml</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">)</span>
-        
-        <span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">imagePath</span><span class="p">:</span>
-            <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">imagePath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">imagePath</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">imagePath</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">imagePath</span><span class="p">:</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">imagePath</span><span class="p">)</span>
         
         <span class="n">level</span> <span class="o">=</span> <span class="n">Level</span><span class="p">(</span>
             <span class="n">xml</span><span class="o">=</span><span class="n">xml</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
             <span class="n">filesystem</span><span class="o">=</span><span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">level</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">xmlPath</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xmlPath</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">level</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">xmlPath</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">level</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">xmlPath</span>
         
         <span class="k">return</span> <span class="n">level</span></div>
     
-<div class="viewcode-block" id="Game.Object"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Object">[docs]</a>    <span class="k">def</span> <span class="nf">Object</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Object"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Object">[docs]</a>    <span class="k">def</span> <span class="nf">Object</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="nb">object</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -127,15 +137,19 @@
 <span class="sd">            classes.object.Object: Where&#39;s My Water? object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="nb">object</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        
         <span class="n">obj</span> <span class="o">=</span> <span class="n">Object</span><span class="p">(</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">object</span><span class="p">),</span>
+            <span class="nb">object</span><span class="p">,</span>
             <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="nb">object</span>
         <span class="k">return</span> <span class="n">obj</span></div>
     
-<div class="viewcode-block" id="Game.Imagelist"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Imagelist">[docs]</a>    <span class="k">def</span> <span class="nf">Imagelist</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Imagelist"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Imagelist">[docs]</a>    <span class="k">def</span> <span class="nf">Imagelist</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">imagelist</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">HD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -151,15 +165,18 @@
 <span class="sd">            classes.imagelist.Imagelist: Imagelist object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">imagelist</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">imagelist</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">imagelist</span><span class="p">)</span>
+        
         <span class="n">imagelistObject</span> <span class="o">=</span> <span class="n">Imagelist</span><span class="p">(</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">imagelist</span><span class="p">),</span>
+            <span class="n">imagelist</span><span class="p">,</span>
             <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
             <span class="n">HD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">imagelistObject</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">imagelist</span>
         <span class="k">return</span> <span class="n">imagelistObject</span></div>
     
-<div class="viewcode-block" id="Game.Sprite"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Sprite">[docs]</a>    <span class="k">def</span> <span class="nf">Sprite</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Sprite"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Sprite">[docs]</a>    <span class="k">def</span> <span class="nf">Sprite</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">sprite</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -174,15 +191,18 @@
 <span class="sd">            classes.sprite.Sprite: Sprite object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sprite</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">sprite</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span>
+        
         <span class="n">spriteObject</span> <span class="o">=</span> <span class="n">Sprite</span><span class="p">(</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sprite</span><span class="p">),</span>
+            <span class="n">sprite</span><span class="p">,</span>
             <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
         <span class="n">spriteObject</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">sprite</span>
         <span class="k">return</span> <span class="n">spriteObject</span></div>
     
-<div class="viewcode-block" id="Game.Texture"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Texture">[docs]</a>    <span class="k">def</span> <span class="nf">Texture</span><span class="p">(</span>
+<div class="viewcode-block" id="Game.Texture"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Texture">[docs]</a>    <span class="k">def</span> <span class="nf">Texture</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">texture</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
@@ -196,14 +216,17 @@
 <span class="sd">            Utils.textures.Texture: Texture object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texture</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">texture</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">texture</span><span class="p">)</span>
+        
         <span class="k">return</span> <span class="n">Texture</span><span class="p">(</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">texture</span><span class="p">)</span>
+            <span class="n">texture</span>
         <span class="p">)</span></div>
     
-<div class="viewcode-block" id="Game.Layout"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.Layout">[docs]</a>    <span class="k">def</span> <span class="nf">Layout</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">layout</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Game.Layout"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.Layout">[docs]</a>    <span class="k">def</span> <span class="nf">Layout</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">layout</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;load layout is not implemented yet.&#39;</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Game.generateFileManifest"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.Game.Game.generateFileManifest">[docs]</a>    <span class="k">def</span> <span class="nf">generateFileManifest</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">writeFile</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/FileManifest.txt&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Game.generateFileManifest"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.game.Game.generateFileManifest">[docs]</a>    <span class="k">def</span> <span class="nf">generateFileManifest</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">writeFile</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/FileManifest.txt&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).</span>
 
 <span class="sd">        Args:</span>
