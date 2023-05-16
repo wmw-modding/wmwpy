@@ -50,7 +50,7 @@ class GameObject():
         this,
         file : bytes | File | io.BytesIO | str,
         template : str | io.BytesIO = None,
-        ) -> io.BytesIO | str:
+    ) -> io.BytesIO | str:
         """Get file
 
         Args:

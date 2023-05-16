@@ -19,6 +19,8 @@ try:
         EXTENSION = 'waltex'
 
         def __init__(self):
+            """Waltex file extension class for the `filetype` module
+            """
             super(_WaltexFile, self).__init__(
                 mime=_WaltexFile.MIME,
                 extension=_WaltexFile.EXTENSION,
@@ -146,7 +148,15 @@ class Waltex():
         
         this.read(byte_order=this._byte_order)
     
-    def read(this, byte_order : str = None):
+    def read(this, byte_order : str = None) -> Image.Image:
+        """Read the waltex image.
+
+        Args:
+            byte_order (str, optional): The byte order. Can be 'little' or 'big'. Defaults to None.
+
+        Returns:
+            PIL.Image.Image: PIL Image object
+        """
         if byte_order:
             this._byte_order = byte_order
             
@@ -172,6 +182,11 @@ class Waltex():
     
     @property
     def size(this):
+        """Return size of image
+
+        Returns:
+            tuple[int,int]: tuple(width, height)
+        """
         return this.image.size
 
 # legacy functions for reading waltex image

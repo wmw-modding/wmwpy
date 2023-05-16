@@ -161,6 +161,8 @@ class Imagelist(GameObject):
         return output
     
     def combinePages(this):
+        """Combine all the pages in this Imagelist into 1 Page
+        """
         if this.type == this.Type.IMAGELIST:
             return
         
@@ -349,7 +351,12 @@ class Imagelist(GameObject):
             
             
             @property
-            def filename(this):
+            def filename(this) -> str:
+                """Image filepath in the Filesystem
+
+                Returns:
+                    str: Full filepath in the Filesystem
+                """
                 return this.filesystem.get(this.name).path
 
         
@@ -597,6 +604,8 @@ class Imagelist(GameObject):
             return this.atlas
     
         def getNO_TEX(this):
+            """## NEED TO UPDATE
+            """
             NO_TEX_settings = getTextueSettings(
                 this.gamepath,
                 this.assets,

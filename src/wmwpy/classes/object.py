@@ -72,7 +72,12 @@ class Object(GameObject):
         if isinstance(file, File):
             this.filename = file.path
     
-    def getOffset(this):
+    def getOffset(this) -> tuple[float,float]:
+        """Get the center offset for the Object image
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
         rects = []
         this._background : list[Sprite] = []
         this._foreground : list[Sprite] = []
@@ -109,6 +114,11 @@ class Object(GameObject):
     
     @property
     def background(this) -> Image.Image:
+        """The background image of this Object
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
         this.getOffset()
         
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
@@ -134,12 +144,22 @@ class Object(GameObject):
         return image
     
     @property
-    def background_PhotoImage(this):
+    def background_PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of this Object
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
         this._PhotoImage['background'] = ImageTk.PhotoImage(this.background)
         return this._PhotoImage['background']
     
     @property
-    def foreground(this):
+    def foreground(this) -> Image.Image:
+        """The foreground of the Object image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
         this.getOffset()
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
         
@@ -164,12 +184,22 @@ class Object(GameObject):
         return image
     
     @property
-    def foreground_PhotoImage(this):
+    def foreground_PhotoImage(this) -> ImageTk.PhotoImage:
+        """Foregound Tkinter PhotoImage
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
         this._PhotoImage['foreground'] = ImageTk.PhotoImage(this.foreground)
         return this._PhotoImage['foreground']
     
     @property
     def image(this) -> Image.Image:
+        """Full Object image, with both the background and foreground.
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
         
         image = this.background
         image.alpha_composite(this.foreground)
@@ -177,7 +207,12 @@ class Object(GameObject):
         return image
     
     @property
-    def offset(this):
+    def offset(this) -> tuple[float,float]:
+        """The center offset of the Object image
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
         this.getOffset()
         offset = this._offset
         
@@ -185,7 +220,16 @@ class Object(GameObject):
         
         return offset
     
-    def rotatePoint(this, point : tuple = (0,0), angle : float = None, origin : tuple = (0,0)):
+    def rotatePoint(this, point : tuple = (0,0), angle : float = None) -> tuple[float,float]:
+        """Rotate a point around (0,0)
+
+        Args:
+            point (tuple, optional): Point to rotate. Defaults to (0,0).
+            angle (float, optional): Angle to rotate. Defaults to Object `Angle` property.
+
+        Returns:
+            tuple[float,float]: (x,y)
+        """
         if angle == None:
             if 'Angle' in this.properties:
                 angle = float(this.properties['Angle'])
@@ -195,9 +239,17 @@ class Object(GameObject):
         if angle == 0:
             return point
         
-        return rotate(point, degrees=-angle, origin=origin)
+        return rotate(point, degrees=-angle)
     
-    def rotateImage(this, image : Image.Image):
+    def rotateImage(this, image : Image.Image) -> Image.Image:
+        """Rotate an image the amount of degrees as the Object `Angle` property
+
+        Args:
+            image (PIL.Image.Image): Image to rotate
+
+        Returns:
+            PIL.Image.Image: Rotated PIL Image
+        """
         if 'Angle' in this.properties:
             angle = float(this.properties['Angle'])
             image = image.rotate(angle, expand = True, resample = Image.BILINEAR)
@@ -205,12 +257,19 @@ class Object(GameObject):
         return image
     
     @property
-    def PhotoImage(this):
+    def PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of the Object image
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
         this._PhotoImage['image'] = ImageTk.PhotoImage(this.image)
         return this._PhotoImage['image']
     
     @property
-    def scale(this):
+    def scale(this) -> int:
+        """Object image scale
+        """
         return this._scale
     @scale.setter
     def scale(this, value : int):
@@ -364,7 +423,9 @@ class Object(GameObject):
         return xml
     
     @property
-    def filename(this):
+    def filename(this) -> str | None:
+        """Object filename based on the `Filename` proprty
+        """
         if 'Filename' in this.properties:
             return this.properties['Filename']
         else:
@@ -374,7 +435,9 @@ class Object(GameObject):
         this.properties['Filename'] = value
     
     @property
-    def type(this):
+    def type(this) -> str | None:
+        """The Object type, based off the `Type` property.
+        """
         if 'Type' in this.properties:
             return this.properties['Type']
         elif 'Type' in this.defaultProperties:
@@ -494,7 +557,12 @@ class Shape(GameObject):
         return xml
     
     @property
-    def image(this):
+    def image(this) -> Image.Image:
+        """Get the Shape image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
         points = numpy.array(this.points).swapaxes(0,1)
         
         min = numpy.array([math.floor(v.min()) for v in points])

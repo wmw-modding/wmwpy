@@ -63,11 +63,21 @@ class Level(GameObject):
         this.scale = 5
     
     @property
-    def size(this):
+    def size(this) -> tuple[int,int]:
+        """Level image size
+
+        Returns:
+            tuple[int,int]: (width,height)
+        """
         return this._image.size
     
     @property
-    def image(this):
+    def image(this) -> Image.Image:
+        """Scaled up Level image
+
+        Returns:
+            PIL.Image.Image: PIL Image
+        """
         image = this._image.copy()
         
         size = numpy.array(image.size)
@@ -82,12 +92,19 @@ class Level(GameObject):
         this._image = value
     
     @property
-    def PhotoImage(this):
+    def PhotoImage(this) -> ImageTk.PhotoImage:
+        """Tkinter PhotoImage of the Level image
+
+        Returns:
+            ImageTk.PhotoImage: Tkinter PhotoImage
+        """
         this._PhotoImage = ImageTk.PhotoImage(this.image)
         return this._PhotoImage
 
     @property
-    def scale(this):
+    def scale(this) -> int:
+        """Level size scale
+        """
         return this._scale
     @scale.setter
     def scale(this, value : int):
@@ -261,7 +278,15 @@ class Level(GameObject):
         
         return obj
     
-    def getObjectById(this, id):
+    def getObjectById(this, id : int) -> Object:
+        """Get an Object by it's id
+
+        Args:
+            id (int): Object id to find
+
+        Returns:
+            Object: wmwpy Object
+        """
         for obj in this.objects:
             if obj.id == id:
                 return obj

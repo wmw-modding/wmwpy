@@ -181,7 +181,13 @@ class WMH(Game):
     ) -> None:
         super().__init__(gamepath, assets, db, profile, baseassets, hook)
     
-    def mode(this, mode = 'wmw'):
+    def mode(this, mode : typing.Literal['wmw', 'wmp'] = 'wmw'):
+        """Switch game mode from 'wmw' to 'wmp' and vice verca.
+
+        Args:
+            mode (str, optional): Mode. Can be 'wmw' or 'wmp'. Defaults to 'wmw'.
+        """
+        
         mode = mode.lower()
         if mode == 'wmw':
             this.db = '/Data/water-Lite.db'
@@ -215,6 +221,17 @@ class WMS(WMPF):
 GAMES : dict[str, Game] = {}
 
 def register_game(name : str, class_ : Game):
+    """Register a game template
+
+    Args:
+        name (str): Name of the game. E.G. 'WMW'
+        class_ (Game): A class that has been inherited by the `Game` object.
+
+    Raises:
+        TypeError: class has to be inherited by Game
+        TypeError: name must be a string
+        NameError: game already exists
+    """
     
     if not isinstance(class_, type):
         class_ = class_.__class__
