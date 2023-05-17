@@ -9,19 +9,15 @@ def joinPath(*args : str) -> str:
     Returns:
         str: New path
     """
+    
     if len(args) == 0:
         return ''
-    else:
-        return pathlib.Path(getRelPath(args[0]), joinPath(*args[1:])).as_posix()
-    # for p in args:
-    #     path = os.path.join(path, getRelPath(p))
-        
-    # return path
 
-def getRelPath(path : str) -> str:
+    path = pathlib.Path(args[0], *[makeRelativePath(p) for p in args[1:]])
+    return path.as_posix()
+
+def makeRelativePath(path : str) -> str:
     """Remove forward and backward slashes (`/` `\`) from the beginning of a path.
-    
-    (I really should rename this function)
 
     Args:
         path (str): Path to check
