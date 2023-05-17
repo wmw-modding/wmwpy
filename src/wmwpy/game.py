@@ -50,7 +50,13 @@ class Game():
         this.filesystem = Filesystem(this.gamepath, this.assets)
         this.filesystem.getAssets(hook = hook)
         
-    def Level(this, xmlPath : str = None, imagePath : str = None, ):
+    def Level(
+        this,
+        xmlPath : str = None,
+        imagePath : str = None,
+        load_callback : typing.Callable[[int, str, int], typing.Any] = None,
+        ignore_errors : bool = False,
+    ):
         """
         Load level
 
@@ -79,9 +85,11 @@ class Game():
                 image = this.filesystem.get(imagePath)
         
         level = Level(
-            xml=xml,
-            image=image,
-            filesystem=this.filesystem,
+            xml = xml,
+            image = image,
+            filesystem = this.filesystem,
+            load_callback = load_callback,
+            ignore_errors = ignore_errors,
         )
         if isinstance(xmlPath, File):
             level.filename = xmlPath.path

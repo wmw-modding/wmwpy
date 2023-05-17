@@ -2,8 +2,10 @@ import io
 from lxml import etree
 from PIL import Image, ImageTk
 import numpy
+import typing
 
 from ..Utils.filesystem import *
+from ..Utils.logging_utils import log_exception
 from .object import Object
 from ..gameobject import GameObject
 
@@ -24,6 +26,8 @@ class Level(GameObject):
         gamepath : str = None,
         assets : str = '/assets',
         baseassets : str = '/',
+        load_callback : typing.Callable[[int, str, int], typing.Any] = None,
+        ignore_errors : bool = False,
     ) -> None:
         """Load level
 
@@ -58,7 +62,7 @@ class Level(GameObject):
         this.properties = {}
         this.room = (0,0)
         
-        this.read()
+        this.read(load_callback = load_callback, ignore_errors = ignore_errors)
         
         this.scale = 5
     
@@ -113,64 +117,101 @@ class Level(GameObject):
         for obj in this.objects:
             obj.scale = this._scale
     
-    def read(this):
+    def read(
+        this,
+        load_callback : typing.Callable[[int, str, int], typing.Any] = None,
+        ignore_errors : bool = False,
+    ):
         """Read level XML
         """
         this.objects : list[Object] = []
         this.properties = {}
         
+        def run_callback(index, name, max):
+            try:
+                if callable(load_callback):
+                    load_callback(index, name, max)
+            except:
+                log_exception()
+        
         id = 0
         
+        max = len(this.xml)
+        
+        index = 0
+        
         for element in this.xml:
-            # comment safe-guard
-            if element is etree.Comment:
-                continue
             
-            if element.tag == 'Object':
-                properties = {}
-                pos = (0,0)
-                name = element.get('name')
+            try:
                 
-                for el in element:
-                    if not el is etree.Comment:
-                        if el.tag == 'AbsoluteLocation':
-                            pos = el.get('value')
+                # comment safe-guard
+                if element is etree.Comment:
+                    run_callback(index, 'Comment', max)
+                    continue
+                
+                if element.tag == 'Object':
+                    properties = {}
+                    pos = (0,0)
+                    name = element.get('name')
+                    
+                    run_callback(index, f'Object: {name}', max)
+                    
+                    for el in element:
+                        if not el is etree.Comment:
+                            if el.tag == 'AbsoluteLocation':
+                                pos = el.get('value')
+                            
+                            elif el.tag == 'Properties':
+                                for property in el:
+                                    if not property is etree.Comment and property.tag == 'Property':
+                                        properties[property.get('name')] = property.get('value')
+                    
+                    obj = Object(
+                        this.filesystem.get(properties['Filename']), # get file because `Object` does not take filepath
+                        filesystem = this.filesystem,
+                        properties = properties,
+                        pos = pos,
+                        name = name,
+                    )
+                    
+                    obj.id = id
+                    
+                    this.objects.append(obj)
+                    
+                    id += 1
+                
+                elif element.tag == 'Properties':
+                    run_callback(index, 'Level Properties', max)
                         
-                        elif el.tag == 'Properties':
-                            for property in el:
-                                if not property is etree.Comment and property.tag == 'Property':
-                                    properties[property.get('name')] = property.get('value')
+                    for el in element:
+                        if el is etree.Comment:
+                            continue
+                        
+                        if el.tag == 'Property':
+                            this.properties[el.get('name')] = el.get('name')
                 
-                obj = Object(
-                    this.filesystem.get(properties['Filename']), # get file because `Object` does not take filepath
-                    filesystem = this.filesystem,
-                    properties = properties,
-                    pos = pos,
-                    name = name,
-                )
+                elif element.tag == 'Room':
+                    run_callback(index, 'Room', max)
+                        
+                    for el in element:
+                        if el is etree.Comment:
+                            continue
+                        
+                        if el.tag == 'AbsoluteLocation':
+                            this.room = tuple([float(_) for _ in el.get('value').split()])
                 
-                obj.id = id
-                
-                this.objects.append(obj)
-                
-                id += 1
-            
-            if element.tag == 'Properties':
-                for el in element:
-                    if el is etree.Comment:
-                        continue
+                elif callable(load_callback):
+                    run_callback(index, element.tag, max)
                     
-                    if el.tag == 'Property':
-                        this.properties[el.get('name')] = el.get('name')
+                index += 1
+                
+                run_callback(index, 'Done!', max)
+                
+            except:
+                log_exception()
+                if not ignore_errors:
+                    raise
             
-            if element.tag == 'Room':
-                for el in element:
-                    if el is etree.Comment:
-                        continue
-                    
-                    if el.tag == 'AbsoluteLocation':
-                        this.room = tuple([float(_) for _ in el.get('value').split()])
-    
     def export(
         this,
         filename : str = None,
