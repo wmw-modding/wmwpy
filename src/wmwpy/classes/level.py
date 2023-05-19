@@ -3,6 +3,7 @@ from lxml import etree
 from PIL import Image, ImageTk
 import numpy
 import typing
+import copy
 
 from ..Utils.filesystem import *
 from ..Utils.logging_utils import log_exception
@@ -58,8 +59,9 @@ class Level(GameObject):
         else:
             this.image = Image.open(this.image_file).quantize(colors=256)
         
-        this.objects = []
-        this.properties = {}
+        this.objects : list[Object] = []
+        this.properties : dict[str,str] = {}
+        this.challenges : list[Level.Challenge] = []
         this.room = (0,0)
         
         this.read(load_callback = load_callback, ignore_errors = ignore_errors)
@@ -141,6 +143,7 @@ class Level(GameObject):
         index = 0
         
         for element in this.xml:
+            element : etree.ElementBase
             
             try:
                 
@@ -199,6 +202,15 @@ class Level(GameObject):
                         
                         if el.tag == 'AbsoluteLocation':
                             this.room = tuple([float(_) for _ in el.get('value').split()])
+                elif element.tag == 'Challenges':
+                    for challenge in element:
+                        challenge : etree.ElementBase
+                        if challenge is etree.Comment:
+                            continue
+                        
+                        if challenge.tag == 'Challenge':
+                            this.challenges.append(this.Challenge(challenge))
+                        
                 
                 elif callable(load_callback):
                     run_callback(index, element.tag, max)
@@ -252,6 +264,14 @@ class Level(GameObject):
         
         if len(properties):
             xml.append(properties)
+        
+        challenges : etree._Element = etree.Element('Challenges')
+        
+        for challenge in this.challenges:
+            challenges.append(challenge.getXML())
+        
+        if len(challenges):
+            xml.append(challenges)
         
         this.xml = xml
         
@@ -344,5 +364,77 @@ class Level(GameObject):
         for obj in this.objects:
             if obj.name == name:
                 return obj
+    
+    class Challenge():
+        def __init__(
+            this,
+            xml : etree.ElementBase = None,
+            id : str = '',
+            requirements : dict[str, dict[str, str]] = {},
+        ) -> None:
+            """A level challenge used in wmw2
+
+            Args:
+                xml (etree.Element, optional): The xml of the challenge. If it is `None`, it will just use the other values. Defaults to None.
+                id (str, optional): The id of the challenge. Defaults to ''.
+                requirements (dict[str, dict[str, str]], optional): The requirements as a `dict`. Defaults to {}.
+            
+            Requirements format:
+                ```python
+                dict[str, dict[str, str]]
+                ```
+                Example:
+                ```python
+                {
+                  'WindWait' : {
+                    'seconds' : '1'
+                  },
+                  'Duck' : {
+                    'count' : '2'
+                  }
+                }
+                ```
+            """
+            this.xml = xml
+            this.id = id
+            this.requirements : dict[str, dict[str, str]] = copy.deepcopy(requirements)
+            
+            if isinstance(this.xml, etree._Element):
+                this.readXML()
         
-        return None
+        def readXML(this):
+            """Read the XML of the challenge. If the XML wasn't set, it'll just return `None`
+            """
+            if not isinstance(this.xml, etree._Element):
+                return
+            
+            this.id = this.xml.get('id', '')
+            
+            for element in this.xml:
+                # so I can acess the attributes in vscode
+                element : etree.ElementBase
+                
+                if element is etree.Comment:
+                    continue
+                
+                requirement = copy.deepcopy(element.attrib)
+                
+                this.requirements[element.tag] = requirement
+        
+        def getXML(this):
+            """Get the XML for the challenge.
+            
+            Returns:
+                lxml.etree.Element: lxml etree Element.
+            """
+            root : etree._Element = etree.Element('Challenge', id = this.id)
+            
+            for name in this.requirements:
+                requirement = this.requirements[name]
+                
+                etree.SubElement(root, name, **requirement)
+            
+            this.xml = root
+            
+            return root
+            
