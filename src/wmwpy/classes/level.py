@@ -191,7 +191,7 @@ class Level(GameObject):
                             continue
                         
                         if el.tag == 'Property':
-                            this.properties[el.get('name')] = el.get('name')
+                            this.properties[el.get('name')] = el.get('value')
                 
                 elif element.tag == 'Room':
                     run_callback(index, 'Room', max)
