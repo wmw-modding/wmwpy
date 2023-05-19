@@ -383,10 +383,13 @@ class Object(GameObject):
         """
         properties = list(this.properties.keys())
         
-        for property in properties:
-            if property in this.defaultProperties:
-                if this.properties[property] == this.defaultProperties[property]:
-                    del this.properties[property]
+        # for property in properties:
+        #     if property in this.defaultProperties:
+        #         if this.properties[property] == this.defaultProperties[property]:
+        #             del this.properties[property]
+        
+        # if this.type != None:
+        #     this.properties['Type'] = this.type
 
     def getLevelXML(
         this,
