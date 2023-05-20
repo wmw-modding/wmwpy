@@ -6,6 +6,7 @@ from PIL import Image
 import zipfile
 import natsort
 import typing
+import fnmatch
 
 from .path import joinPath
 # from . import Waltex
@@ -159,7 +160,7 @@ class Filesystem():
         """
         return this.root.exists(fp)
     
-    def listdir(this, path = '/', recursive = False) -> list:
+    def listdir(this, path = '/', recursive = False, search = r'*') -> list:
         """Returns a list of files and subfolders in path.
 
         Args:
@@ -169,7 +170,7 @@ class Filesystem():
         Returns:
             list: List of files and subfolders.
         """
-        return this.get(path).listdir(recursive = recursive)
+        return this.get(path).listdir(recursive = recursive, search = search)
     
     def dump(this, output : str = None):
         """Dump the contents of the filesystem to the specified directory
@@ -522,7 +523,7 @@ class File(FileBase):
         this.rawdata.seek(0)
         return this.rawdata.write(data)
     
-    def listdir(this, recursive = False):
+    def listdir(this, recursive = False, search = r'*'):
         """Returns a list of files and subfolders in path.
 
         Args:
@@ -532,7 +533,7 @@ class File(FileBase):
         Returns:
             list: List of files and subfolders.
         """
-        return this.parent.listdir(recursive = recursive)
+        return this.parent.listdir(recursive = recursive, search = search)
     
 
 class Folder(FileBase):
@@ -649,7 +650,7 @@ class Folder(FileBase):
         """
         return this.get(path) != None
     
-    def listdir(this, recursive = False):
+    def listdir(this, recursive = False, search = r'*'):
         """Returns a list of files and subfolders in path.
 
         Args:
@@ -666,6 +667,7 @@ class Folder(FileBase):
                 files = files + file.listdir(recursive = recursive)
         
         files = natsort.natsorted(files)
+        files = fnmatch.filter(files, search)
         
         return files
 
