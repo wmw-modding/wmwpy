@@ -28,6 +28,9 @@ def makeRelativePath(path : str) -> str:
     if path == '':
         return '.'
     parts = pathlib.Path(path).parts
+    if len(parts) == 0:
+        return path
+    
     if parts[0] in ['\\', '/']:
         return pathlib.Path(*parts[1::]).as_posix()
     return path
