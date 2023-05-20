@@ -20,7 +20,7 @@ def load(
     profile : str = None,
     baseassets : str = None,
     hook : typing.Callable[[int, str, int], typing.Any] = None,
-):
+) -> Game:
     """load game
 
     Args:
