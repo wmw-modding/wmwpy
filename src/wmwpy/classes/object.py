@@ -446,7 +446,7 @@ class Object(GameObject):
         elif 'Type' in this.defaultProperties:
             return this.defaultProperties['Type']
         else:
-            return None
+            return ''
     @type.setter
     def type(this, value : str):
         if not isinstance(value, str):
