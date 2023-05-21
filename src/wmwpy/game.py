@@ -122,7 +122,7 @@ class Game():
             filesystem = this.filesystem,
             **kwargs
         )
-        obj.filename = object
+        obj.filename = object.path
         return obj
     
     def Imagelist(
