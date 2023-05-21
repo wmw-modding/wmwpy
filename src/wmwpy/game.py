@@ -122,7 +122,12 @@ class Game():
             filesystem = this.filesystem,
             **kwargs
         )
-        obj.filename = object.path
+        if isinstance(object, File):
+            obj.filename = object.path
+        else:
+            obj.filename = object
+            
+        
         return obj
     
     def Imagelist(
@@ -149,7 +154,11 @@ class Game():
             filesystem = this.filesystem,
             HD = False,
         )
-        imagelistObject.filename = imagelist
+        if isinstance(imagelist, File):
+            imagelistObject.filename = imagelist.path
+        else:
+            imagelistObject.filename = imagelist
+        
         return imagelistObject
     
     def Sprite(
@@ -175,7 +184,11 @@ class Game():
             filesystem = this.filesystem,
             **kwargs
         )
-        spriteObject.filename = sprite
+        if isinstance(sprite, File):
+            spriteObject.filename = sprite.path
+        else:
+            spriteObject.filename = sprite.path
+        
         return spriteObject
     
     def Texture(
