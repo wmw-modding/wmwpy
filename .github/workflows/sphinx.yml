@@ -7,10 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Upload artifacts
+    - name: Install dependencies
       run:
         pip install -U sphinx
+    
+    - name: Upload artifacts
+      run:
         sphinx-build -b html doc-build docs
+    
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
