@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wmwpy.Utils.filesystem &#8212; wmwpy 0.3.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wmwpy.Utils.filesystem</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">filetype</span> <span class="kn">import</span> <span class="n">filetype</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">natsort</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+
+<span class="kn">from</span> <span class="nn">.path</span> <span class="kn">import</span> <span class="n">joinPath</span>
+<span class="c1"># from . import Waltex</span>
+<span class="c1"># from . import ImageUtils</span>
+<span class="c1"># from ..classes import sprite</span>
+<span class="c1"># from ..classes import Object</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Filesystem&#39;</span><span class="p">,</span> <span class="s1">&#39;File&#39;</span><span class="p">,</span> <span class="s1">&#39;Folder&#39;</span><span class="p">,</span> <span class="s1">&#39;FileBase&#39;</span><span class="p">]</span>
+
+
+<span class="n">FILE_READERS</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Filesystem object.</span>
+
+<div class="viewcode-block" id="Filesystem"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem">[docs]</a><span class="k">class</span> <span class="nc">Filesystem</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">baseassets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;wmwpy filesystem</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gamepath (str): Path to game directory.</span>
+<span class="sd">            assets (str): Path to assets folder relative to gamepath.</span>
+<span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">this</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Filesystem.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Filesystem.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds file with path to Folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to destenation of file. Must be str.</span>
+<span class="sd">            file (str | bytes): File. This can be a path to the file to use, raw `bytes` of the file, or file-like object.</span>
+<span class="sd">            replace (bool, optional): Replace any conflicting files? Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If file is not `str`, `bytes` or file-like object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File: File object of the added file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if isinstance(file, str):</span>
+        <span class="c1">#     with open(file, &#39;rb&#39;) as f:</span>
+        <span class="c1">#         file = f.read()</span>
+        <span class="c1">#     # print(&#39;file&#39;)</span>
+        <span class="c1"># elif isinstance(file, bytes):</span>
+        <span class="c1">#     # print(&#39;bytes&#39;)</span>
+        <span class="c1">#     pass</span>
+        <span class="c1"># elif hasattr(file, &#39;read&#39;):</span>
+        <span class="c1">#     file = file.read()</span>
+        <span class="c1">#     if isinstance(file, str):</span>
+        <span class="c1">#         file = file.encode()</span>
+        <span class="c1">#     # print(&#39;file-like&#39;)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     raise TypeError(f&quot;file can only &#39;str&#39;, &#39;bytes&#39;, or file-like object.&quot;)</span>
+        
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="n">replace</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Filesystem.remove"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a file or folder</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Filesystem.getAssets"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.getAssets">[docs]</a>    <span class="k">def</span> <span class="nf">getAssets</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">extract_zip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">split_imagelist</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">hook</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scans the assets directory and loads all files into the filesystem. This is so wmwpy can modify files without modifying the actual files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            extract_zip (bool, optional): Extrack zip files? Defaults to False.</span>
+<span class="sd">            split_imagelist (bool, optional): Split imagelist files? Defaults to False.</span>
+<span class="sd">            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: Assets folder does not exist.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            this: Current Filesystem object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+                    
+        <span class="k">def</span> <span class="nf">dirlength</span><span class="p">(</span><span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="n">dirlength</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">count</span>
+
+        
+        <span class="c1"># print(this.gamepath)</span>
+        <span class="c1"># print(f&#39;{this.gamepath = }\n{this.assets = }&#39;)</span>
+        
+        <span class="n">assets</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">joinPath</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Folder </span><span class="si">{</span><span class="n">assets</span><span class="si">}</span><span class="s1"> does not exist&#39;</span><span class="p">)</span>
+        
+        <span class="n">total</span> <span class="o">=</span> <span class="n">dirlength</span><span class="p">(</span><span class="n">assets</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">assets</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="n">assets</span><span class="p">))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+                <span class="c1"># print(path)</span>
+                
+                <span class="k">if</span> <span class="n">hook</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">hook</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+                
+                <span class="n">fileobj</span> <span class="p">:</span> <span class="n">File</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+                
+                <span class="k">if</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;zip&#39;</span> <span class="ow">and</span> <span class="n">extract_zip</span><span class="p">:</span>
+                    <span class="n">fileobj</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">this</span></div>
+    
+<div class="viewcode-block" id="Filesystem.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">fp</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test if file path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fp (str): File path.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the path exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Filesystem.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="n">search</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Filesystem.dump"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Filesystem.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dump the contents of the filesystem to the specified directory</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output (str, optional): Path to output directory. Defaults to original path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">joinPath</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">)</span>
+        
+        <span class="c1"># print(f&#39;output: {output}&#39;)</span>
+        
+        <span class="n">files</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+            
+            <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::]</span>
+            
+            <span class="c1"># print(f&#39;new: {parts}&#39;)</span>
+            
+            <span class="n">newpath</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">)</span>
+            
+            <span class="c1"># print(f&#39;writing: {newpath.as_posix()}&#39;)</span>
+            
+            <span class="n">newpath</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">newpath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+        
+        
+    
+<span class="c1"># Filesystem helpers</span>
+<div class="viewcode-block" id="FileBase"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.FileBase">[docs]</a><span class="k">class</span> <span class="nc">FileBase</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;File Base</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (Folder): Parent. Use `None` for root.</span>
+<span class="sd">            path (str): File path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="p">:</span> <span class="n">Folder</span> <span class="o">=</span> <span class="n">parent</span>
+    
+<div class="viewcode-block" id="FileBase.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.FileBase.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="FileBase.remove"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.FileBase.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove file or folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to file or folder. If &#39;.&#39;, it removes itself. Defaults to &#39;.&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        
+        <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">file</span><span class="o">.</span><span class="n">detatch</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="FileBase.detatch"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.FileBase.detatch">[docs]</a>    <span class="k">def</span> <span class="nf">detatch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detatch this file or folder from it&#39;s parent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="FileBase.is_dir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.FileBase.is_dir">[docs]</a>    <span class="k">def</span> <span class="nf">is_dir</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether this is a folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FOLDER</span></div>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Path to this file or folder from the root.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Path this file or folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">Filesystem</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">Filesystem</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">return</span> <span class="s1">&#39;/&#39;</span>
+        <span class="k">return</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Folder&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Root Folder for this File or Folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Folder: Root Folder for this File or Folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">root</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filesystem</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Filesystem</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the Filesystem or root Folder for this File or Folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filesystem | Folder: Root Filesystem or Folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">Filesystem</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">filesystem</span>
+        
+    <span class="k">class</span> <span class="nc">_Type</span><span class="p">():</span>
+        <span class="n">FOLDER</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">FILE</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="nb">type</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">type</span>    </div>
+    
+    
+<div class="viewcode-block" id="File"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">FileBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span> <span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;File</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (Folder): Parent. Use `None` for root.</span>
+<span class="sd">            path (str): File path.</span>
+<span class="sd">            content (bytes): Contents of file as bytes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FILE</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">=</span> <span class="s1">&#39;raw&#39;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_original_filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">=</span> <span class="s1">&#39;path&#39;</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_original_filename</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_rawcontent</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_datatype</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_original_filename</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_original_filename</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_original_filename</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span>
+            
+            <span class="n">data</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">==</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_getdata</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">_getdata</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get data from file path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">=</span> <span class="s1">&#39;raw&#39;</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span><span class="p">)</span>
+        <span class="c1"># seek back to the start to be able to read the data later.</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">testFile</span><span class="p">()</span>
+        
+<div class="viewcode-block" id="File.testFile"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.testFile">[docs]</a>    <span class="k">def</span> <span class="nf">testFile</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests what type of file this is.&quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">filetype</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">::]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">this</span><span class="o">.</span><span class="n">extension</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">mime</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;text/raw&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">mime</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;text/</span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">extension</span><span class="si">}</span><span class="s1">&#39;</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">mime</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">mime</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">extension</span>
+            
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">mime</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rawdata</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the raw data of the file as a `BytesIO` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            io.BytesIO: Raw data of file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_getdata</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_rawdata</span>
+    <span class="nd">@rawdata</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rawdata</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_rawdata</span> <span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">=</span> <span class="n">value</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extension</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The file extension</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: File extension</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_rawcontent</span><span class="p">)[</span><span class="mi">1</span><span class="p">::]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_extension</span>
+    <span class="nd">@extension</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">extension</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_extension</span> <span class="o">=</span> <span class="n">value</span>
+        
+<div class="viewcode-block" id="File.read"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: Object for file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_datatype</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_getdata</span><span class="p">()</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">FILE_READERS</span><span class="p">:</span>
+            <span class="c1"># print(r)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">mime</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">extension</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="p">,</span> <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">reader</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">break</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">mime</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">extension</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c1"># if this.mime == &#39;image/waltex&#39;:</span>
+        <span class="c1">#     this.content = Waltex(this.rawcontent.getvalue())</span>
+        <span class="c1">#     this.image = this.content.image</span>
+        
+        <span class="c1"># elif this.mime.startswith(&#39;image/&#39;):</span>
+        <span class="c1">#     this.content = Image.open(this.rawcontent.getvalue())</span>
+        <span class="c1">#     this.image = this.content</span>
+        
+        <span class="c1"># elif this.extension == &#39;zip&#39;:</span>
+        <span class="c1">#     this.content = zipfile.ZipFile(this.rawcontent)</span>
+        <span class="c1">#     if &#39;extract&#39; in kwargs and kwargs[&#39;extract&#39;]:</span>
+        <span class="c1">#         print(f&#39;extracting {this.name}&#39;)</span>
+                
+        <span class="c1">#         files = this.content.namelist()</span>
+        <span class="c1">#         for f in files:</span>
+        <span class="c1">#             print(f)</span>
+                    
+        <span class="c1">#             content = this.content.read(f)</span>
+        <span class="c1">#             this.root.add(f, content, replace = True)</span>
+                
+        <span class="c1"># elif this.mime.startswith(&#39;text/&#39;):</span>
+        <span class="c1">#     if this.extension == &#39;imagelist&#39;:</span>
+        <span class="c1">#         this.content = ImageUtils.Imagelist(this.rawcontent.getvalue(), this.root, **kwargs)</span>
+        <span class="c1">#         # I need to make Imagelist() accept a Folder or Filesystem, and raw file data.</span>
+        <span class="c1">#         # raise NotImplementedError(&#39;Imagelist reading is currently not implemented yet.&#39;)</span>
+        <span class="c1">#         # this.content = ImageUtils.Imagelist()</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         this.content = this.rawcontent.read().decode(encoding=kwargs[&#39;encoding&#39;])</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">content</span></div>
+    
+<div class="viewcode-block" id="File.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add file to folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): New file path.</span>
+<span class="sd">            content (bytes): Content of file in bytes.</span>
+<span class="sd">            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotADirectoryError: Path to file contains file, not folder.</span>
+<span class="sd">            FileExistsError: File already exists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File: Newly added File.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="n">replace</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="File.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests whether path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Does path exist?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="File.write"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write data to file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (bytes): New data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: bytes written.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="File.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.File.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="n">search</span><span class="p">)</span></div></div>
+    
+
+<div class="viewcode-block" id="Folder"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder">[docs]</a><span class="k">class</span> <span class="nc">Folder</span><span class="p">(</span><span class="n">FileBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Folder</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (Folder): Parent. Use `None` for root.</span>
+<span class="sd">            path (str): Folder path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">parent</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+            
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FOLDER</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        
+<div class="viewcode-block" id="Folder.add"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add file to folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): New file path.</span>
+<span class="sd">            content (bytes): Content of file in bytes.</span>
+<span class="sd">            replace (bool, optional): Whether to replace any conflicting file.. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotADirectoryError: Path to file contains file, not folder.</span>
+<span class="sd">            FileExistsError: File already exists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File: Newly added File.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+        
+        <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_getPath</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">file</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FOLDER</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> is not a directory.&quot;</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::])</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="n">content</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span>  <span class="ow">not</span> <span class="n">replace</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;File </span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> already exists.&#39;</span><span class="p">)</span>
+                <span class="c1"># print(f&#39;File {file.path} already exists. Now replacing it.&#39;)</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            
+            <span class="n">file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span> <span class="o">=</span> <span class="n">content</span><span class="p">)</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">file</span></div>
+        
+    <span class="k">def</span> <span class="nf">_getPath</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get File or Folder with this path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to File or Folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">elif</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;..&#39;</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="n">f</span>
+                    <span class="k">break</span>
+        <span class="k">return</span> <span class="n">file</span>
+    
+<div class="viewcode-block" id="Folder.get"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get file in filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to file or folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File or Folder: File or Folder object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span>
+        
+        <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_getPath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">file</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FOLDER</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::]))</span>
+        <span class="k">return</span> <span class="n">file</span></div>
+    
+<div class="viewcode-block" id="Folder.exists"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests whether path exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Does path exist?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="Folder.listdir"><a class="viewcode-back" href="../../../wmwpy.Utils.html#wmwpy.Utils.filesystem.Folder.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of files and subfolders in path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str, optional): Path to folder to list. Defaults to &#39;/&#39;.</span>
+<span class="sd">            recursive (bool, optional): Whether to include subfolders. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of files and subfolders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">_type</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">this</span><span class="o">.</span><span class="n">_Type</span><span class="o">.</span><span class="n">FOLDER</span><span class="p">:</span>
+                <span class="n">files</span> <span class="o">=</span> <span class="n">files</span> <span class="o">+</span> <span class="n">file</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">recursive</span> <span class="o">=</span> <span class="n">recursive</span><span class="p">)</span>
+        
+        <span class="n">files</span> <span class="o">=</span> <span class="n">natsort</span><span class="o">.</span><span class="n">natsorted</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">files</span></div></div>
+
+<span class="k">class</span> <span class="nc">Reader</span><span class="p">():</span>
+    <span class="n">MIME</span> <span class="o">=</span> <span class="s1">&#39;text/&#39;</span>
+    <span class="n">EXTENSION</span> <span class="o">=</span> <span class="s1">&#39;txt&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">mime</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extension</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rawdata</span> <span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check file type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mime (str): File mime.</span>
+<span class="sd">            extension (str): File extension</span>
+<span class="sd">            rawdata (io.BytesIO): Contents of file as file-like object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the file is of this type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mime</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">MIME</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">mime</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extension</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rawdata</span> <span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mime (str): Mime of file.</span>
+<span class="sd">            extension (str): File extension.</span>
+<span class="sd">            rawdata (io.BytesIO): File data as file-like object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: File data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;endoding&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+        
+        <span class="k">return</span> <span class="n">rawdata</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">register_reader</span><span class="p">(</span><span class="n">reader</span> <span class="p">:</span> <span class="n">Reader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add reader for file type.</span>
+<span class="sd">    reader must inherit from `Utils.filesystem.Reader` class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reader (Reader): Inherited `Reader` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">Reader</span><span class="p">):</span>
+        <span class="n">FILE_READERS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;reader must inherit from `Utils.filesystem.Reader`&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../wmwpy.html">wmwpy package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../wmwpy.html">wmwpy</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
