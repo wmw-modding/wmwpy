@@ -3,3 +3,4 @@ natsort==8.2.0
 numpy==1.24.2
 Pillow==9.4.0
 filetype==1.2.0
+tk==0.1.0
