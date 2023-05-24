@@ -4,10 +4,10 @@ __author__ = 'ego-lay-atman-bay'
 import typing
 
 from .game import Game
+from . import Utils
 from . import classes
 from . import Font
 from .classes import widget
-from . import Utils
 from .gametemplate import GAMES
 from .Utils import filesystem
 

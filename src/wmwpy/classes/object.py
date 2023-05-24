@@ -1,15 +1,18 @@
 import lxml
 from lxml import etree
 import io
+import os
 from copy import deepcopy
 from PIL import Image, ImageTk, ImageDraw
 import numpy
 import math
+import typing
 
 from ..gameobject import GameObject
 from .sprite import Sprite
 from ..Utils.filesystem import *
 from ..Utils.rotate import rotate
+from ..Utils.gif import save_transparent_gif
 
 from ..Utils.XMLTools import strbool
 class Object(GameObject):
@@ -59,6 +62,7 @@ class Object(GameObject):
         this.name = name
         this.size = (0,0)
         this.id = 0
+        this.frame = 0
         
         this._background : list[Sprite] = []
         this._foreground : list[Sprite] = []
@@ -71,6 +75,15 @@ class Object(GameObject):
         
         if isinstance(file, File):
             this.filename = file.path
+            
+    @property
+    def frame(this):
+        return this._frame
+    @frame.setter
+    def frame(this, value : int):
+        this._frame = value
+        for sprite in this.sprites:
+            sprite.frame = value
     
     def getOffset(this) -> tuple[float,float]:
         """Get the center offset for the Object image
@@ -521,6 +534,99 @@ class Object(GameObject):
                 this.properties[name] = property[name]
             return
         this.properties[property] = value
+    
+    def getAnimation(
+        this,
+        duration : int = 0,
+        fps : float = 0,
+    ) -> dict[
+        typing.Literal[
+            'fps',
+            'frame_duration',
+            'frames',
+        ],
+        float |
+        int |
+        list[Image.Image]
+    ]:
+        """Get the animation of this object
+
+        Args:
+            duration (int, optional): Duration of animation in seconds. If 0, it will try to create a perfect loop. Defaults to 0.
+            fps (float, optional): The fps of the animation. If 0, it will try to detect the fps that works for all the sprites. Defaults to 0.
+
+        Raises:
+            TypeError: 'fps must be an int or float'
+        """
+        if not isinstance(fps, (int, float)) and not fps == None:
+            raise TypeError('fps must be an int or float')
+        
+        if not isinstance(duration, (int, float)) and not duration == None:
+            raise TypeError('duration must be an int or float')
+        
+        if (fps in [0, None]) or (fps <= 0):
+            fps = math.lcm(*[int(sprite.fps) for sprite in this.sprites])
+        
+        frames : list[Image.Image] = []
+        this.frame = 0
+        frame = 0
+        time = 0
+        
+        def check():
+            sprite_frame = sum([sprite.frame for sprite in this.sprites])
+            
+            if duration > 0:
+                return time <= duration
+            
+            if (time <= 0) or (frame <= 1):
+                return True
+            if sprite_frame == 0:
+                return False
+            
+            return True
+            
+            # print(f'test = {( not ((time > 0) and (duration <= 0) and ((sum([sprite.frame for sprite in this.sprites]) == 0))))}')
+            # print(f'time check = {((time <= duration) and (duration > 0))}')
+        
+        while check():
+            for sprite in this.sprites:
+                sprite.frame += (frame) % ((fps / sprite.fps) + 1)
+            
+            frames.append(this.image)
+            
+            frame += 1
+            time += (1000 / fps) / 1000
+        
+        # frames = frames[:-1]
+        
+        return {
+            'fps': fps,
+            'frame_duration' : (1000 / fps) / 1000,
+            'frames' : frames,
+         }
+        
+    def saveGIF(
+        this,
+        filename = None,
+        duration : int = 0,
+        fps : float = 0,
+    ):
+        if filename == None:
+            filename = this.name if this.name not in ['', None] else this.type if this.type not in ['', None] else os.path.basename(this.filename)
+            filename = os.path.splitext(filename)[0] + '.gif'
+            
+            print(f'{filename = }')
+        
+        animation = this.getAnimation(
+            duration = duration,
+            fps = fps,
+        )
+        
+        return save_transparent_gif(
+            animation['frames'],
+            durations = animation['frame_duration'],
+            save_file = filename,
+        )
 
 class Shape(GameObject):
     def __init__(this, xml : etree.ElementBase = None) -> None:
@@ -604,3 +710,5 @@ class Shape(GameObject):
             draw.line(line, fill=0, width=1)
         
         return image
+    
+    

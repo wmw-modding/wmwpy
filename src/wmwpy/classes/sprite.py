@@ -3,9 +3,12 @@ from PIL import Image, ImageTk
 import numpy
 from copy import deepcopy
 import math
+import typing
+import os
 
 from .imagelist import Imagelist
 from ..Utils.filesystem import *
+from ..Utils.gif import save_transparent_gif
 from ..Utils.XMLTools import strbool
 from ..gameobject import GameObject
 
@@ -92,6 +95,15 @@ class Sprite(GameObject):
             this._currentAnimation = animation
     
     @property
+    def frames(this) -> list['Sprite.Animation.Frame']:
+        """Returns the current animation frames.
+
+        Returns:
+            list[Sprite.Animation.Frame]: A list of frames.
+        """
+        return this.animation.frames
+    
+    @property
     def frame(this) -> int:
         """The current animation frame.
 
@@ -102,6 +114,10 @@ class Sprite(GameObject):
     @frame.setter
     def frame(this, value : int):
         this.animation.frame = value
+    
+    @property
+    def fps(this) -> float:
+        return this.animation.fps
     
     @property
     def filename(this) -> str:
@@ -233,6 +249,50 @@ class Sprite(GameObject):
     @angle.setter
     def angle(this, value : int | float):
         this.properties['angle'] = str(value)
+    
+    def getAnimation(
+        this,
+        duration : int = 0,
+        fps : float = 0,
+    ) -> dict[
+        typing.Literal[
+            'fps',
+            'frame_duration',
+            'frames',
+        ],
+        float |
+        int |
+        list[Image.Image]
+    ]:
+        
+        """Get the animation of this object
+
+        Args:
+            duration (int, optional): Duration of animation in seconds. If 0, it will try to create a perfect loop. Defaults to 0.
+            fps (float, optional): The fps of the animation. If 0, it will try to detect the fps that works for all the sprites. Defaults to 0.
+
+        Raises:
+            TypeError: 'fps must be an int or float'
+        """
+        return this.animation.getAnimation(
+            duration = duration,
+            fps = fps,
+        )
+    
+    def saveGIF(
+        this,
+        filename : str = None,
+        duration : int = 0,
+        fps : float = 0,
+    ):
+        if filename in ['', None]:
+            filename = f'{os.path.splitext(os.path.basename(this.filename))[0]}-{this.animation.name}.gif'
+        
+        this.animation.saveGIF(
+            filename = filename,
+            duration = duration,
+            fps = fps,
+        )
 
     class Animation(GameObject):
         def __init__(
@@ -269,9 +329,8 @@ class Sprite(GameObject):
             
             this._PhotoImage = None
             
-            this.frame = 0
-            
             this.frames : list[Sprite.Animation.Frame] = []
+            this.frame = 0
             
             this.readXML()
         
@@ -282,12 +341,18 @@ class Sprite(GameObject):
             Returns:
                 PIL.Image.Image: PIL Image
             """
-            if this.frame > len(this.frames):
-                this.frame = 0
-            if this.frame < 0:
-                this.frame = len(this.frames)
             
             return this.frames[this.frame].image
+        
+        @property
+        def frame(this) -> int:
+            return this._frame
+        @frame.setter
+        def frame(this, value : int):
+            if len(this.frames) > 0:
+                this._frame = int(value) % len(this.frames)
+            else:
+                this._frame = 0
         
         @property
         def PhotoImage(this) -> ImageTk.PhotoImage:
@@ -325,8 +390,6 @@ class Sprite(GameObject):
                 #     HD=True
                 # )
                 
-            if 'fps' in this.properties:
-                this.fps = float(this.properties['fps'])
             if 'playbackMode' in this.properties:
                 this.playbackMode = this.properties['playbackMode']
             if 'loopCount' in this.properties:
@@ -386,6 +449,106 @@ class Sprite(GameObject):
             this.xml = xml
             return this.xml
         
+        @property
+        def fps(this):
+            if 'fps' in this.properties:
+                return float(this.properties['fps'])
+            else:
+                this.fps = 30
+                return this.fps
+        @fps.setter
+        def fps(this, value : int | float | str):
+            this.properties['fps'] = str(value)
+        
+        def getAnimation(
+            this,
+            duration : int = 0,
+            fps : float = 0,
+        ) -> dict[
+            typing.Literal[
+                'fps',
+                'frame_duration',
+                'frames',
+            ],
+            float |
+            int |
+            list[Image.Image]
+        ]:
+            """Get the animation of this object
+
+            Args:
+                duration (int, optional): Duration of animation in seconds. If 0, it will try to create a perfect loop. Defaults to 0.
+                fps (float, optional): The fps of the animation. If 0, it will try to detect the fps that works for all the sprites. Defaults to 0.
+
+            Raises:
+                TypeError: 'fps must be an int or float'
+            """
+            if not isinstance(fps, (int, float)) and not fps == None:
+                raise TypeError('fps must be an int or float')
+            
+            if not isinstance(duration, (int, float)) and not duration == None:
+                raise TypeError('duration must be an int or float')
+            
+            if (fps in [0, None]) or (fps <= 0):
+                fps = this.fps
+            
+            frames : list[Image.Image] = []
+            this.frame = 0
+            frame = 0
+            time = 0
+            
+            def check():
+                if duration > 0:
+                    return time <= duration
+                
+                if (time <= 0) or (frame <= 1):
+                    return True
+                if this.frame == 0:
+                    return False
+                
+                return True
+                
+                # print(f'test = {( not ((time > 0) and (duration <= 0) and ((sum([sprite.frame for sprite in this.sprites]) == 0))))}')
+                # print(f'time check = {((time <= duration) and (duration > 0))}')
+            
+            while check():
+                this.frame += (frame) % ((fps / this.fps) + 1)
+                
+                frames.append(this.image)
+                
+                frame += 1
+                time += (1000 / fps) / 1000
+            
+            # frames = frames[:-1]
+            
+            return {
+                'fps': fps,
+                'frame_duration' : (1000 / fps) / 1000,
+                'frames' : frames,
+            }
+        
+        def saveGIF(
+            this,
+            filename = None,
+            duration : int = 0,
+            fps : float = 0,
+        ):
+            if filename == None:
+                filename = this.name
+                filename = os.path.splitext(filename)[0] + '.gif'
+                
+                print(f'{filename = }')
+            
+            animation = this.getAnimation(
+                duration = duration,
+                fps = fps,
+            )
+            
+            return save_transparent_gif(
+                animation['frames'],
+                durations = animation['frame_duration'],
+                save_file = filename,
+            )
         
         # Frame
         class Frame():
