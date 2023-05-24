@@ -285,6 +285,17 @@ class Sprite(GameObject):
         duration : int = 0,
         fps : float = 0,
     ):
+        
+        """Save current animation as a gif.
+
+        Args:
+            filename (str, optional): The filename to save this animation gif as. Defaults to None.
+            duration (int, optional): The duration of the gif in seconds. If it's 0, it automatically finds a perfect loop. Defaults to 0.
+            fps (float, optional): The frames per second of the animation. If it's 0, it is automatically calculated. Defaults to 0.
+
+        Returns:
+            PIL.Image.Image: The resulting PIL Image object.
+        """
         if filename in ['', None]:
             filename = f'{os.path.splitext(os.path.basename(this.filename))[0]}-{this.animation.name}.gif'
         
@@ -532,7 +543,17 @@ class Sprite(GameObject):
             filename = None,
             duration : int = 0,
             fps : float = 0,
-        ):
+        ) -> Image.Image:
+            """Save animation as a gif.
+
+            Args:
+                filename (str, optional): The filename to save this animation gif as. Defaults to None.
+                duration (int, optional): The duration of the gif in seconds. If it's 0, it automatically finds a perfect loop. Defaults to 0.
+                fps (float, optional): The frames per second of the animation. If it's 0, it is automatically calculated. Defaults to 0.
+
+            Returns:
+                PIL.Image.Image: The resulting PIL Image object.
+            """
             if filename == None:
                 filename = this.name
                 filename = os.path.splitext(filename)[0] + '.gif'
@@ -664,3 +685,27 @@ class Sprite(GameObject):
                 """
                 this.updateProperties()
                 return etree.Element('Frame', **this.properties)
+            
+            def show(this, title: str | None = None):
+                """Calls the PIL.Image.Image.show() method.
+                
+                ---
+                #### Description copied from the PIL library
+                
+                Displays this image. This method is mainly intended for debugging purposes.
+
+                This method calls PIL.ImageShow.show internally. You can use
+                PIL.ImageShow.register to override its default behaviour.
+
+                The image is first saved to a temporary file. By default, it will be in PNG format.
+
+                On Unix, the image is then opened using the **display**, **eog** or **xv** utility, depending on which one can be found.
+
+                On macOS, the image is opened with the native Preview application.
+
+                On Windows, the image is opened with the standard PNG display utility.
+
+                Args:
+                    title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.
+                """
+                return this.image.show(title = title)

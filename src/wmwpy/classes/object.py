@@ -611,6 +611,17 @@ class Object(GameObject):
         duration : int = 0,
         fps : float = 0,
     ):
+        
+        """Save object as a gif.
+
+        Args:
+            filename (str, optional): The filename to save this object gif as. Defaults to None.
+            duration (int, optional): The duration of the gif in seconds. If it's 0, it automatically finds a perfect loop. Defaults to 0.
+            fps (float, optional): The frames per second of the animation. If it's 0, it is automatically calculated. Defaults to 0.
+
+        Returns:
+            PIL.Image.Image: The resulting PIL Image object.
+        """
         if filename == None:
             filename = this.name if this.name not in ['', None] else this.type if this.type not in ['', None] else os.path.basename(this.filename)
             filename = os.path.splitext(filename)[0] + '.gif'
