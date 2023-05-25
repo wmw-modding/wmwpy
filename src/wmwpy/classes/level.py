@@ -29,6 +29,8 @@ class Level(GameObject):
         baseassets : str = '/',
         load_callback : typing.Callable[[int, str, int], typing.Any] = None,
         ignore_errors : bool = False,
+        HD : bool = False,
+        TabHD : bool = False,
     ) -> None:
         """Load level
 
@@ -39,6 +41,9 @@ class Level(GameObject):
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            ignore_errors (bool, optional): Ignore errors while loading. Defaults to False.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
         """
         
         this.gamepath = gamepath
@@ -58,6 +63,9 @@ class Level(GameObject):
             this.image = this.IMAGE_TEMPLATE.copy()
         else:
             this.image = Image.open(this.image_file).quantize(colors=256)
+        
+        this.HD = HD
+        this.TabHD = TabHD
         
         this.objects : list[Object] = []
         this.properties : dict[str,str] = {}
@@ -175,6 +183,8 @@ class Level(GameObject):
                         properties = properties,
                         pos = pos,
                         name = name,
+                        HD = this.HD,
+                        TabHD = this.TabHD,
                     )
                     
                     obj.id = id

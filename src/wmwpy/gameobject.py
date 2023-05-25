@@ -39,7 +39,7 @@ class GameObject():
         elif hasattr(this.filesystem, 'filesystem'):
             this.filesystem = this.filesystem.filesystem
 
-        else:
+        elif this.gamepath:
             this.filesystem = Filesystem(this.gamepath, this.assets)
             this.filesystem.getAssets()
         # except Exception as e:

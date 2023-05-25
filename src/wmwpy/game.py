@@ -56,6 +56,8 @@ class Game():
         imagePath : str = None,
         load_callback : typing.Callable[[int, str, int], typing.Any] = None,
         ignore_errors : bool = False,
+        HD = False,
+        TabHD = False,
     ):
         """
         Load level
@@ -90,6 +92,8 @@ class Game():
             filesystem = this.filesystem,
             load_callback = load_callback,
             ignore_errors = ignore_errors,
+            HD = HD,
+            TabHD = TabHD,
         )
         if isinstance(xmlPath, File):
             level.filename = xmlPath.path
@@ -101,13 +105,17 @@ class Game():
     def Object(
         this,
         object : str,
+        HD : bool = False,
+        TabHD : bool = False,
         **kwargs
     ):
         """
-        Loads object
+        Load object
 
         Args:
             object (str): Path to `.hs` object file.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
 
         Returns:
             classes.object.Object: Where's My Water? object.
@@ -120,6 +128,8 @@ class Game():
         obj = Object(
             object,
             filesystem = this.filesystem,
+            HD = HD,
+            TabHD = TabHD,
             **kwargs
         )
         if isinstance(object, File):
@@ -134,13 +144,15 @@ class Game():
         this,
         imagelist : str = None,
         HD = False,
+        TabHD = False,
     ):
         """
         Load imagelist
 
         Args:
             imagelist (str): Path to `.imagelist` file. Defaults to None
-            HD (bool, optional): Whether to use HD textures. Defaults to False.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
 
         Returns:
             classes.imagelist.Imagelist: Imagelist object.
@@ -152,7 +164,8 @@ class Game():
         imagelistObject = Imagelist(
             imagelist,
             filesystem = this.filesystem,
-            HD = False,
+            HD = HD,
+            TabHD = TabHD
         )
         if isinstance(imagelist, File):
             imagelistObject.filename = imagelist.path
@@ -164,13 +177,17 @@ class Game():
     def Sprite(
         this,
         sprite : str,
+        HD = False,
+        TabHD = False,
         **kwargs
     ):
         """
         Loads sprite.
 
         Args:
-            sprite (str): Path to `.sprite` file.`
+            sprite (str): Path to `.sprite` file.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
 
         Returns:
             classes.sprite.Sprite: Sprite object.
@@ -182,6 +199,8 @@ class Game():
         spriteObject = Sprite(
             sprite,
             filesystem = this.filesystem,
+            HD = HD,
+            TabHD = TabHD,
             **kwargs
         )
         if isinstance(sprite, File):

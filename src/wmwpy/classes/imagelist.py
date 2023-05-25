@@ -28,26 +28,56 @@ class Imagelist(GameObject):
         gamepath : str = None, assets : str = '/assets',
         baseassets : str = '/',
         HD : bool = False,
+        TabHD : bool = False,
     ) -> None:
-        """
-        Get imagelist from file
+        """Get imagelist from file
+        
         Args:
-            file (str | bytes | File): File to read.
+            file (str | bytes | File, optional): File to read. Defaults to None.
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
-            HD (bool, optional): Whether to use HD textures. Defaults to False.
-            gamepath (str, optional): Path to game. Only is used when filesystem is `Folder` or `None`. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
-            assets (str, optional): Path to assets relative to gamepath. Defaults to '/assets'.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
+        
         Raises:
             FileNotFoundError: Filesystem is not usable and no gamepath.
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
         
+        this.HD = HD
+        this.TabHD = TabHD
+        
+        if isinstance(file, str):
+            file = getHDFile(
+                file,
+                HD = this.HD,
+                TabHD = this.TabHD,
+                filesystem = this.filesystem,
+                gamepath = this.gamepath,
+                assets = this.assets,
+                baseassets = this.baseassets,
+            )
+        elif isinstance(file, File):
+            file = getHDFile(
+                file.path,
+                HD = this.HD,
+                TabHD = this.TabHD,
+                filesystem = this.filesystem,
+                gamepath = this.gamepath,
+                assets = this.assets,
+                baseassets = this.baseassets,
+            )
+        
+        if isinstance(file, str):
+            file = this.filesystem.get(file)
+        
         this.file = super().get_file(file, template = this.TEMPLATE)
 
-        this.HD = HD
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
+        
         this.textureBasePath : str = '/Textures/'
         this.pages : list[Imagelist.Page] = []
         this.type = this.Type.IMAGELIST
@@ -72,6 +102,7 @@ class Imagelist(GameObject):
                     element,
                     filesystem = this.filesystem,
                     HD = this.HD,
+                    TabHD = this.TabHD
                 )
                 
                 this.pages.append(page)
@@ -81,6 +112,7 @@ class Imagelist(GameObject):
                 this.xml,
                 filesystem = this.filesystem,
                 HD = this.HD,
+                TabHD = this.TabHD,
             )
             
             this.pages.append(page)
@@ -211,19 +243,14 @@ class Imagelist(GameObject):
             page.removeImageFiles()
     
     class Page(GameObject):
-        HD = False
-        id = None
-        imgSize = (1,1)
-        textureBasePath = '/Textures/'
-        file = ''
-
         def __init__(
             this,
             element : etree.ElementBase,
             filesystem: Filesystem | Folder = None,
             gamepath: str = None,
             assets: str = '/assets',
-            HD = False,
+            HD : bool = False,
+            TabHD : bool = False,
         ) -> None:
             """Page for Imagelist. This is also used when imagelist is not in pages format.
 
@@ -236,12 +263,14 @@ class Imagelist(GameObject):
             """
             super().__init__(filesystem, gamepath, assets)
             
-            this.HD : bool = HD
+            this.HD = HD
+            this.TabHD = TabHD
             
             this.xml : etree.ElementBase = element
             
             this.atlas = None
             this.images : dict[str, Imagelist.Page.Image] = {}
+            this.properties : dict[str,str] = {}
             
             this.read()
         
@@ -364,33 +393,96 @@ class Imagelist(GameObject):
             """Read xml.
             """
             this.properties = deepcopy(this.xml.attrib)
-            if 'imgSize' in this.properties:
-                this.size = tuple([int(v) for v in this.properties['imgSize'].split()])
-            if 'textureBasePath' in this.properties:
-                this.textureBasePath = this.properties['textureBasePath']
-            if 'file' in this.properties:
-                this.file = this.properties['file']
-            if 'id' in this.properties:
-                this.id = this.properties['id']
-    
-            if this.HD:
-                hd = getHDFile(this.file)
-                if this.filesystem.exists(hd):
-                    this.file = hd
     
             this.fullAtlasPath = ''
     
-            if this.gamepath:
-                this.fullAtlasPath = joinPath(this.gamepath, this.assets, this.file)
+            # if this.gamepath:
+            #     this.fullAtlasPath = joinPath(this.gamepath, this.assets, this.file)
                 # print(this.fullAtlasPath)
     
             this.getAtlas()
             this.getImages()
+        
+        @property
+        def imgSize(this) -> tuple[int,int]:
+            """The size of the image in the properties. Does not have to reflect the size of the atlas.
+
+            Returns:
+                tuple[int,int]: (width,height)
+            """
+            if 'imgSize' in this.properties:
+                return tuple([int(v) for v in this.properties['imgSize'].split()])
+            else:
+                return (1,1)
+        @imgSize.setter
+        def imgSize(this, size : tuple | list | str):
+            if isinstance(size, (list, tuple)):
+                this.properties['imgSize'] = ''.join([str(a) for a in size])
+            elif isinstance(size, str):
+                this.properties['imgSize'] = size
+            else:
+                raise TypeError('size must be a tuple, list, or str')
+    
+        @property
+        def textureBasePath(this) -> str:
+            """The base Textures path, or the place where the files are extracted to.
+
+            Returns:
+                str: The textureBasePath
+            """
+            if 'textureBasePath' in this.properties:
+                return this.properties['textureBasePath']
+            else:
+                this.textureBasePath = joinPath(this.filesystem.baseassets, '/Textures/')
+                return this.textureBasePath
+        @textureBasePath.setter
+        def textureBasePath(this, path):
+            this.properties['textureBasePath'] = path
+        
+        @property
+        def file(this):
+            """The path to the atlas file to use in this ImageList
+
+            Returns:
+                str: Path to atlas file.
+            """
+            if 'file' in this.properties:
+                return getHDFile(
+                    this.properties['file'],
+                    HD = this.HD,
+                    TabHD = this.TabHD,
+                    filesystem = this.filesystem,
+                    assets = this.assets,
+                    baseassets = this.baseassets,
+                )
+            else:
+                return ''
+        @file.setter
+        def file(this, path):
+            this.properties['file'] = path
+        
+        @property
+        def id(this):
+            """Page id
+
+            Returns:
+                str: The id
+            """
+            if 'id' in this.properties:
+                return this.properties['id']
+            else:
+                return ''
+        @id.setter
+        def id(this, value : int, str):
+            if isinstance(value, str):
+                this.properties['id'] = value
+            else:
+                this.properties['id'] = str(value)
     
         def getAtlas(this):
             """Get atlas image.
             """
-            if not this.file:
+            if this.file in ['', None]:
                 image = Texture(PIL.Image.new('RGBA', this.size))
                 this.atlas = image.image.copy()
                 return

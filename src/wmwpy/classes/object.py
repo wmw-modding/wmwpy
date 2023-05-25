@@ -26,7 +26,9 @@ class Object(GameObject):
         properties : dict = {},
         pos : tuple | str = (0,0),
         name : str = 'Obj',
-        scale : int = 10,
+        scale : int = 50,
+        HD : bool = False,
+        TabHD : bool = False,
     ) -> None:
         """Get game object. Game object is `.hs` file.
 
@@ -40,6 +42,8 @@ class Object(GameObject):
             pos (tuple | str, optional): Position of object. Defaults to (0,0).
             name (str, optional): Name of object. Defaults to 'Obj'.
             scale (int, optional): The image scale. Defaults to 10.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
@@ -51,6 +55,9 @@ class Object(GameObject):
             this.pos = tuple([float(a) for a in pos.split()])
         else:
             this.pos = tuple(pos)
+        
+        this.HD = HD
+        this.TabHD = TabHD
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         this.sprites : list[Sprite] = []
@@ -486,6 +493,8 @@ class Object(GameObject):
                     filesystem = this.filesystem,
                     properties = attributes,
                     scale = this.scale,
+                    HD = this.HD,
+                    TabHD = this.TabHD,
                 )
                 this.sprites.append(sprite)
     

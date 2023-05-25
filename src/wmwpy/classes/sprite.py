@@ -20,7 +20,9 @@ class Sprite(GameObject):
         gamepath: str = None, assets: str = '/assets',
         baseassets : str = '/',
         properties : dict = {},
-        scale : int = 10,
+        scale : int = 50,
+        HD : bool = False,
+        TabHD : bool = False,
     ) -> None:
         """Game sprite.
 
@@ -33,12 +35,17 @@ class Sprite(GameObject):
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             properties (dict, optional): Sprite properties. Defaults to {}.
             scale (int, optional): Sprite image scale. Defaults to 10.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
         this.file = super().get_file(file)
         
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
+        
+        this.HD = HD
+        this.TabHD = TabHD
         
         this.properties = deepcopy(properties)
         this.animations : list[Sprite.Animation] = []
@@ -139,7 +146,9 @@ class Sprite(GameObject):
             if (not element is etree.Comment) or element.tag == 'Animation':
                 animation = this.Animation(
                     element,
-                    this.filesystem
+                    this.filesystem,
+                    HD = this.HD,
+                    TabHD = this.TabHD,
                 )
                 
                 this.animations.append(animation)
@@ -313,6 +322,8 @@ class Sprite(GameObject):
             gamepath: str = None,
             assets: str = '/assets',
             baseassets: str = '/',
+            HD : bool = False,
+            TabHD : bool = False,
         ) -> None:
             """Animation for Sprite.
 
@@ -322,6 +333,8 @@ class Sprite(GameObject):
                 gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
                 assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
                 baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+                HD (bool, optional): Use HD images. Defaults to False.
+                TabHD (bool, optional): Use TabHD images. Defaults to False.
             """
             super().__init__(filesystem, gamepath, assets, baseassets)
             
@@ -329,6 +342,9 @@ class Sprite(GameObject):
                 this.xml : etree.ElementBase = etree.parse(xml).getroot()
             else:
                 this.xml = xml
+            
+            this.HD = HD
+            this.TabHD = TabHD
             
             this.properties = {}
             this.name = ''
@@ -392,7 +408,8 @@ class Sprite(GameObject):
                 this.atlas = Imagelist(
                     this.filesystem.get(this.properties['atlas']),
                     this.filesystem,
-                    HD=False
+                    HD=this.HD,
+                    TabHD = this.TabHD,
                 )
                 
                 # this.atlasHD = Imagelist(

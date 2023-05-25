@@ -1,20 +1,29 @@
 import os
 from lxml import etree
+
 from .waltex import WaltexImage, Waltex
 from PIL import Image
 
 from .path import joinPath
 from .XMLTools import findTag
 from .filesystem import Filesystem, Folder, File
+from ..gameobject import GameObject
 
 _cachedWaltextImages = {}
 
-class Texture():
-    def __init__(this, image : Image.Image | Waltex | File) -> None:
+class Texture(GameObject):
+    def __init__(
+        this,
+        image : Image.Image | Waltex | File,
+        HD : bool = False,
+        TabHD : bool = False,
+    ) -> None:
         """Texture for image.
 
         Args:
             image (Image.Image | Waltex | File): Image object. Can be PIL.Image.Image, Waltex image, or file.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
 
         Raises:
             TypeError: image must be PIL.Image.Image, Waltex, or filesystem.File.
@@ -35,21 +44,85 @@ class Texture():
     def size(this):
         return this.image.size
 
-def getHDFile(file : str) -> str:
+class HDFile(GameObject):
+    def __init__(
+        this,
+        file : str | File,
+        HD : bool = True,
+        TabHD : bool = False, 
+        filesystem: Filesystem | Folder = None,
+        gamepath: str = None,
+        assets: str = '/assets',
+        baseassets: str = '/',
+    ) -> None:
+        super().__init__(filesystem, gamepath, assets, baseassets)
+        
+        if isinstance(file, File):
+            this.file = file.path
+        elif isinstance(file, str):
+            this.file = file
+        else:
+            raise TypeError('file must be a File or str')
+
+        this.HD = HD
+        this.TabHD = TabHD
+    
+    @property
+    def filename(this) -> str:
+        name, extension = os.path.splitext(this.file)
+        
+        if this.TabHD:
+            filename = f'{name}-TabHD{extension}'
+            if this.filesystem == None:
+                return filename
+
+            if this.filesystem.exists(filename):
+                return filename
+        
+        if this.HD:
+            filename = f'{name}-HD{extension}'
+            if this.filesystem == None:
+                return filename
+
+            if this.filesystem.exists(filename):
+                return filename
+        
+        return this.file
+
+def getHDFile(
+    file : str,
+    HD = True,
+    TabHD = False,
+    filesystem : Filesystem = None,
+    gamepath : str = None,
+    assets : str = '/assets',
+    baseassets : str = '/',
+) -> str:
     """Get HD filename.
 
     Args:
-        file (str): Filename
+        file (str): Filename. Must be a string.
+        HD (bool, optional): 
 
     Returns:
         str: HD filename.
     """
-    split = os.path.splitext(file)
-    split = list(split)
-    split.insert(1, '-HD')
-    return ''.join(split)
+    return HDFile(
+        file = file,
+        HD = HD,
+        TabHD = TabHD,
+        filesystem = filesystem,
+        gamepath = gamepath,
+        assets = assets,
+        baseassets = baseassets,
+    ).filename
             
-def getTexture(path : str, textureSettings : dict, size : tuple, cache = True) -> Image.Image:
+def getTexture(
+    path : str,
+    textureSettings : dict,
+    size : tuple,
+    cache = True
+) -> Image.Image:
     """Get image.
 
     Args:
