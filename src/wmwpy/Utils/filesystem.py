@@ -555,7 +555,12 @@ class Folder(FileBase):
         this._type.value = this._Type.FOLDER
         this.files = []
         
-    def add(this, path : str, content : bytes, replace = False) -> File:
+    def add(
+        this,
+        path : str,
+        content : bytes,
+        replace = False,
+    ) -> File:
         """Add file to folder.
 
         Args:
