@@ -120,6 +120,9 @@ class Object(GameObject):
             rects.append(
                 tuple(pos + (size / 2))
             )
+        
+        if len(rects) == 0:
+            rects.append([0,0])
             
         rects = numpy.array(rects).swapaxes(0,1)
         
@@ -234,9 +237,9 @@ class Object(GameObject):
             tuple[float,float]: (x,y)
         """
         this.getOffset()
-        offset = this._offset
+        offset = numpy.array(this._offset)
         
-        offset = this.rotatePoint(this._offset)
+        offset = this.rotatePoint(offset * [1,-1])
         
         return offset
     
