@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import numpy
 import typing
 import copy
+import logging
 
 from ..Utils.filesystem import *
 from ..Utils.logging_utils import log_exception
@@ -54,7 +55,18 @@ class Level(GameObject):
         
         super().__init__(filesystem, gamepath, assets, baseassets)
         
+        logging.debug(f'Level: xml before: {xml}')
+        
+        if isinstance(xml, File):
+            logging.debug(f'Level: xml path: {xml.path}')
+        
         this.xml_file = super().get_file(xml, template = this.XML_TEMPLATE)
+        
+        logging.debug(f'Level: xml after: {this.xml_file}')
+        try:
+            logging.debug(f'Level: raw xml:\n{this.xml_file.getvalue().decode()}')
+        except:
+            logging.debug('Level: file not io.BytesIO')
         
         this.xml = etree.parse(this.xml_file).getroot()
         

@@ -1,5 +1,6 @@
 import os
 import typing
+import logging
 
 from .Utils.filesystem import *
 from .Utils import Texture
@@ -66,8 +67,13 @@ class Game():
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
         """
+        logging.debug(f'Game: xml input: {xmlPath}')
+        
         if isinstance(xmlPath, File):
             xml = xmlPath
+            
+            logging.debug(f'Game: xml path: {xmlPath.path}')
+            
         else:
             xml = None
             if xmlPath:
@@ -79,12 +85,21 @@ class Game():
                 
                 xml = this.filesystem.get(xmlPath)
         
+        logging.debug(f'Game: xml file before {xml}')
+        
+        if isinstance(xml, File):
+            logging.debug(f'Game: xml path: {xml.path}')
+        
         if isinstance(imagePath, File):
             image = imagePath
         else:
             image = None
             if imagePath:
                 image = this.filesystem.get(imagePath)
+        
+        logging.debug(f'Game: xml after: {xml}')
+        if isinstance(xml, File):
+            logging.debug(f'Game: xml path: {xml.path}')
         
         level = Level(
             xml = xml,
