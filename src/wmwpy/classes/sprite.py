@@ -638,7 +638,7 @@ class Sprite(GameObject):
                     this.repeat = int(this.properties['repeat'])
                 
             def getImage(this):
-                this._image = this.atlas.getImage(this.name)
+                this._image = this.atlas.get(this.name)
             
             @property
             def image(this) -> Image.Image:
