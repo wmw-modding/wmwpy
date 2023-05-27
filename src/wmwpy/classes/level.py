@@ -63,10 +63,10 @@ class Level(GameObject):
         this.xml_file = super().get_file(xml, template = this.XML_TEMPLATE)
         
         logging.debug(f'Level: xml after: {this.xml_file}')
-        try:
-            logging.debug(f'Level: raw xml:\n{this.xml_file.getvalue().decode()}')
-        except:
-            logging.debug('Level: file not io.BytesIO')
+        # try:
+        #     logging.debug(f'Level: raw xml:\n{this.xml_file.getvalue().decode()}')
+        # except:
+        #     logging.debug('Level: file not io.BytesIO')
         
         this.xml = etree.parse(this.xml_file).getroot()
         
