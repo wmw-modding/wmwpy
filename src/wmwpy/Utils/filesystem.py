@@ -610,7 +610,7 @@ class Folder(FileBase):
         """
         parts = pathlib.Path(path).parts
         file = None
-        if parts[0] == '\\':
+        if parts[0] in ['\\', '/']:
             file = this.root
         elif parts[0] == '..':
             file = this.parent
