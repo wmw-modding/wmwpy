@@ -240,6 +240,7 @@ class Object(GameObject):
         offset = numpy.array(this._offset)
         
         offset = this.rotatePoint(offset * [1,-1])
+        offset = numpy.array(offset) * [-1,1]
         
         return offset
     
@@ -262,7 +263,7 @@ class Object(GameObject):
         if angle == 0:
             return point
         
-        return rotate(point, degrees=-angle)
+        return rotate(point, degrees = -angle)
     
     def rotateImage(this, image : Image.Image) -> Image.Image:
         """Rotate an image the amount of degrees as the Object `Angle` property
