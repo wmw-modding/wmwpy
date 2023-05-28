@@ -4,6 +4,7 @@ import logging
 
 from .Utils.filesystem import *
 from .Utils import Texture
+from .Utils import path
 from .classes import *
 
 class Game():
@@ -69,6 +70,8 @@ class Game():
         """
         logging.debug(f'Game: xml input: {xmlPath}')
         
+        levels = this.filesystem.get(path.joinPath(this.baseassets, '/Levels'))
+        
         if isinstance(xmlPath, File):
             xml = xmlPath
             
@@ -83,7 +86,7 @@ class Game():
                         imagePath = '.'.join([split[0], 'png'])
                     xmlPath = '.'.join([split[0], 'xml'])
                 
-                xml = this.filesystem.get(xmlPath)
+                xml = levels.get(xmlPath)
         
         logging.debug(f'Game: xml file before {xml}')
         
@@ -95,7 +98,7 @@ class Game():
         else:
             image = None
             if imagePath:
-                image = this.filesystem.get(imagePath)
+                image = levels.get(imagePath)
         
         logging.debug(f'Game: xml after: {xml}')
         if isinstance(xml, File):
@@ -136,9 +139,10 @@ class Game():
             classes.object.Object: Where's My Water? object.
         """
         
+        objects = this.filesystem.get(path.joinPath(this.baseassets, '/Objects'))
         
         if not isinstance(object, File):
-            object = this.filesystem.get(object)
+            object = objects.get(object)
         
         obj = Object(
             object,
@@ -173,8 +177,10 @@ class Game():
             classes.imagelist.Imagelist: Imagelist object.
         """
         
+        textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        
         if not isinstance(imagelist, File):
-            imagelist = this.filesystem.get(imagelist)
+            imagelist = textures.get(imagelist)
         
         imagelistObject = Imagelist(
             imagelist,
@@ -208,8 +214,10 @@ class Game():
             classes.sprite.Sprite: Sprite object.
         """
         
+        sprites = this.filesystem.get(path.joinPath(this.baseassets, '/Sprites'))
+        
         if not isinstance(sprite, File):
-            sprite = this.filesystem.get(sprite)
+            sprite = sprites.get(sprite)
         
         spriteObject = Sprite(
             sprite,
@@ -239,8 +247,10 @@ class Game():
             Utils.textures.Texture: Texture object.
         """
         
+        textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        
         if not isinstance(texture, File):
-            texture = this.filesystem.get(texture)
+            texture = textures.get(texture)
         
         return Texture(
             texture
