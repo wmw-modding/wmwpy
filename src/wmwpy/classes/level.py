@@ -1,4 +1,5 @@
 import io
+import os
 from lxml import etree
 from PIL import Image, ImageTk
 import numpy
@@ -67,6 +68,9 @@ class Level(GameObject):
         #     logging.debug(f'Level: raw xml:\n{this.xml_file.getvalue().decode()}')
         # except:
         #     logging.debug('Level: file not io.BytesIO')
+        
+        if isinstance(this.xml_file, io.BytesIO):
+            this.xml_file.seek(0)
         
         this.xml = etree.parse(this.xml_file).getroot()
         
@@ -250,6 +254,7 @@ class Level(GameObject):
         this,
         filename : str = None,
         exportObjects : bool = False,
+        saveImage : bool = True,
     ) -> bytes:
         """Export level
 
@@ -307,6 +312,24 @@ class Level(GameObject):
                 
         else:
             this.filesystem.add(filename, output)
+        
+        if saveImage:
+            imgFile = io.BytesIO()
+            this._image.save(
+                imgFile,
+                format = this.IMAGE_FORMAT,
+            )
+            
+            filename = os.path.splitext(filename)[0] + f'.{this.IMAGE_FORMAT.lower()}'
+            
+            if (file := this.filesystem.get(filename)) != None:
+                if isinstance(file, File):
+                    file.write(imgFile.getvalue())
+                else:
+                    raise TypeError(f'Path {filename} is not a file.')
+                    
+            else:
+                this.filesystem.add(filename, imgFile.getvalue())
         
         return output
     
