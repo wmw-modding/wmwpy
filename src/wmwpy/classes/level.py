@@ -1,11 +1,19 @@
 import io
 import os
 from lxml import etree
-from PIL import Image, ImageTk
+from PIL import Image
 import numpy
 import typing
 import copy
 import logging
+
+LOADED_ImageTk = True
+if LOADED_ImageTk:
+    try:
+        from PIL import ImageTk
+    except:
+        LOADED_ImageTk = False
+
 
 from ..Utils.filesystem import *
 from ..Utils.logging_utils import log_exception
@@ -122,13 +130,17 @@ class Level(GameObject):
         this._image = value
     
     @property
-    def PhotoImage(this) -> ImageTk.PhotoImage:
+    def PhotoImage(this) -> 'ImageTk.PhotoImage':
         """Tkinter PhotoImage of the Level image
 
         Returns:
             ImageTk.PhotoImage: Tkinter PhotoImage
         """
-        this._PhotoImage = ImageTk.PhotoImage(this.image)
+        if LOADED_ImageTk:
+            this._PhotoImage = ImageTk.PhotoImage(this.image)
+        else:
+            this._PhotoImage = this.image.copy()
+            
         return this._PhotoImage
 
     @property

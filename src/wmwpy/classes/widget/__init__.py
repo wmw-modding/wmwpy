@@ -1,5 +1,3 @@
-from PIL import ImageTk
-
 from .widget import Widget, register_widget, WIDGETS, get_widget
 
 from .WT_PUSH_BUTTON import WT_PUSH_BUTTON

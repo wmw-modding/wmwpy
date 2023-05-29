@@ -1,10 +1,17 @@
 from lxml import etree
-from PIL import Image, ImageTk
+from PIL import Image
 import numpy
 from copy import deepcopy
 import math
 import typing
 import os
+
+LOADED_ImageTk = True
+if LOADED_ImageTk:
+    try:
+        from PIL import ImageTk
+    except:
+        LOADED_ImageTk = False
 
 from .imagelist import Imagelist
 from ..Utils.filesystem import *
@@ -382,10 +389,14 @@ class Sprite(GameObject):
                 this._frame = 0
         
         @property
-        def PhotoImage(this) -> ImageTk.PhotoImage:
+        def PhotoImage(this) -> 'ImageTk.PhotoImage':
             """Tkinter PhotoImage for the Animation
             """
-            this._PhotoImage = ImageTk.PhotoImage(this.image)
+            if LOADED_ImageTk:
+                this._PhotoImage = ImageTk.PhotoImage(this.image)
+            else:
+                this._PhotoImage = this.image.copy()
+            
             return this._PhotoImage
             
         def readXML(this):

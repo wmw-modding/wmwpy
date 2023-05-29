@@ -1,6 +1,6 @@
 import lxml
 from lxml import etree
-from PIL import Image, ImageTk
+from PIL import Image
 from ..Utils.waltex import WaltexImage
 from .widget import Widget
 

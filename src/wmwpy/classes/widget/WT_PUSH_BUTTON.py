@@ -1,6 +1,6 @@
 import lxml
 from lxml import etree
-from PIL import Image, ImageTk
+from PIL import Image
 from .widget import Widget, register_widget
 
 class WT_PUSH_BUTTON(Widget):

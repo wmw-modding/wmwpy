@@ -3,10 +3,17 @@ from lxml import etree
 import io
 import os
 from copy import deepcopy
-from PIL import Image, ImageTk, ImageDraw
+from PIL import Image, ImageDraw
 import numpy
 import math
 import typing
+
+LOADED_ImageTk = True
+if LOADED_ImageTk:
+    try:
+        from PIL import ImageTk
+    except:
+        LOADED_ImageTk = False
 
 from ..gameobject import GameObject
 from .sprite import Sprite
@@ -73,7 +80,7 @@ class Object(GameObject):
         
         this._background : list[Sprite] = []
         this._foreground : list[Sprite] = []
-        this._PhotoImage : dict[str, ImageTk.PhotoImage] = {}
+        this._PhotoImage : dict[str, 'ImageTk.PhotoImage'] = {}
         
         this._offset = [0,0]
         this.scale = scale
@@ -167,13 +174,17 @@ class Object(GameObject):
         return image
     
     @property
-    def background_PhotoImage(this) -> ImageTk.PhotoImage:
+    def background_PhotoImage(this) -> 'ImageTk.PhotoImage':
         """Tkinter PhotoImage of this Object
 
         Returns:
             ImageTk.PhotoImage: Tkinter PhotoImage
         """
-        this._PhotoImage['background'] = ImageTk.PhotoImage(this.background)
+        if LOADED_ImageTk:
+            this._PhotoImage['background'] = ImageTk.PhotoImage(this.background)
+        else:
+            this._PhotoImage['background'] = this.background.copy()
+        
         return this._PhotoImage['background']
     
     @property
@@ -207,13 +218,17 @@ class Object(GameObject):
         return image
     
     @property
-    def foreground_PhotoImage(this) -> ImageTk.PhotoImage:
+    def foreground_PhotoImage(this) -> 'ImageTk.PhotoImage':
         """Foregound Tkinter PhotoImage
 
         Returns:
             ImageTk.PhotoImage: Tkinter PhotoImage
         """
-        this._PhotoImage['foreground'] = ImageTk.PhotoImage(this.foreground)
+        if LOADED_ImageTk:
+            this._PhotoImage['foreground'] = ImageTk.PhotoImage(this.foreground)
+        else:
+            this._PhotoImage['foreground'] = this.foreground.copy()
+        
         return this._PhotoImage['foreground']
     
     @property
@@ -281,13 +296,17 @@ class Object(GameObject):
         return image
     
     @property
-    def PhotoImage(this) -> ImageTk.PhotoImage:
+    def PhotoImage(this) -> 'ImageTk.PhotoImage':
         """Tkinter PhotoImage of the Object image
 
         Returns:
             ImageTk.PhotoImage: Tkinter PhotoImage
         """
-        this._PhotoImage['image'] = ImageTk.PhotoImage(this.image)
+        if LOADED_ImageTk:
+            this._PhotoImage['image'] = ImageTk.PhotoImage(this.image)
+        else:
+            this._PhotoImage['image'] = this.image.copy()
+        
         return this._PhotoImage['image']
     
     @property
