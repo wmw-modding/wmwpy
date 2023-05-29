@@ -11,6 +11,8 @@ from .classes import widget
 from .gametemplate import GAMES
 from .Utils import filesystem
 
+__all__ = ['load', 'Game', 'Utils', 'classes', 'GAMES', 'filesystem']
+
 def load(
     gamepath : str,
     platform : typing.Literal['android', 'ios'] = 'android',
