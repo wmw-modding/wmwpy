@@ -34,7 +34,7 @@ def load(
         db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
         profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
         baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
-        hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
+        load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
     """
     
     game = game.upper()

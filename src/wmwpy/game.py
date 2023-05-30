@@ -32,7 +32,7 @@ class Game():
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
-            load_callbac (Callable[[int, str, int], Any], optional): (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
+            load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
         """
         if gamepath == None:
             return
