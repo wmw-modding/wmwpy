@@ -389,7 +389,7 @@ class Imagelist(GameObject):
                     )
                     this.images.append(image)
 
-                    image.saveFile(replace = True)
+                    # image.saveFile(replace = True)
     
         def get(this, name : str) -> 'Imagelist.Page.Image':
             """Get an image from the imagelist
@@ -554,7 +554,8 @@ class Imagelist(GameObject):
                 textureBasePath = '/Textures',
                 filesystem: Filesystem | Folder = None,
                 gamepath: str = None,
-                assets: str = '/assets'
+                assets: str = '/assets',
+                save : bool = False,
             ) -> None:
                 """Image for Imagelist
 
@@ -574,8 +575,11 @@ class Imagelist(GameObject):
                 this.image = PIL.Image.new('RGBA', this.size)
 
                 this.rawdata = io.BytesIO()
-
-                this.getImage()
+                
+                this._image = None
+                
+                if save:
+                    this.getImage()
             
             @property
             def size(this) -> tuple[int,int]:
@@ -664,18 +668,29 @@ class Imagelist(GameObject):
             @name.setter
             def name(this, name : str):
                 this.properties['name'] = str(name)
+            
+            @property
+            def image(this):
+                if this._image == None:
+                    this.getImage()
+                
+                return this._image.copy()
+            
+            @image.setter
+            def image(this, image : PIL.Image.Image):
+                this._image = image.copy()
 
-            def getImage(this):
+            def getImage(this) -> PIL.Image.Image:
                 """Get image from atlas.
 
                 Returns:
                     PIL.Image.Image: PIL Image.
                 """
-                this.image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
-                this.image = this.image.resize(this.size)
+                this._image = this.atlas.crop(numpy.add(this.rect, (0,0) + this.rect[0:2]))
+                this._image = this._image.resize(this.size)
                 
-                this.image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::].upper())
-                return this.image
+                this._image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::].upper())
+                return this._image
 
             def show(this):
                 """Show image with default image viewer.
