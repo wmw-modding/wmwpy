@@ -198,7 +198,7 @@
 <li><p><strong>db</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to database file from assets folder. Defaults to ‘/Data/water.db’.</p></li>
 <li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Relative path to profile file in WMW2. Defaults to <cite>None</cite></p></li>
 <li><p><strong>baseassets</strong> (<em>str</em><em>, </em><em>optional</em>) – Base assets path within the assets folder, e.g. <cite>/perry/</cite> in wmp. Defaults to <cite>/</cite></p></li>
-<li><p><strong>hook</strong> (<em>Callable</em><em>[</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Hook for loading assets, useful for guis. The function gets called with the paramaters <cite>(progress : int, current : str, max : int)</cite>. Defaults to None.</p></li>
+<li><p><strong>load_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – A callback function to be ran while loading the game. Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>

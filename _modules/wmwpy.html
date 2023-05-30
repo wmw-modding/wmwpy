@@ -65,7 +65,7 @@
 <span class="sd">        db (str, optional): Relative path to database file from assets folder. Defaults to &#39;/Data/water.db&#39;.</span>
 <span class="sd">        profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`</span>
 <span class="sd">        baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
-<span class="sd">        hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.</span>
+<span class="sd">        load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">game</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
