@@ -51,6 +51,7 @@ class Level(GameObject):
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the level. Defaults to None.
             ignore_errors (bool, optional): Ignore errors while loading. Defaults to False.
             HD (bool, optional): Use HD images. Defaults to False.
             TabHD (bool, optional): Use TabHD images. Defaults to False.
