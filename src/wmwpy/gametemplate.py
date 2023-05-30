@@ -21,7 +21,7 @@ class WMW(Game):
     ) -> None:
         
         
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 class WMWF(WMW):
     _DB = '/Data/water-Lite.db'
@@ -55,7 +55,7 @@ class WMP(Game):
         baseassets: str = '/Perry/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 class WMPF(WMP):
     _DB = '/Perry/Data/perry-Lite.db'
@@ -89,7 +89,7 @@ class WMM(Game):
         baseassets: str = '/Mickey/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 class WMMF(WMM):
     _DB = '/Mickey/Data/perry-Lite.db'
@@ -124,7 +124,7 @@ class WMXYY(Game):
         hook: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 class WMWFXYY(Game):
     _DB = '/Perry/Data/perry.db'
@@ -142,7 +142,7 @@ class WMWFXYY(Game):
         hook: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 # Where's My Water 2?
 class WMW2(Game):
@@ -161,7 +161,7 @@ class WMW2(Game):
         baseassets: str = '/Water/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
 
 # Where's My Holiday?
 class WMH(Game):
@@ -179,7 +179,7 @@ class WMH(Game):
         baseassets: str = '/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
     
     def mode(this, mode : typing.Literal['wmw', 'wmp'] = 'wmw'):
         """Switch game mode from 'wmw' to 'wmp' and vice verca.

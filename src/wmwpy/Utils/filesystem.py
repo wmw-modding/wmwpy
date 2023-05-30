@@ -97,7 +97,7 @@ class Filesystem():
         this,
         extract_zip = False,
         split_imagelist = False,
-        hook : typing.Callable[[int, str, int], typing.Any] = None
+        load_callback : typing.Callable[[int, str, int], typing.Any] = None,
     ):
         """Scans the assets directory and loads all files into the filesystem. This is so wmwpy can modify files without modifying the actual files.
 
@@ -139,9 +139,9 @@ class Filesystem():
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
                 # print(path)
                 
-                if callable(hook):
+                if callable(load_callback):
                     current += 1
-                    hook(current, path, total)
+                    load_callback(current, path, total)
                 
                 fileobj : File = this.add(path, os.path.join(dir, file))
                 
@@ -149,8 +149,8 @@ class Filesystem():
                     fileobj.read()
         
         
-        if callable(hook):
-            hook(current, 'Finished loading game', total)
+        if callable(load_callback):
+            load_callback(current, 'Finished loading game', total)
         
         return this
     
@@ -177,20 +177,35 @@ class Filesystem():
         """
         return this.get(path).listdir(recursive = recursive, search = search)
     
-    def dump(this, output : str = None):
+    def dump(
+        this,
+        folder : str = None,
+        callback : typing.Callable[[int, str, int], typing.Any] = None,
+    ):
         """Dump the contents of the filesystem to the specified directory
 
         Args:
-            output (str, optional): Path to output directory. Defaults to original path.
+            folder (str, optional): Path to output directory. Defaults to original path.
+            callback (Callable[[int, str, int], Any], optional): A callback function to be ran while dumping the filesystem. Defaults to None.
         """
-        if output == None:
-            output = joinPath(this.gamepath, this.assets)
+        if folder == None:
+            folder = joinPath(this.gamepath, this.assets)
         
         # print(f'output: {output}')
         
         files = this.listdir(recursive=True)
+        total = len(files)
+        progress = 0
+        
         for path in files:
             file = this.get(path)
+            
+            
+            progress += 1
+            
+            if callable(callback):
+                callback(progress, path, total)
+            
             if file.is_dir():
                 continue
             parts = pathlib.Path(path).parts
@@ -200,7 +215,7 @@ class Filesystem():
             
             # print(f'new: {parts}')
             
-            newpath = pathlib.Path(output, *parts)
+            newpath = pathlib.Path(folder, *parts)
             
             # print(f'writing: {newpath.as_posix()}')
             
@@ -210,8 +225,9 @@ class Filesystem():
             
             with open(newpath, 'wb') as f:
                 f.write(data)
-        
-        
+            
+        if callable(callback):
+            callback(progress, 'Done!', total)
     
 # Filesystem helpers
 class FileBase():

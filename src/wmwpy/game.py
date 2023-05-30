@@ -21,7 +21,7 @@ class Game():
         profile : str = None,
         baseassets : str = '/',
         platform : typing.Literal['android', 'ios'] = 'android',
-        hook : typing.Callable[[int, str, int], typing.Any] = None,
+        load_callback : typing.Callable[[int, str, int], typing.Any] = None,
     ) -> None:
         """load game
 
@@ -32,7 +32,7 @@ class Game():
             profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
-            hook (Callable[[int, str, int], Any], optional): Hook for loading assets, useful for guis. The function gets called with the paramaters `(progress : int, current : str, max : int)`. Defaults to None.
+            load_callbac (Callable[[int, str, int], Any], optional): (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
         """
         if gamepath == None:
             return
@@ -46,13 +46,24 @@ class Game():
         this.platform = platform
         
         
-        this.updateFilesystem(hook = hook)
+        this.updateFilesystem(load_callback = load_callback)
         
-    def updateFilesystem(this, hook : typing.Callable[[int, str, int], typing.Any] = None):
+    def updateFilesystem(this, load_callback : typing.Callable[[int, str, int], typing.Any] = None):
         this.filesystem = Filesystem(this.gamepath, this.assets)
-        this.filesystem.getAssets(hook = hook)
+        this.filesystem.getAssets(load_callback = load_callback)
     
-    
+    def dump(
+        this,
+        folder = None,
+        callback : typing.Callable[[int, str, int], typing.Any] = None,
+    ):
+        """Dump the contents of the filesystem to the specified directory
+
+        Args:
+            folder (str, optional): Path to output directory. Defaults to original path.
+            callback (Callable[[int, str, int], Any], optional): A callback function to be ran while dumping the filesystem. Defaults to None.
+        """
+        this.filesystem.dump(folder = folder, callback = callback)
         
     def Level(
         this,
