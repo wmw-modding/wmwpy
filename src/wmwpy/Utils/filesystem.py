@@ -7,6 +7,7 @@ import zipfile
 import natsort
 import typing
 import fnmatch
+import logging
 
 from .path import joinPath
 # from . import Waltex
@@ -138,7 +139,7 @@ class Filesystem():
                 path = pathlib.Path('/', os.path.relpath(os.path.join(dir, file), assets)).as_posix()
                 # print(path)
                 
-                if hook:
+                if callable(hook):
                     current += 1
                     hook(current, path, total)
                 
@@ -146,6 +147,10 @@ class Filesystem():
                 
                 if fileobj.extension == 'zip' and extract_zip:
                     fileobj.read()
+        
+        
+        if callable(hook):
+            hook(current, 'Finished loading game', total)
         
         return this
     

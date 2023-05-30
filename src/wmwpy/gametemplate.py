@@ -21,7 +21,7 @@ class WMW(Game):
     ) -> None:
         
         
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 class WMWF(WMW):
     _DB = '/Data/water-Lite.db'
@@ -37,7 +37,7 @@ class WMWF(WMW):
         baseassets: str = '/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 # Where's My Perry?
 class WMP(Game):
@@ -55,7 +55,7 @@ class WMP(Game):
         baseassets: str = '/Perry/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 class WMPF(WMP):
     _DB = '/Perry/Data/perry-Lite.db'
@@ -71,7 +71,7 @@ class WMPF(WMP):
         baseassets: str = '/Perry/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 # Where's My Mickey?
 class WMM(Game):
@@ -89,7 +89,7 @@ class WMM(Game):
         baseassets: str = '/Mickey/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 class WMMF(WMM):
     _DB = '/Mickey/Data/perry-Lite.db'
@@ -105,7 +105,7 @@ class WMMF(WMM):
         baseassets: str = '/Mickey/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 # Where's My XiYangYang?
 class WMXYY(Game):
@@ -124,7 +124,7 @@ class WMXYY(Game):
         hook: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 class WMWFXYY(Game):
     _DB = '/Perry/Data/perry.db'
@@ -142,7 +142,7 @@ class WMWFXYY(Game):
         hook: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 # Where's My Water 2?
 class WMW2(Game):
@@ -161,7 +161,7 @@ class WMW2(Game):
         baseassets: str = '/Water/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 # Where's My Holiday?
 class WMH(Game):
@@ -179,7 +179,7 @@ class WMH(Game):
         baseassets: str = '/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
     
     def mode(this, mode : typing.Literal['wmw', 'wmp'] = 'wmw'):
         """Switch game mode from 'wmw' to 'wmp' and vice verca.
@@ -216,7 +216,7 @@ class WMS(WMPF):
         baseassets: str = '/Perry/',
         hook: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath, assets, db, profile, baseassets, hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
 
 GAMES : dict[str, Game] = {}
 
