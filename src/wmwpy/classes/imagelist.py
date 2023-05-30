@@ -29,6 +29,7 @@ class Imagelist(GameObject):
         baseassets : str = '/',
         HD : bool = False,
         TabHD : bool = False,
+        save_images : bool = False
     ) -> None:
         """Get imagelist from file
         
@@ -84,9 +85,9 @@ class Imagelist(GameObject):
 
         # this.images = {}
 
-        this.read()
+        this.read(save_images = save_images)
     
-    def read(this):
+    def read(this, save_images : bool = False):
         """Read the imagelist xml.
         """
         this.format = this.Format.IMAGELIST
@@ -101,7 +102,8 @@ class Imagelist(GameObject):
                     element,
                     filesystem = this.filesystem,
                     HD = this.HD,
-                    TabHD = this.TabHD
+                    TabHD = this.TabHD,
+                    save_images = save_images,
                 )
                 
                 this.pages.append(page)
@@ -112,6 +114,7 @@ class Imagelist(GameObject):
                 filesystem = this.filesystem,
                 HD = this.HD,
                 TabHD = this.TabHD,
+                save_images = save_images,
             )
             
             this.pages.append(page)
@@ -250,6 +253,7 @@ class Imagelist(GameObject):
             assets: str = '/assets',
             HD : bool = False,
             TabHD : bool = False,
+            save_images : bool = False,
         ) -> None:
             """Page for Imagelist. This is also used when imagelist is not in pages format.
 
@@ -271,9 +275,9 @@ class Imagelist(GameObject):
             this.images : list[Imagelist.Page.Image] = []
             this.properties : dict[str,str] = {}
             
-            this.read()
+            this.read(save_images = save_images)
         
-        def read(this):
+        def read(this, save_images : bool = False):
             """Read xml.
             """
             this.properties = deepcopy(this.xml.attrib)
@@ -283,7 +287,7 @@ class Imagelist(GameObject):
                 # print(this.fullAtlasPath)
     
             this.getAtlas()
-            this.getImages()
+            this.getImages(save_images = save_images)
         
         @property
         def imgSize(this) -> tuple[int,int]:
@@ -373,7 +377,7 @@ class Imagelist(GameObject):
                 image = Texture(file.read())
                 this.atlas = image.image.copy()
     
-        def getImages(this):
+        def getImages(this, save_images = False):
             """Get images from xml.
             """
             for element in this.xml:
@@ -386,10 +390,9 @@ class Imagelist(GameObject):
                         properties = element.attrib,
                         textureBasePath = this.textureBasePath,
                         filesystem = this.filesystem.get(this.textureBasePath),
+                        save_image = save_images,
                     )
                     this.images.append(image)
-
-                    # image.saveFile(replace = True)
     
         def get(this, name : str) -> 'Imagelist.Page.Image':
             """Get an image from the imagelist
@@ -555,7 +558,7 @@ class Imagelist(GameObject):
                 filesystem: Filesystem | Folder = None,
                 gamepath: str = None,
                 assets: str = '/assets',
-                save : bool = False,
+                save_image : bool = False,
             ) -> None:
                 """Image for Imagelist
 
@@ -578,7 +581,7 @@ class Imagelist(GameObject):
                 
                 this._image = None
                 
-                if save:
+                if save_image:
                     this.getImage()
             
             @property

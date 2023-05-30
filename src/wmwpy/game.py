@@ -51,6 +51,8 @@ class Game():
     def updateFilesystem(this, hook : typing.Callable[[int, str, int], typing.Any] = None):
         this.filesystem = Filesystem(this.gamepath, this.assets)
         this.filesystem.getAssets(hook = hook)
+    
+    
         
     def Level(
         this,
@@ -164,6 +166,7 @@ class Game():
         imagelist : str = None,
         HD = False,
         TabHD = False,
+        save_images = False
     ):
         """
         Load imagelist
@@ -186,7 +189,8 @@ class Game():
             imagelist,
             filesystem = this.filesystem,
             HD = HD,
-            TabHD = TabHD
+            TabHD = TabHD,
+            save_images = save_images,
         )
         if isinstance(imagelist, File):
             imagelistObject.filename = imagelist.path
