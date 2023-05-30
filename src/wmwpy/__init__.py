@@ -52,21 +52,21 @@ def load(
     if assets == None:
         assets = platforms[platform]['assets']
     
-    try:
-        return GAMES[game](
-            gamepath = gamepath,
-            assets = assets,
-            db = db,
-            profile = profile,
-            load_callback = load_callback,
-            baseassets = baseassets,
-        )
-    except:
-        return Game(
-            gamepath = gamepath,
-            assets = assets,
-            db = db,
-            profile = profile,
-            load_callback = load_callback,
-            baseassets = baseassets,
-        )
+    # try:
+    return GAMES.get(game, Game)(
+        gamepath = gamepath,
+        assets = assets,
+        db = db,
+        profile = profile,
+        load_callback = load_callback,
+        baseassets = baseassets,
+    )
+    # except:
+    #     return Game(
+    #         gamepath = gamepath,
+    #         assets = assets,
+    #         db = db,
+    #         profile = profile,
+    #         load_callback = load_callback,
+    #         baseassets = baseassets,
+    #     )

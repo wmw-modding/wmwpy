@@ -17,11 +17,11 @@ class WMW(Game):
         db: str = '/Data/water.db',
         profile: str = None,
         baseassets: str = '/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
         
         
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 class WMWF(WMW):
     _DB = '/Data/water-Lite.db'
@@ -35,9 +35,9 @@ class WMWF(WMW):
         db: str = '/Data/water-Lite.db',
         profile: str = None,
         baseassets: str = '/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 # Where's My Perry?
 class WMP(Game):
@@ -53,9 +53,9 @@ class WMP(Game):
         db: str = '/Perry/Data/water.db',
         profile: str = None,
         baseassets: str = '/Perry/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 class WMPF(WMP):
     _DB = '/Perry/Data/perry-Lite.db'
@@ -69,9 +69,9 @@ class WMPF(WMP):
         db: str = '/Perry/Data/water-Lite.db',
         profile: str = None,
         baseassets: str = '/Perry/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 # Where's My Mickey?
 class WMM(Game):
@@ -87,9 +87,9 @@ class WMM(Game):
         db: str = '/Mickey/Data/perry.db',
         profile: str = None,
         baseassets: str = '/Mickey/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 class WMMF(WMM):
     _DB = '/Mickey/Data/perry-Lite.db'
@@ -103,9 +103,9 @@ class WMMF(WMM):
         db: str = '/Mickey/Data/perry-Lite.db',
         profile: str = None,
         baseassets: str = '/Mickey/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 # Where's My XiYangYang?
 class WMXYY(Game):
@@ -121,10 +121,10 @@ class WMXYY(Game):
         db: str = '/Perry/Data/water.db',
         profile: str = None,
         baseassets: str = '/Perry/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None,
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 class WMWFXYY(Game):
     _DB = '/Perry/Data/perry.db'
@@ -139,10 +139,10 @@ class WMWFXYY(Game):
         db: str = '/Perry/Data/water.db',
         profile: str = None,
         baseassets: str = '/Perry/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None,
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None,
         databasekey = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 # Where's My Water 2?
 class WMW2(Game):
@@ -159,9 +159,9 @@ class WMW2(Game):
         db: str = '/Water/Data/perry.db',
         profile: str = '/Water/Data/factory_profile.json',
         baseassets: str = '/Water/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 # Where's My Holiday?
 class WMH(Game):
@@ -177,9 +177,9 @@ class WMH(Game):
         db: str = '/Data/water-Lite.db',
         profile: str = None,
         baseassets: str = '/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
     
     def mode(this, mode : typing.Literal['wmw', 'wmp'] = 'wmw'):
         """Switch game mode from 'wmw' to 'wmp' and vice verca.
@@ -214,9 +214,9 @@ class WMS(WMPF):
         db: str = '/Perry/Data/water-Lite.db',
         profile: str = None,
         baseassets: str = '/Perry/',
-        hook: typing.Callable[[int, str, int], typing.Any] = None
+        load_callback: typing.Callable[[int, str, int], typing.Any] = None
     ) -> None:
-        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, hook = hook)
+        super().__init__(gamepath = gamepath, assets = assets, db = db, profile = profile, baseassets = baseassets, load_callback = load_callback)
 
 GAMES : dict[str, Game] = {}
 
