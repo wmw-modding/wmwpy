@@ -2,6 +2,7 @@ __version__ = "0.3.0-beta"
 __author__ = 'ego-lay-atman-bay'
 
 import typing
+import logging
 
 from .game import Game
 from . import Utils
@@ -21,7 +22,7 @@ def load(
     db : str = None,
     profile : str = None,
     baseassets : str = None,
-    hook : typing.Callable[[int, str, int], typing.Any] = None,
+    load_callback : typing.Callable[[int, str, int], typing.Any] = None,
 ) -> Game:
     """load game
 
@@ -53,19 +54,19 @@ def load(
     
     try:
         return GAMES[game](
-            gamepath=gamepath,
-            assets=assets,
-            db=db,
-            profile=profile,
-            hook = hook,
-            baseassets=baseassets
+            gamepath = gamepath,
+            assets = assets,
+            db = db,
+            profile = profile,
+            load_callback = load_callback,
+            baseassets = baseassets,
         )
     except:
         return Game(
-            gamepath=gamepath,
-            assets=assets,
-            db=db,
-            profile=profile,
-            hook = hook,
-            baseassets=baseassets
+            gamepath = gamepath,
+            assets = assets,
+            db = db,
+            profile = profile,
+            load_callback = load_callback,
+            baseassets = baseassets,
         )
