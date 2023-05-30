@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.sprite &#8212; wmwpy 0.3.0-beta documentation</title>
+    <title>wmwpy.classes.sprite &#8212; wmwpy 0.4.1-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -30,13 +30,23 @@
             
   <h1>Source code for wmwpy.classes.sprite</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageTk</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">LOADED_ImageTk</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">LOADED_ImageTk</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageTk</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">LOADED_ImageTk</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="kn">from</span> <span class="nn">.imagelist</span> <span class="kn">import</span> <span class="n">Imagelist</span>
 <span class="kn">from</span> <span class="nn">..Utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..Utils.gif</span> <span class="kn">import</span> <span class="n">save_transparent_gif</span>
 <span class="kn">from</span> <span class="nn">..Utils.XMLTools</span> <span class="kn">import</span> <span class="n">strbool</span>
 <span class="kn">from</span> <span class="nn">..gameobject</span> <span class="kn">import</span> <span class="n">GameObject</span>
 
@@ -48,7 +58,9 @@
         <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
         <span class="n">baseassets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
         <span class="n">properties</span> <span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
-        <span class="n">scale</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">scale</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">HD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">TabHD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Game sprite.</span>
 
@@ -61,12 +73,17 @@
 <span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
 <span class="sd">            properties (dict, optional): Sprite properties. Defaults to {}.</span>
 <span class="sd">            scale (int, optional): Sprite image scale. Defaults to 10.</span>
+<span class="sd">            HD (bool, optional): Use HD images. Defaults to False.</span>
+<span class="sd">            TabHD (bool, optional): Use TabHD images. Defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">HD</span> <span class="o">=</span> <span class="n">HD</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">TabHD</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
         <span class="n">this</span><span class="o">.</span><span class="n">animations</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sprite</span><span class="o">.</span><span class="n">Animation</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -123,6 +140,15 @@
             <span class="n">this</span><span class="o">.</span><span class="n">_currentAnimation</span> <span class="o">=</span> <span class="n">animation</span>
     
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">frames</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;Sprite.Animation.Frame&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current animation frames.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[Sprite.Animation.Frame]: A list of frames.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">frames</span>
+    
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The current animation frame.</span>
 
@@ -133,6 +159,10 @@
     <span class="nd">@frame</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">value</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fps</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">fps</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -154,7 +184,9 @@
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">)</span> <span class="ow">or</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Animation&#39;</span><span class="p">:</span>
                 <span class="n">animation</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Animation</span><span class="p">(</span>
                     <span class="n">element</span><span class="p">,</span>
-                    <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span>
+                    <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+                    <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+                    <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
                 <span class="p">)</span>
                 
                 <span class="n">this</span><span class="o">.</span><span class="n">animations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">animation</span><span class="p">)</span></div>
@@ -264,6 +296,61 @@
     <span class="nd">@angle</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;angle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Sprite.getAnimation"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.getAnimation">[docs]</a>    <span class="k">def</span> <span class="nf">getAnimation</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">duration</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">fps</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span>
+        <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span>
+            <span class="s1">&#39;fps&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;frame_duration&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;frames&#39;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="nb">float</span> <span class="o">|</span>
+        <span class="nb">int</span> <span class="o">|</span>
+        <span class="nb">list</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]</span>
+    <span class="p">]:</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the animation of this object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            duration (int, optional): Duration of animation in seconds. If 0, it will try to create a perfect loop. Defaults to 0.</span>
+<span class="sd">            fps (float, optional): The fps of the animation. If 0, it will try to detect the fps that works for all the sprites. Defaults to 0.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: &#39;fps must be an int or float&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">getAnimation</span><span class="p">(</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">,</span>
+            <span class="n">fps</span> <span class="o">=</span> <span class="n">fps</span><span class="p">,</span>
+        <span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Sprite.saveGIF"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.saveGIF">[docs]</a>    <span class="k">def</span> <span class="nf">saveGIF</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">duration</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">fps</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save current animation as a gif.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str, optional): The filename to save this animation gif as. Defaults to None.</span>
+<span class="sd">            duration (int, optional): The duration of the gif in seconds. If it&#39;s 0, it automatically finds a perfect loop. Defaults to 0.</span>
+<span class="sd">            fps (float, optional): The frames per second of the animation. If it&#39;s 0, it is automatically calculated. Defaults to 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            PIL.Image.Image: The resulting PIL Image object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">filename</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.gif&#39;</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">saveGIF</span><span class="p">(</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">,</span>
+            <span class="n">fps</span> <span class="o">=</span> <span class="n">fps</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Sprite.Animation"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation">[docs]</a>    <span class="k">class</span> <span class="nc">Animation</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -273,6 +360,8 @@
             <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
             <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+            <span class="n">HD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">TabHD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Animation for Sprite.</span>
 
@@ -282,6 +371,8 @@
 <span class="sd">                gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.</span>
 <span class="sd">                assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to &#39;/assets&#39;.</span>
 <span class="sd">                baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
+<span class="sd">                HD (bool, optional): Use HD images. Defaults to False.</span>
+<span class="sd">                TabHD (bool, optional): Use TabHD images. Defaults to False.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
             
@@ -289,6 +380,9 @@
                 <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">xml</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">HD</span> <span class="o">=</span> <span class="n">HD</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">TabHD</span>
             
             <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
@@ -300,9 +394,8 @@
             
             <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="kc">None</span>
             
-            <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
-            
             <span class="n">this</span><span class="o">.</span><span class="n">frames</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sprite</span><span class="o">.</span><span class="n">Animation</span><span class="o">.</span><span class="n">Frame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
             
             <span class="n">this</span><span class="o">.</span><span class="n">readXML</span><span class="p">()</span>
         
@@ -313,18 +406,28 @@
 <span class="sd">            Returns:</span>
 <span class="sd">                PIL.Image.Image: PIL Image</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">frames</span><span class="p">):</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
             
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">this</span><span class="o">.</span><span class="n">frame</span><span class="p">]</span><span class="o">.</span><span class="n">image</span>
         
         <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_frame</span>
+        <span class="nd">@frame</span><span class="o">.</span><span class="n">setter</span>
+        <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_frame</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ImageTk.PhotoImage&#39;</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Tkinter PhotoImage for the Animation</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">LOADED_ImageTk</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span>
             
 <div class="viewcode-block" id="Sprite.Animation.readXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.readXML">[docs]</a>        <span class="k">def</span> <span class="nf">readXML</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
@@ -347,7 +450,8 @@
                 <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">Imagelist</span><span class="p">(</span>
                     <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;atlas&#39;</span><span class="p">]),</span>
                     <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
-                    <span class="n">HD</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="n">HD</span><span class="o">=</span><span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+                    <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
                 <span class="p">)</span>
                 
                 <span class="c1"># this.atlasHD = Imagelist(</span>
@@ -356,8 +460,6 @@
                 <span class="c1">#     HD=True</span>
                 <span class="c1"># )</span>
                 
-            <span class="k">if</span> <span class="s1">&#39;fps&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;fps&#39;</span><span class="p">])</span>
             <span class="k">if</span> <span class="s1">&#39;playbackMode&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">playbackMode</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;playbackMode&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="s1">&#39;loopCount&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
@@ -417,6 +519,116 @@
             <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">xml</span>
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span></div>
         
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">fps</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;fps&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;fps&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="mi">30</span>
+                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">fps</span>
+        <span class="nd">@fps</span><span class="o">.</span><span class="n">setter</span>
+        <span class="k">def</span> <span class="nf">fps</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;fps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="Sprite.Animation.getAnimation"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.getAnimation">[docs]</a>        <span class="k">def</span> <span class="nf">getAnimation</span><span class="p">(</span>
+            <span class="n">this</span><span class="p">,</span>
+            <span class="n">duration</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">fps</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span>
+            <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span>
+                <span class="s1">&#39;fps&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;frame_duration&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;frames&#39;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="nb">float</span> <span class="o">|</span>
+            <span class="nb">int</span> <span class="o">|</span>
+            <span class="nb">list</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]</span>
+        <span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Get the animation of this object</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                duration (int, optional): Duration of animation in seconds. If 0, it will try to create a perfect loop. Defaults to 0.</span>
+<span class="sd">                fps (float, optional): The fps of the animation. If 0, it will try to detect the fps that works for all the sprites. Defaults to 0.</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                TypeError: &#39;fps must be an int or float&#39;</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fps</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;fps must be an int or float&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">duration</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;duration must be an int or float&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">fps</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">fps</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">fps</span>
+            
+            <span class="n">frames</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="k">def</span> <span class="nf">check</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">duration</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">frame</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+                <span class="k">return</span> <span class="kc">True</span>
+                
+                <span class="c1"># print(f&#39;test = {( not ((time &gt; 0) and (duration &lt;= 0) and ((sum([sprite.frame for sprite in this.sprites]) == 0))))}&#39;)</span>
+                <span class="c1"># print(f&#39;time check = {((time &lt;= duration) and (duration &gt; 0))}&#39;)</span>
+            
+            <span class="k">while</span> <span class="n">check</span><span class="p">():</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">+=</span> <span class="p">(</span><span class="n">frame</span><span class="p">)</span> <span class="o">%</span> <span class="p">((</span><span class="n">fps</span> <span class="o">/</span> <span class="n">this</span><span class="o">.</span><span class="n">fps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                
+                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+                
+                <span class="n">frame</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">time</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="n">fps</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+            
+            <span class="c1"># frames = frames[:-1]</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;fps&#39;</span><span class="p">:</span> <span class="n">fps</span><span class="p">,</span>
+                <span class="s1">&#39;frame_duration&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="n">fps</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s1">&#39;frames&#39;</span> <span class="p">:</span> <span class="n">frames</span><span class="p">,</span>
+            <span class="p">}</span></div>
+        
+<div class="viewcode-block" id="Sprite.Animation.saveGIF"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.saveGIF">[docs]</a>        <span class="k">def</span> <span class="nf">saveGIF</span><span class="p">(</span>
+            <span class="n">this</span><span class="p">,</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">duration</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">fps</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Save animation as a gif.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                filename (str, optional): The filename to save this animation gif as. Defaults to None.</span>
+<span class="sd">                duration (int, optional): The duration of the gif in seconds. If it&#39;s 0, it automatically finds a perfect loop. Defaults to 0.</span>
+<span class="sd">                fps (float, optional): The frames per second of the animation. If it&#39;s 0, it is automatically calculated. Defaults to 0.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                PIL.Image.Image: The resulting PIL Image object.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.gif&#39;</span>
+                
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="w"> </span><span class="si">= }</span><span class="s1">&#39;</span><span class="p">)</span>
+            
+            <span class="n">animation</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getAnimation</span><span class="p">(</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">,</span>
+                <span class="n">fps</span> <span class="o">=</span> <span class="n">fps</span><span class="p">,</span>
+            <span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">save_transparent_gif</span><span class="p">(</span>
+                <span class="n">animation</span><span class="p">[</span><span class="s1">&#39;frames&#39;</span><span class="p">],</span>
+                <span class="n">durations</span> <span class="o">=</span> <span class="n">animation</span><span class="p">[</span><span class="s1">&#39;frame_duration&#39;</span><span class="p">],</span>
+                <span class="n">save_file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span>
+            <span class="p">)</span></div>
         
         <span class="c1"># Frame</span>
 <div class="viewcode-block" id="Sprite.Animation.Frame"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.Frame">[docs]</a>        <span class="k">class</span> <span class="nc">Frame</span><span class="p">():</span>
@@ -468,7 +680,7 @@
                     <span class="n">this</span><span class="o">.</span><span class="n">repeat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;repeat&#39;</span><span class="p">])</span></div>
                 
 <div class="viewcode-block" id="Sprite.Animation.Frame.getImage"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.Frame.getImage">[docs]</a>            <span class="k">def</span> <span class="nf">getImage</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span><span class="o">.</span><span class="n">getImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+                <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
             
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
@@ -531,7 +743,31 @@
 <span class="sd">                    etree.Element: XML of this Frame</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">updateProperties</span><span class="p">()</span>
-                <span class="k">return</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Frame&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span></div></div></div></div>
+                <span class="k">return</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Frame&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="Sprite.Animation.Frame.show"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.sprite.Sprite.Animation.Frame.show">[docs]</a>            <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Calls the PIL.Image.Image.show() method.</span>
+<span class="sd">                </span>
+<span class="sd">                ---</span>
+<span class="sd">                #### Description copied from the PIL library</span>
+<span class="sd">                </span>
+<span class="sd">                Displays this image. This method is mainly intended for debugging purposes.</span>
+
+<span class="sd">                This method calls PIL.ImageShow.show internally. You can use</span>
+<span class="sd">                PIL.ImageShow.register to override its default behaviour.</span>
+
+<span class="sd">                The image is first saved to a temporary file. By default, it will be in PNG format.</span>
+
+<span class="sd">                On Unix, the image is then opened using the **display**, **eog** or **xv** utility, depending on which one can be found.</span>
+
+<span class="sd">                On macOS, the image is opened with the native Preview application.</span>
+
+<span class="sd">                On Windows, the image is opened with the standard PNG display utility.</span>
+
+<span class="sd">                Args:</span>
+<span class="sd">                    title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span></div></div></div></div>
 </pre></div>
 
           </div>
