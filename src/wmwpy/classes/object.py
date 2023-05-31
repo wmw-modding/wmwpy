@@ -675,6 +675,18 @@ class Object(GameObject):
             durations = animation['frame_duration'],
             save_file = filename,
         )
+    
+    def copy(this):
+        return Object(
+            this.file,
+            filesystem = this.filesystem,
+            properties = this.properties,
+            pos = this.pos,
+            name = this.name,
+            scale = this.scale,
+            HD = this.HD,
+            TabHD = this.TabHD,
+        )
 
 class Shape(GameObject):
     def __init__(this, xml : etree.ElementBase = None) -> None:
