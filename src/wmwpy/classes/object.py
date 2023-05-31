@@ -511,15 +511,20 @@ class Object(GameObject):
             
             if element.tag == 'Sprite':
                 attributes = element.attrib
-                sprite = Sprite(
-                    file = this.filesystem.get(attributes['filename']),
-                    filesystem = this.filesystem,
-                    properties = attributes,
-                    scale = this.scale,
-                    HD = this.HD,
-                    TabHD = this.TabHD,
-                )
-                this.sprites.append(sprite)
+                
+                file = this.filesystem.get(attributes['filename'])
+                
+                if isinstance(file, File):
+                
+                    sprite = Sprite(
+                        file = file,
+                        filesystem = this.filesystem,
+                        properties = attributes,
+                        scale = this.scale,
+                        HD = this.HD,
+                        TabHD = this.TabHD,
+                    )
+                    this.sprites.append(sprite)
     
     def _getUVs(this, xml : etree.ElementBase):
         for element in xml:
