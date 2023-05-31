@@ -23,7 +23,6 @@ dependencies = [
   "Pillow",
   "natsort",
   "filetype",
-  "tk",
 ]
 dynamic = ["version"]
 
