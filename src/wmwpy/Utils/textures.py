@@ -15,34 +15,59 @@ class Texture(GameObject):
     def __init__(
         this,
         image : Image.Image | Waltex | File,
-        HD : bool = False,
-        TabHD : bool = False,
+        filesystem : Filesystem | Folder = None,
+        gamepath : str = None,
+        assets : str = '/assets',
+        baseassets : str = '/',
+        HD = False,
+        TabHD = False,
     ) -> None:
         """Texture for image.
 
         Args:
             image (Image.Image | Waltex | File): Image object. Can be PIL.Image.Image, Waltex image, or file.
-            HD (bool, optional): Use HD images. Defaults to False.
-            TabHD (bool, optional): Use TabHD images. Defaults to False.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.
+            HD (bool, optional): Use HD image. Defaults to False.
+            TabHD (bool, optional): Use TabHD image. Defaults to False.
 
         Raises:
             TypeError: image must be PIL.Image.Image, Waltex, or filesystem.File.
         """
-        this._image = image
+        super().__init__(filesystem, gamepath, assets, baseassets)
         
-        if isinstance(this._image, File):
-            this._image = this._image.read()
+        this._file = image
+        this.HD = HD
+        this.TabHD = TabHD
         
-        if isinstance(this._image, Waltex):
-            this.image = this._image.image
-        elif isinstance(this._image, Image.Image):
-            this.image = this._image
+        if isinstance(this._file, (File, str)):
+            if isinstance(this._file, str):
+                this.filename = this._file
+            else:
+                this.filename = this._file.path
+            
+            this._file = getHDFile(this._file)
+        else:
+            this.filename = ''
+        
+        if isinstance(this._file, str):
+            this._file = this.filesystem.get(this._file)
+        
+        if isinstance(this._file, Waltex):
+            this.image = this._file.image
+        elif isinstance(this._file, Image.Image):
+            this.image = this._file
+        elif isinstance(this._file, File):
+            this.image = this._file.read()
         else:
             raise TypeError('image must be PIL.Image.Image, Waltex, or filesystem.File.')
         
     @property
     def size(this):
         return this.image.size
+    
 
 class HDFile(GameObject):
     def __init__(

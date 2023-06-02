@@ -84,6 +84,8 @@ class Game():
         logging.debug(f'Game: xml input: {xmlPath}')
         
         levels = this.filesystem.get(path.joinPath(this.baseassets, '/Levels'))
+        if levels == None:
+            levels = this.filesystem
         
         if isinstance(xmlPath, File):
             xml = xmlPath
@@ -153,6 +155,8 @@ class Game():
         """
         
         objects = this.filesystem.get(path.joinPath(this.baseassets, '/Objects'))
+        if objects == None:
+            objects = this.filesystem
         
         if not isinstance(object, File):
             object = objects.get(object)
@@ -192,6 +196,8 @@ class Game():
         """
         
         textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        if textures == None:
+            textures = this.filesystem
         
         if not isinstance(imagelist, File):
             imagelist = textures.get(imagelist)
@@ -230,6 +236,8 @@ class Game():
         """
         
         sprites = this.filesystem.get(path.joinPath(this.baseassets, '/Sprites'))
+        if sprites == None:
+            sprites = this.filesystem
         
         if not isinstance(sprite, File):
             sprite = sprites.get(sprite)
@@ -250,25 +258,34 @@ class Game():
     
     def Texture(
         this,
-        texture : str,
+        texture : str | File,
+        HD = False,
+        TabHD = False,
     ):
         """
         Get image texture. Doesn't matter if it's a `.waltex` image or not.
 
         Args:
             texture (str): Path to image file.
+            HD (bool, optional): Use HD image. Defaults to False.
+            TabHD (bool, optional): Use TabHD image. Defaults to False.
 
         Returns:
             Utils.textures.Texture: Texture object.
         """
         
         textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        if textures == None:
+            textures = this.filesystem
         
-        if not isinstance(texture, File):
+        if isinstance(texture, str):
             texture = textures.get(texture)
         
         return Texture(
-            texture
+            texture,
+            filesystem = this.filesystem,
+            HD = HD,
+            TabHD = TabHD,
         )
     
     def Layout(this, layout : str):
