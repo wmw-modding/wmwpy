@@ -1,5 +1,6 @@
 import os
 from lxml import etree
+import io
 
 from .waltex import WaltexImage, Waltex
 from PIL import Image
@@ -67,6 +68,20 @@ class Texture(GameObject):
     @property
     def size(this):
         return this.image.size
+
+    def save(this, filename = None):
+        if filename == None:
+            filename = this.filename
+        else:
+            this.filename = filename
+        
+        fileio = io.BytesIO()
+        
+        this.image.save(fileio, format = os.path.splitext(filename)[1][1:].upper())
+        
+        file = this.filesystem.add(filename, fileio, replace = True)
+
+        return file
     
 
 class HDFile(GameObject):
