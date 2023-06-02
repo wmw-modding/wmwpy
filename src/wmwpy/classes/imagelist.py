@@ -52,6 +52,7 @@ class Imagelist(GameObject):
         this.TabHD = TabHD
         
         if isinstance(file, str):
+            this.filename = file
             file = getHDFile(
                 file,
                 HD = this.HD,
@@ -62,6 +63,7 @@ class Imagelist(GameObject):
                 baseassets = this.baseassets,
             )
         elif isinstance(file, File):
+            this.filename = file.path
             file = getHDFile(
                 file.path,
                 HD = this.HD,
@@ -71,6 +73,8 @@ class Imagelist(GameObject):
                 assets = this.assets,
                 baseassets = this.baseassets,
             )
+        else:
+            this.filename = ''
         
         if isinstance(file, str):
             file = this.filesystem.get(file)
@@ -81,7 +85,6 @@ class Imagelist(GameObject):
         
         this.pages : list[Imagelist.Page] = []
         this.format = this.Format.IMAGELIST
-        this.filename = ''
 
         # this.images = {}
 
