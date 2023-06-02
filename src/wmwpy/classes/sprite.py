@@ -17,7 +17,9 @@ from .imagelist import Imagelist
 from ..Utils.filesystem import *
 from ..Utils.gif import save_transparent_gif
 from ..Utils.XMLTools import strbool
+from ..Utils import path
 from ..gameobject import GameObject
+from ..Utils import textures
 
 class Sprite(GameObject):
     def __init__(
@@ -34,7 +36,6 @@ class Sprite(GameObject):
         """Game sprite.
 
         Args:
-            this (_type_): _description_
             file (str | bytes | File): Sprite file.
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
@@ -354,12 +355,6 @@ class Sprite(GameObject):
             this.TabHD = TabHD
             
             this.properties = {}
-            this.name = ''
-            this.textureBasePath = '/Textures/'
-            this.atlas : Imagelist = None
-            this.fps = 30
-            this.playbackMode = 'ONCE'
-            this.loopCount = 1
             
             this._PhotoImage = None
             
@@ -410,30 +405,135 @@ class Sprite(GameObject):
             """
             this.properties = this.xml.attrib
             
+        
+        @property
+        def name(this):
             if 'name' in this.properties:
-                this.name = this.properties['name']
+                return this.properties['name']
+            else:
+                return ''
+        @name.setter
+        def name(this, value : str):
+            if not isinstance(value, str):
+                raise TypeError('name must be str')
+            
+            this.properties['name'] = value
+        
+        @property
+        def textureBasePath(this):
             if 'textureBasePath' in this.properties:
-                this.textureBasePath = this.properties['textureBasePath']
+                return this.properties['textureBasePath']
+            else:
+                this.textureBasePath = path.joinPath(this.filesystem.baseassets, '/Textures')
+                return this.textureBasePath
+        @textureBasePath.setter
+        def textureBasePath(this, path):
+            if isinstance(path, Folder):
+                path = path.path
+            if not isinstance(path, str):
+                raise TypeError('path must be str')
+            
+            this.properties['textureBasePath'] = path
+        
+        @property
+        def atlasPath(this):
             if 'atlas' in this.properties:
-                this.atlasPath = this.properties['atlas']
-                this.atlas = Imagelist(
+                return this.properties['atlas']
+            else:
+                return None
+        @atlasPath.setter
+        def atlasPath(this, path):
+            this.atlas = path
+        
+        @property
+        def atlas(this):
+            if hasattr(this, '_atlas') and isinstance(this._atlas, Imagelist):
+                this.properties['atlas'] = this._atlas.filename
+                return this._atlas
+            
+            if 'atlas' in this.properties:
+                this._atlas = Imagelist(
                     this.filesystem.get(this.properties['atlas']),
                     this.filesystem,
-                    HD=this.HD,
+                    HD = this.HD,
+                    TabHD = this.TabHD,
+                )
+            else:
+                this._atlas = None
+            
+            return this._atlas
+        @atlas.setter
+        def atlas(this, path):
+            if isinstance(path, str):
+                this._atlas = Imagelist(
+                    this.filesystem.get(this.properties['atlas']),
+                    this.filesystem,
+                    HD = this.HD,
+                    TabHD = this.TabHD,
+                )
+            elif isinstance(path, Imagelist):
+                this._atlas = path
+            else:
+                raise TypeError('atlas must be str or Imagelist')
+        
+        @property
+        def texture(this):
+            if hasattr(this, '_texture') and isinstance(this._texture, textures.Texture):
+                this.properties['texture'] = this._texture.filename
+                return this._texture
+            
+            if 'texture' in this.properties:
+                this._texture = textures.Texture(
+                    this.properties['texture'],
+                    filesystem = this.filesystem,
+                    gamepath = this.gamepath,
+                    assets = this.assets,
+                    baseassets = this.baseassets,
+                    HD = this.HD,
                     TabHD = this.TabHD,
                 )
                 
-                # this.atlasHD = Imagelist(
-                #     this.filesystem.get(this.properties['atlas']),
-                #     this.filesystem,
-                #     HD=True
-                # )
-                
-            if 'playbackMode' in this.properties:
-                this.playbackMode = this.properties['playbackMode']
-            if 'loopCount' in this.properties:
-                this.loopCount = int(this.properties['loopCount'])
+            else:
+                this._texture = None
+
+            return this._texture
+        @texture.setter
+        def texture(this, path):
+            if isinstance(path, str):
+                this.properties['texture'] = path
+            elif isinstance(path, File):
+                this.properties['texture'] = path.path
+            elif isinstance(path, textures.Texture):
+                this.properties['texture'] = path.filename
+                this._texture = path
+            else:
+                raise TypeError('texture must be a path, File, or Texture object')
             
+                
+        
+        @property
+        def playbackMode(this):
+            if 'playbackMode' in this.properties:
+                return this.properties['playbackMode']
+            else:
+                return 'ONCE'
+        @playbackMode.setter
+        def playbackMode(this, mode):
+            if not isinstance(mode, str):
+                raise TypeError('playbackMode must be str')
+        
+        @property
+        def loopCount(this):        
+            if 'loopCount' in this.properties:
+                return int(this.properties['loopCount'])
+            else:
+                return 0
+        @loopCount.setter
+        def loopCount(this, count):
+            if not isinstance(count, (str, int, float)):
+                raise TypeError('loopCount must be str or int')
+            
+            this.properties['loopCount'] = str(count)
             
         def getFrames(this) -> list['Sprite.Animation.Frame']:
             """Get a list of all the Animation `Frame`s
@@ -449,8 +549,8 @@ class Sprite(GameObject):
                 if (not f is etree.Comment) and f.tag == 'Frame':
                     this.frames.append(this.Frame(
                         f.attrib,
-                        this.atlas,
-                        this.textureBasePath
+                        this.atlas if this.atlas != None else this.texture,
+                        this.textureBasePath,
                     ))
             
             return this.frames
@@ -585,8 +685,6 @@ class Sprite(GameObject):
             if filename == None:
                 filename = this.name
                 filename = os.path.splitext(filename)[0] + '.gif'
-                
-                print(f'{filename = }')
             
             animation = this.getAnimation(
                 duration = duration,
@@ -614,7 +712,6 @@ class Sprite(GameObject):
                 """Frame for Sprite.Animation.
 
                 Args:
-                    this (_type_): _description_
                     properties (dict): Image properties.
                     atlas (Imagelist, optional): Image atlas for Image. Defaults to None.
                     textureBasePath (str, optional): Directory to put image in. Defaults to None.
@@ -649,7 +746,19 @@ class Sprite(GameObject):
                     this.repeat = int(this.properties['repeat'])
                 
             def getImage(this):
-                this._image = this.atlas.get(this.name)
+                if isinstance(this.atlas, Imagelist):
+                    this._image = this.atlas.get(this.name)
+                elif this.texture != None:
+                    this._image = this.texture.image
+                
+            
+            @property
+            def texture(this):
+                if isinstance(this.atlas, textures.Texture):
+                    return this.atlas
+                else:
+                    return None
+            
             
             @property
             def image(this) -> Image.Image:
