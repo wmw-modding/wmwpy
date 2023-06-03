@@ -5,14 +5,14 @@ import typing
 import logging
 
 from .game import Game
-from . import Utils
+from . import utils
 from . import classes
 from . import Font
 from .classes import widget
 from .gametemplate import GAMES
-from .Utils import filesystem
+from .utils import filesystem
 
-__all__ = ['load', 'Game', 'Utils', 'classes', 'GAMES', 'filesystem']
+__all__ = ['load', 'Game', 'utils', 'classes', 'GAMES', 'filesystem']
 
 def load(
     gamepath : str,

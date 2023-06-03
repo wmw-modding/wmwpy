@@ -1,5 +1,5 @@
 from ..gameobject import GameObject
-from ..Utils.filesystem import *
+from ..utils.filesystem import *
 from .widget import get_widget
 
 class Layout(GameObject):

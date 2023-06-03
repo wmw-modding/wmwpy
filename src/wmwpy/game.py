@@ -2,9 +2,9 @@ import os
 import typing
 import logging
 
-from .Utils.filesystem import *
-from .Utils import Texture
-from .Utils import path
+from .utils.filesystem import *
+from .utils import Texture
+from .utils import path
 from .classes import *
 
 class Game():
@@ -271,7 +271,7 @@ class Game():
             TabHD (bool, optional): Use TabHD image. Defaults to False.
 
         Returns:
-            Utils.textures.Texture: Texture object.
+            utils.textures.Texture: Texture object.
         """
         
         textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))

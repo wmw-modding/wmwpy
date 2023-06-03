@@ -1,4 +1,4 @@
-from .Utils.filesystem import *
+from .utils.filesystem import *
 
 import io
 import typing
@@ -54,7 +54,7 @@ class GameObject():
         """Get file
 
         Args:
-            file (bytes | wmwpy.Utils.filesystem.File | io.BytesIO | str): Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.
+            file (bytes | wmwpy.utils.filesystem.File | io.BytesIO | str): Content of file. Can be bytes, wmwpy File, str (contents of file) or file-like object.
             template (str | io.BytesIO, optional): Fallback for file if file == None. Defaults to ''
 
         Raises:

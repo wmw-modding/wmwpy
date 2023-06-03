@@ -14,12 +14,12 @@ if LOADED_ImageTk:
         LOADED_ImageTk = False
 
 from .imagelist import Imagelist
-from ..Utils.filesystem import *
-from ..Utils.gif import save_transparent_gif
-from ..Utils.XMLTools import strbool
-from ..Utils import path
+from ..utils.filesystem import *
+from ..utils.gif import save_transparent_gif
+from ..utils.XMLTools import strbool
+from ..utils import path
 from ..gameobject import GameObject
-from ..Utils import textures
+from ..utils import textures
 
 class Sprite(GameObject):
     def __init__(

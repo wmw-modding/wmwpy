@@ -1,4 +1,4 @@
-wmwpy.Utils package
+wmwpy.utils package
 ===================
 
 Subpackages
@@ -7,47 +7,47 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   wmwpy.Utils.Types
+   wmwpy.utils.Types
 
 Submodules
 ----------
 
-wmwpy.Utils.XMLTools module
+wmwpy.utils.XMLTools module
 ---------------------------
 
-.. automodule:: wmwpy.Utils.XMLTools
+.. automodule:: wmwpy.utils.XMLTools
    :members:
    :undoc-members:
    :show-inheritance:
 
-wmwpy.Utils.filesystem module
+wmwpy.utils.filesystem module
 -----------------------------
 
-.. automodule:: wmwpy.Utils.filesystem
+.. automodule:: wmwpy.utils.filesystem
    :members:
    :undoc-members:
    :show-inheritance:
 
-wmwpy.Utils.path module
+wmwpy.utils.path module
 -----------------------
 
-.. automodule:: wmwpy.Utils.path
+.. automodule:: wmwpy.utils.path
    :members:
    :undoc-members:
    :show-inheritance:
 
-wmwpy.Utils.textures module
+wmwpy.utils.textures module
 ---------------------------
 
-.. automodule:: wmwpy.Utils.textures
+.. automodule:: wmwpy.utils.textures
    :members:
    :undoc-members:
    :show-inheritance:
 
-wmwpy.Utils.waltex module
+wmwpy.utils.waltex module
 -------------------------
 
-.. automodule:: wmwpy.Utils.waltex
+.. automodule:: wmwpy.utils.waltex
    :members:
    :undoc-members:
    :show-inheritance:
@@ -55,7 +55,7 @@ wmwpy.Utils.waltex module
 Module contents
 ---------------
 
-.. automodule:: wmwpy.Utils
+.. automodule:: wmwpy.utils
    :members:
    :undoc-members:
    :show-inheritance:

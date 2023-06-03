@@ -15,8 +15,8 @@ if LOADED_ImageTk:
         LOADED_ImageTk = False
 
 
-from ..Utils.filesystem import *
-from ..Utils.logging_utils import log_exception
+from ..utils.filesystem import *
+from ..utils.logging_utils import log_exception
 from .object import Object
 from ..gameobject import GameObject
 

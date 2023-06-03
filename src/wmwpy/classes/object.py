@@ -17,11 +17,11 @@ if LOADED_ImageTk:
 
 from ..gameobject import GameObject
 from .sprite import Sprite
-from ..Utils.filesystem import *
-from ..Utils.rotate import rotate
-from ..Utils.gif import save_transparent_gif
+from ..utils.filesystem import *
+from ..utils.rotate import rotate
+from ..utils.gif import save_transparent_gif
 
-from ..Utils.XMLTools import strbool
+from ..utils.XMLTools import strbool
 class Object(GameObject):
     def __init__(
         this,

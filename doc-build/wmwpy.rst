@@ -15,7 +15,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   wmwpy.Utils
+   wmwpy.utils
    wmwpy.classes
 
 Submodules

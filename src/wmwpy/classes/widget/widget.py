@@ -1,5 +1,5 @@
 # main widget class
-from ...Utils.filesystem import Filesystem, Folder
+from ...utils.filesystem import Filesystem, Folder
 from ...gameobject import GameObject
 
 

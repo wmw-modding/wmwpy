@@ -1,21 +1,21 @@
-wmwpy.Utils.Types package
+wmwpy.utils.Types package
 =========================
 
 Submodules
 ----------
 
-wmwpy.Utils.Types.Documents module
+wmwpy.utils.Types.Documents module
 ----------------------------------
 
-.. automodule:: wmwpy.Utils.Types.Documents
+.. automodule:: wmwpy.utils.Types.Documents
    :members:
    :undoc-members:
    :show-inheritance:
 
-wmwpy.Utils.Types.Images module
+wmwpy.utils.Types.Images module
 -------------------------------
 
-.. automodule:: wmwpy.Utils.Types.Images
+.. automodule:: wmwpy.utils.Types.Images
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ wmwpy.Utils.Types.Images module
 Module contents
 ---------------
 
-.. automodule:: wmwpy.Utils.Types
+.. automodule:: wmwpy.utils.Types
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,6 @@
-from ..Utils.textures import getHDFile, getTextueSettings, getTexture
-from ..Utils.filesystem import *
-from ..Utils import joinPath, Texture
+from ..utils.textures import getHDFile, getTextueSettings, getTexture
+from ..utils.filesystem import *
+from ..utils import joinPath, Texture
 from ..gameobject import GameObject
 
 import numpy
