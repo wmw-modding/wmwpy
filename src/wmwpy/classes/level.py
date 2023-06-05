@@ -19,6 +19,7 @@ from ..utils.filesystem import *
 from ..utils.logging_utils import log_exception
 from .object import Object
 from ..gameobject import GameObject
+from .objectpack.pack import ObjectPack
 
 class Level(GameObject):
     XML_TEMPLATE = b"""<?xml version="1.0"?>
@@ -41,6 +42,7 @@ class Level(GameObject):
         ignore_errors : bool = False,
         HD : bool = False,
         TabHD : bool = False,
+        object_pack : ObjectPack = None
     ) -> None:
         """Load level
 
@@ -91,6 +93,8 @@ class Level(GameObject):
         
         this.HD = HD
         this.TabHD = TabHD
+        
+        this.object_pack = object_pack
         
         this.objects : list[Object] = []
         this.properties : dict[str,str] = {}
@@ -214,6 +218,7 @@ class Level(GameObject):
                         name = name,
                         HD = this.HD,
                         TabHD = this.TabHD,
+                        object_pack = this.object_pack,
                     )
                     
                     obj.id = id
@@ -371,6 +376,7 @@ class Level(GameObject):
                 properties = properties,
                 pos = pos,
                 name = name,
+                object_pack = this.object_pack,
             )
         else:
             filename.name = name

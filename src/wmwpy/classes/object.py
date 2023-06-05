@@ -20,6 +20,7 @@ from .sprite import Sprite
 from ..utils.filesystem import *
 from ..utils.rotate import rotate
 from ..utils.gif import save_transparent_gif
+from .objectpack import ObjectPack
 
 from ..utils.XMLTools import strbool
 class Object(GameObject):
@@ -36,6 +37,7 @@ class Object(GameObject):
         scale : int = 50,
         HD : bool = False,
         TabHD : bool = False,
+        object_pack : ObjectPack = None,
     ) -> None:
         """Get game object. Game object is `.hs` file.
 
@@ -77,6 +79,8 @@ class Object(GameObject):
         this.size = (0,0)
         this.id = 0
         this.frame = 0
+        
+        this.object_pack = object_pack
         
         this._background : list[Sprite] = []
         this._foreground : list[Sprite] = []
@@ -140,7 +144,27 @@ class Object(GameObject):
         this.size = max - min
         this._offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
         
+        
+        
         return this._offset
+    
+    
+    @property
+    def SAFE_MODE(this):
+        if not hasattr(this, '_SAFE_MODE'):
+            this._SAFE_MODE = False
+        
+        this.SAFE_MODE = this._SAFE_MODE
+        return this._SAFE_MODE
+    
+    @SAFE_MODE.setter
+    def SAFE_MODE(this, mode : bool):
+        this._SAFE_MODE = mode
+        for sprite in this.sprites:
+            sprite.SAFE_MODE = mode
+        
+        
+    
     
     @property
     def background(this) -> Image.Image:
@@ -149,6 +173,12 @@ class Object(GameObject):
         Returns:
             PIL.Image.Image: PIL Image
         """
+        this.SAFE_MODE = True
+        
+        type = this.object_pack.get_type(this.type)
+        if type != None:
+            type.ready_sprites(this)
+        
         this.getOffset()
         
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
@@ -171,6 +201,7 @@ class Object(GameObject):
             )
         image = this.rotateImage(image)
         
+        this.SAFE_MODE = False
         return image
     
     @property
@@ -194,6 +225,12 @@ class Object(GameObject):
         Returns:
             PIL.Image.Image: PIL Image
         """
+        this.SAFE_MODE = True
+        
+        type = this.object_pack.get_type(this.type)
+        if type != None:
+            type.ready_sprites(this)
+        
         this.getOffset()
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
         
@@ -215,6 +252,7 @@ class Object(GameObject):
             )
         image = this.rotateImage(image)
         
+        this.SAFE_MODE = False
         return image
     
     @property

@@ -22,9 +22,14 @@ from ..gameobject import GameObject
 from ..utils import textures
 
 class Sprite(GameObject):
+    TEMPLATE = b"""<?xml version="1.0"?>
+<Sprite>
+</Sprite>
+"""
+    
     def __init__(
         this,
-        file : str | bytes | File,
+        file : str | bytes | File = None,
         filesystem: Filesystem | Folder = None,
         gamepath: str = None, assets: str = '/assets',
         baseassets : str = '/',
@@ -48,15 +53,19 @@ class Sprite(GameObject):
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
-        this.file = super().get_file(file)
         
+        this.file = super().get_file(file, template = this.TEMPLATE)
+
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
         this.HD = HD
         this.TabHD = TabHD
         
         this.properties = deepcopy(properties)
+        this._properties = deepcopy(this.properties)
         this.animations : list[Sprite.Animation] = []
+        
+        this._SAFE_MODE = False
         
         this.scale = scale
         
@@ -70,6 +79,23 @@ class Sprite(GameObject):
             animation (str | int): Animation name or index.
         """
         this.animation = animation
+    
+    @property
+    def SAFE_MODE(this) -> bool:
+        return this._SAFE_MODE
+    @SAFE_MODE.setter
+    def SAFE_MODE(this, mode : bool):
+        if not isinstance(mode, bool):
+            raise TypeError('mode must be True or False')
+        
+        if mode:
+            if not this.SAFE_MODE:
+                this._properties = deepcopy(this.properties)
+        else:
+            if this.SAFE_MODE:
+                this.properties = deepcopy(this._properties)
+        
+        this._SAFE_MODE = mode
     
     @property
     def image(this) -> Image.Image:
@@ -100,7 +126,8 @@ class Sprite(GameObject):
     def animation(this, animation : str | int):
         if isinstance(animation, (int, float)):
             animation = int(animation)
-            this._currentAnimation = this.animations[animation]
+            if animation < len(this.animations):
+                this._currentAnimation = this.animations[animation]
         elif isinstance(animation, str):
             for a in this.animations:
                 if a.name == animation:
@@ -149,9 +176,15 @@ class Sprite(GameObject):
     def readXML(this):
         """Read Sprite XML
         """
+        if this.file == None:
+            return
+        
         this.animations = []
         for element in this.xml:
-            if (not element is etree.Comment) or element.tag == 'Animation':
+            if element is etree.Comment:
+                continue
+            
+            if element.tag == 'Animation':
                 animation = this.Animation(
                     element,
                     this.filesystem,
@@ -323,9 +356,13 @@ class Sprite(GameObject):
         )
 
     class Animation(GameObject):
+        TEMPLATE = """<Animation>
+</Animation>
+"""
+        
         def __init__(
             this,
-            xml : str | etree.ElementBase,
+            xml : str | etree.ElementBase = None,
             filesystem: Filesystem | Folder = None,
             gamepath: str = None,
             assets: str = '/assets',
@@ -347,9 +384,11 @@ class Sprite(GameObject):
             super().__init__(filesystem, gamepath, assets, baseassets)
             
             if isinstance(xml, str):
-                this.xml : etree.ElementBase = etree.parse(xml).getroot()
-            else:
+                this.xml : etree.ElementBase = etree.XML(xml).getroot()
+            elif isinstance(xml, etree._Element):
                 this.xml = xml
+            elif xml == None:
+                this.xml = etree.XML(this.TEMPLATE)
             
             this.HD = HD
             this.TabHD = TabHD
@@ -424,7 +463,10 @@ class Sprite(GameObject):
             if 'textureBasePath' in this.properties:
                 return this.properties['textureBasePath']
             else:
-                this.textureBasePath = path.joinPath(this.filesystem.baseassets, '/Textures')
+                if this.filesystem == None:
+                    return '/Textures/'
+                
+                this.textureBasePath = path.joinPath(this.filesystem.baseassets, '/Textures/')
                 return this.textureBasePath
         @textureBasePath.setter
         def textureBasePath(this, path):
@@ -705,7 +747,7 @@ class Sprite(GameObject):
             _repeat = 1
             def __init__(
                 this,
-                properties : dict,
+                properties : dict = {},
                 atlas : Imagelist = None,
                 textureBasePath : str = None,
             ) -> None:
