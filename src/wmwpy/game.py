@@ -303,6 +303,23 @@ class Game():
     def Layout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
     
+    def Location(this, location : str):
+        locations = this.filesystem.get(path.joinPath(this.baseassets, '/Locations'))
+        if locations == None:
+            locations = this.filesystem
+        
+        if isinstance(location, str):
+            location = locations.get(location)
+        
+        return Location(
+            location,
+            filesystem = this.filesystem,
+            gamepath = this.gamepath,
+            assets = this.assets,
+            baseassets = this.baseassets,
+        )
+        
+    
     def Database(this, path : str = None):
         if path == None:
             path = this.db
