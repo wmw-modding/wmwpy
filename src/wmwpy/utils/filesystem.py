@@ -382,6 +382,7 @@ class File(FileBase):
             this._rawcontent = bytes(data)
         
         this.content = None
+        this.reader = Reader()
         
         if this._datatype == 'raw':
             this._getdata()
@@ -447,8 +448,25 @@ class File(FileBase):
     @extension.setter
     def extension(this, value):
         this._extension = value
+    
+    def setReader(this, extension = None, mime = None, **kwargs):
+        this.reader = Reader()
         
-    def read(this, **kwargs):
+        for r in FILE_READERS:
+            # print(r)
+            if r.check(mime, extension, this.rawdata, filesystem = this.filesystem, **kwargs):
+                this.reader = r
+                return r
+        
+        for r in FILE_READERS:
+            # print(r)
+            if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
+                this.reader = r
+                return r
+        
+        return this.reader
+    
+    def read(this, mime = None, extension = None, **kwargs):
         """Read file.
 
         Returns:
@@ -460,13 +478,7 @@ class File(FileBase):
         
         this.rawdata.seek(0)
         
-        reader = Reader()
-        
-        for r in FILE_READERS:
-            # print(r)
-            if r.check(this.mime, this.extension, this.rawdata, filesystem = this.filesystem, **kwargs):
-                reader = r
-                break
+        reader = this.setReader(mime = mime, extension = extension, **kwargs)
         
         this.content = reader.read(this.mime, this.extension, this.rawdata, **kwargs)
         
@@ -531,7 +543,7 @@ class File(FileBase):
         """
         return this.parent.exists(path)
     
-    def write(this, data : bytes) -> int:
+    def write(this, data : bytes, extension = None, mime = None,) -> int:
         """Write data to file.
 
         Args:
@@ -542,7 +554,10 @@ class File(FileBase):
         """
         this.rawdata.truncate(0)
         this.rawdata.seek(0)
-        return this.rawdata.write(data)
+        
+        this.setReader(extension = extension, mime = mime)
+        
+        return this.rawdata.write(this.reader.save(data))
     
     def listdir(this, recursive = False, search = r'*'):
         """Returns a list of files and subfolders in path.
@@ -734,6 +749,11 @@ class Reader():
             encoding = 'utf-8'
         
         return rawdata.getvalue().decode(encoding=encoding)
+    
+    def save(this, data : bytes | io.BytesIO) -> bytes:
+        if isinstance(data, io.BytesIO):
+            return data.getvalue()
+        return data
 
 def register_reader(reader : Reader):
     """

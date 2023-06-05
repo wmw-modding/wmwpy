@@ -7,6 +7,8 @@ from .utils import Texture
 from .utils import path
 from .classes import *
 
+from . import object_packs
+
 class Game():
     _DB = '/Data/water.db'
     _BASEASSETS = '/'
@@ -73,6 +75,7 @@ class Game():
         ignore_errors : bool = False,
         HD = False,
         TabHD = False,
+        object_pack = None,
     ):
         """
         Load level
@@ -119,6 +122,9 @@ class Game():
         if isinstance(xml, File):
             logging.debug(f'Game: xml path: {xml.path}')
         
+        if object_pack == None:
+            object_pack = object_packs.get_object_pack(this.game)
+        
         level = Level(
             xml = xml,
             image = image,
@@ -127,6 +133,7 @@ class Game():
             ignore_errors = ignore_errors,
             HD = HD,
             TabHD = TabHD,
+            object_pack = object_pack,
         )
         if isinstance(xmlPath, File):
             level.filename = xmlPath.path
@@ -140,6 +147,7 @@ class Game():
         object : str,
         HD : bool = False,
         TabHD : bool = False,
+        object_pack = None,
         **kwargs
     ):
         """
@@ -161,11 +169,15 @@ class Game():
         if not isinstance(object, File):
             object = objects.get(object)
         
+        if object_pack == None:
+            object_pack = object_packs.get_object_pack(this.game)
+        
         obj = Object(
             object,
             filesystem = this.filesystem,
             HD = HD,
             TabHD = TabHD,
+            object_pack = object_pack,
             **kwargs
         )
         if isinstance(object, File):
@@ -290,6 +302,14 @@ class Game():
     
     def Layout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
+    
+    def Database(this, path : str = None):
+        if path == None:
+            path = this.db
+        
+        file = this.filesystem.get(path)
+        
+        return Database(file)
     
     def FileManifest(this, writeFile : bool = True, filename : str = '/FileManifest.txt'):
         """Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).
