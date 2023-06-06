@@ -436,7 +436,12 @@ class Imagelist(GameObject):
             
             texture = this.Image(
                 image,
-                properties
+                properties,
+                textureBasePath = this.textureBasePath,
+                filesystem = this.filesystem,
+                gamepath = this.gamepath,
+                assets = this.assets,
+                save_image = True,
             )
             this.images.append(texture)
             
@@ -497,8 +502,8 @@ class Imagelist(GameObject):
         def removeImageFiles(this):
             """Remove all image files from filesystem.
             """
-            for name in this.images:
-                this.images.removeFile()
+            for image in this.images:
+                image.removeFile()
             
         
         def _getRects(this, gap : tuple = (1,1)):
@@ -512,7 +517,6 @@ class Imagelist(GameObject):
             row = column = 0
             
             for image in this.images:
-                image = this.images[image]
                 image.rect = (x,y) + image.size
                 
                 if x > maxwidth:
@@ -545,7 +549,6 @@ class Imagelist(GameObject):
             atlas : PIL.Image.Image = PIL.Image.new('RGBA', this.imgSize)
             
             for image in this.images:
-                image = this.images[image]
                 image.atlas = atlas
                 atlas.paste(image.image, image.rect[0:2])
             
@@ -577,13 +580,11 @@ class Imagelist(GameObject):
                 this.atlas = atlas
                 this.properties = deepcopy(properties)
                 this.textureBasePath : str = textureBasePath
+                this.rawdata = io.BytesIO()
 
+                this._image = None
                 this.image = PIL.Image.new('RGBA', this.size)
 
-                this.rawdata = io.BytesIO()
-                
-                this._image = None
-                
                 if save_image:
                     this.getImage()
             
