@@ -2,11 +2,13 @@ import typing
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..object import Object
+    
+from copy import deepcopy
 
 
 class Type():
     NAME : str = ''
-    PROPERTIES : dict[str, dict[typing.Literal['type', 'default']]] = {
+    PROPERTIES : dict[str, dict[typing.Literal['type', 'default', 'options'], str | list[str]]] = {
         'OmegaDamping': {
             'type' : 'float',
             'default' : '',
@@ -18,6 +20,14 @@ class Type():
     def __init__(self) -> None:
         pass
     
+    def split_property_num(string) -> tuple[str,str]:
+        if not isinstance(string, str):
+            raise TypeError('string must be str')
+        
+        head = string.rstrip('0123456789')
+        tail = string[len(head):]
+        return head, tail
+    
     def ready_sprites(
         self,
         obj : 'Object',
@@ -25,19 +35,32 @@ class Type():
         pass
     
     def value(self, value : str, type : typing.Literal['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...'] = 'string'):
+        def getint(value : str):
+            try:
+                try:
+                    return int(value)
+                except:
+                    return int(float(value))
+            except:
+                return 0
+        
+        def getfloat(value : str):
+            try:
+                return float(value)
+            except:
+                return 0.0
+        
         types : dict[str, typing.Callable[[str], str | float | int]] = {
             'string' : str,
-            'float' : float,
-            'int' : int,
-            'bit' : int,
+            'float' : getfloat,
+            'int' : getint,
+            'bit' : getint,
         }
         
         arrays : dict[str, typing.Callable[[str], list[str]]] = {
             'comma' : lambda string : string.split(','),
             'spaced' : lambda string : string.split(),
         }
-        
-        is_comma_array = False
         
         values = []
         
@@ -59,4 +82,31 @@ class Type():
                 
                 return new_values
         
-        return types.get(type, 'string')(value)
+        return types.get(type, types['string'])(value)
+    
+    def ready_properties(self, obj : 'Object', include : list[str] = []):
+        properties = deepcopy(obj.properties)
+        
+        include += ['Type', 'Angle', 'Filename']
+        
+        for property in properties:
+            if property in include:
+                continue
+            for prop in include:
+                if prop.endswith('#'):
+                    split_property : tuple[str,str] = self.split_property_num(property)
+                    if split_property[0] == '' or not split_property[1].isnumeric():
+                        if prop == property:
+                            continue
+                        elif split_property[1].isnumeric():
+                            if split_property[0] + '#' == prop:
+                                continue
+                else:
+                    if prop == property:
+                        continue
+            
+            if property in obj.defaultProperties:
+                if obj.properties[property] == obj.defaultProperties[property]:
+                    del obj.properties[property]
+        
+        return obj.properties
