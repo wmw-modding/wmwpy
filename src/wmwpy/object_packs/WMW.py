@@ -75,6 +75,7 @@ class spout(Type):
                 "lava",
                 "steam",
                 "mud",
+                "drymud",
                 "wetmud",
             ]
         },
@@ -326,6 +327,7 @@ class fluidconverter(Type):
                 "lava",
                 "steam",
                 "mud",
+                "drymud",
                 "wetmud",
             ]
         },
@@ -338,6 +340,7 @@ class fluidconverter(Type):
                 "lava",
                 "steam",
                 "mud",
+                "drymud",
                 "wetmud",
             ]
         },
@@ -358,6 +361,7 @@ class fluidconverter(Type):
                 "lava",
                 "steam",
                 "mud",
+                "drymud",
                 "wetmud",
             ]
         }
@@ -375,6 +379,7 @@ class fluidconverter(Type):
             "lava" : 'Ooze',
             "steam" : 'Steam',
             "mud" : 'MudDry',
+            "drymud" : 'MudDry',
             "wetmud" : 'MudWet',
         }
         
