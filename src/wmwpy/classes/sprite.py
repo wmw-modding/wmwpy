@@ -65,7 +65,7 @@ class Sprite(GameObject):
         this._properties = deepcopy(this.properties)
         this.animations : list[Sprite.Animation] = []
         
-        this._SAFE_MODE = False
+        this.SAFE_MODE = False
         
         this.scale = scale
         
@@ -82,6 +82,9 @@ class Sprite(GameObject):
     
     @property
     def SAFE_MODE(this) -> bool:
+        if not hasattr(this, '_SAFE_MODE'):
+            this._SAFE_MODE = False
+        
         return this._SAFE_MODE
     @SAFE_MODE.setter
     def SAFE_MODE(this, mode : bool):
@@ -94,6 +97,9 @@ class Sprite(GameObject):
         else:
             if this.SAFE_MODE:
                 this.properties = deepcopy(this._properties)
+        
+        for animation in this.animations:
+            animation.SAFE_MODE = mode
         
         this._SAFE_MODE = mode
     
@@ -401,6 +407,32 @@ class Sprite(GameObject):
             this.frame = 0
             
             this.readXML()
+            
+            this.SAFE_MODE = False
+        
+        
+        @property
+        def SAFE_MODE(this) -> bool:
+            if not hasattr(this, '_SAFE_MODE'):
+                this._SAFE_MODE = False
+            
+            return this._SAFE_MODE
+        @SAFE_MODE.setter
+        def SAFE_MODE(this, mode : bool):
+            if not isinstance(mode, bool):
+                raise TypeError('mode must be True or False')
+            
+            if mode:
+                if not this.SAFE_MODE:
+                    this._properties = deepcopy(this.properties)
+            else:
+                if this.SAFE_MODE:
+                    this.properties = deepcopy(this._properties)
+            
+            for frame in this.frames:
+                frame.SAFE_MODE = mode
+            
+            this._SAFE_MODE = mode
         
         @property
         def image(this) -> Image.Image:
@@ -593,6 +625,10 @@ class Sprite(GameObject):
                         f.attrib,
                         this.atlas if this.atlas != None else this.texture,
                         this.textureBasePath,
+                        filesystem = this.filesystem,
+                        gamepath = this.gamepath,
+                        assets = this.assets,
+                        baseassets = this.baseassets,
                     ))
             
             return this.frames
@@ -740,16 +776,16 @@ class Sprite(GameObject):
             )
         
         # Frame
-        class Frame():
-            _offset = (0,0)
-            _scale = (1,1)
-            _angleDeg = 0
-            _repeat = 1
+        class Frame(GameObject):
             def __init__(
                 this,
                 properties : dict = {},
                 atlas : Imagelist = None,
                 textureBasePath : str = None,
+                filesystem : Filesystem | Folder = None,
+                gamepath : str = None,
+                assets : str = '/assets',
+                baseassets : str = '/',
             ) -> None:
                 """Frame for Sprite.Animation.
 
@@ -757,41 +793,117 @@ class Sprite(GameObject):
                     properties (dict): Image properties.
                     atlas (Imagelist, optional): Image atlas for Image. Defaults to None.
                     textureBasePath (str, optional): Directory to put image in. Defaults to None.
+                    filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+                    gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+                    assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+                    baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `
                 """
+                super().__init__(filesystem, gamepath, assets, baseassets)
+                
                 this.atlas = atlas
                 this.textueBasePath = textureBasePath
                 this.properties = properties
                 
-                this.name = ''
-                this.offset = this._offset
-                this.scale = this._scale
-                this.angleDeg = this._angleDeg
-                this.repeat = this._repeat
-                
-                
-                
-                this.getData()
                 this.getImage()
+                
+                this.SAFE_MODE = False
             
-            def getData(this):
-                """Get the Frame data
-                """
+            
+            @property
+            def SAFE_MODE(this) -> bool:
+                if not hasattr(this, '_SAFE_MODE'):
+                    this._SAFE_MODE = False
+                
+                return this._SAFE_MODE
+            @SAFE_MODE.setter
+            def SAFE_MODE(this, mode : bool):
+                if not isinstance(mode, bool):
+                    raise TypeError('mode must be True or False')
+                
+                if mode:
+                    if not this.SAFE_MODE:
+                        this._properties = deepcopy(this.properties)
+                else:
+                    if this.SAFE_MODE:
+                        this.properties = deepcopy(this._properties)
+                
+                this._SAFE_MODE = mode
+            
+            @property
+            def name(this) -> str:
                 if 'name' in this.properties:
-                    this.name = this.properties['name']
+                    return this.properties['name']
+                else:
+                    return ''
+            @name.setter
+            def name(this, name : str):
+                this.properties['name'] = str(name)
+            
+            @property
+            def offset(this) -> tuple[float,float]:
                 if 'offset' in this.properties:
-                    this.offset = tuple([float(x) for x in this.properties['offset'].split()])
+                    return tuple([float(x) for x in this.properties['offset'].split()])
+                else:
+                    return (0,0)
+            @offset.setter
+            def offset(this, offset : tuple[float,float]):
+                if isinstance(offset, (tuple, list)):
+                    this.properties['offset'] = ' '.join([str(x) for x in offset])
+                elif isinstance(offset, (int, float)):
+                    this.properties['offset'] = ' '.join([str(offset), str(offset)])
+                elif isinstance(offset, str):
+                    this.properties['offset'] = offset
+                else:
+                    raise TypeError('offset must be tuple, float or str')
+            
+            @property
+            def scale(this) -> tuple[float, float]:
                 if 'scale' in this.properties:
-                    this.scale = tuple([float(x) for x in this.properties['scale'].split()])
+                    return tuple([float(x) for x in this.properties['scale'].split()])
+                else:
+                    return (1, 1)
+            @scale.setter
+            def scale(this, scale : tuple[float,float]):
+                if isinstance(scale, (tuple, list)):
+                    this.properties['scale'] = ' '.join([str(x) for x in scale])
+                elif isinstance(scale, (int, float)):
+                    this.properties['scale'] = ' '.join([str(scale), str(scale)])
+                elif isinstance(scale, str):
+                    this.properties['scale'] = scale
+                else:
+                    raise TypeError('scale must be tuple, float or str')
+            
+            @property
+            def angleDeg(this) -> float:
                 if 'angleDeg' in this.properties:
-                    this.angleDeg = float(this.properties['angleDeg'])
+                    return float(this.properties['angleDeg'])
+                else:
+                    return 0
+            @angleDeg.setter
+            def angleDeg(this, angle : float):
+                if isinstance(angle, (int, float, str)):
+                    this.properties['angleDeg'] = str(angle)
+                else:
+                    raise TypeError('angle must be float')
+            
+            @property
+            def repeat(this) -> int:
                 if 'repeat' in this.properties:
                     this.repeat = int(this.properties['repeat'])
+                else:
+                    return 0
+            @repeat.setter
+            def repeat(this, num : int):
+                if isinstance(num, (int, float, str)):
+                    this.properties['angleDeg'] = str(int(float(num)))
+                else:
+                    raise TypeError('angle must be int')
                 
             def getImage(this):
                 if isinstance(this.atlas, Imagelist):
                     this._image = this.atlas.get(this.name)
                 elif this.texture != None:
-                    this._image = this.texture.image
+                    this._image = this.texture
                 
             
             @property
@@ -809,16 +921,40 @@ class Sprite(GameObject):
                 Returns:
                     PIL.Image.Image: PIL Image
                 """
-                if this._image:
+                this.getImage()
+                
+                if hasattr(this._image, 'image'):
                     image = this._image.image.copy()
+                    image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                    image = image.rotate(this.angleDeg, expand = True)
+                elif isinstance(this._image, Image.Image):
+                    image = this._image.copy()
                     image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
                     image = image.rotate(this.angleDeg, expand = True)
                 else:
                     image = Image.new('RGBA', (1,1), (0,0,0,0))
                 return image
             @image.setter
-            def image(this, image : Image.Image):
-                this._image = image
+            def image(this, image : str):
+                if isinstance(image, textures.Texture):
+                    this.atlas = image
+                elif isinstance(this.atlas, textures.Texture):
+                    if isinstance(image, str):
+                        this.atlas = textures.Texture(
+                            image = image,
+                            filesystem = this.filesystem,
+                            gamepath = this.gamepath,
+                            assets = this.assets,
+                            baseassets = this.baseassets,
+                            HD = this.atlas.HD,
+                            TabHD = this.atlas.TabHD,
+                        )
+                elif isinstance(this.atlas, Imagelist):
+                    if isinstance(image, str):
+                        this.name = image
+                
+                this.getImage()
+                
             
             def updateProperties(this):
                 """Update Image properties
