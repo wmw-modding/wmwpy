@@ -59,7 +59,7 @@ class Object(GameObject):
         
         this.file = super().get_file(file)
         
-        this._properties = deepcopy(properties)
+        this._level_properties = deepcopy(properties)
         if isinstance(pos, str):
             this.pos = tuple([float(a) for a in pos.split()])
         else:
@@ -90,6 +90,8 @@ class Object(GameObject):
         this.scale = scale
         
         this.readXML()
+        
+        this.SAFE_MODE = False
         
         if isinstance(file, File):
             this.filename = file.path
@@ -159,12 +161,23 @@ class Object(GameObject):
     
     @SAFE_MODE.setter
     def SAFE_MODE(this, mode : bool):
-        this._SAFE_MODE = mode
+        if not isinstance(mode, bool):
+            raise TypeError('mode must be True or False')
+        
+            if mode:
+                if not hasattr(this, '_SAFE_MODE') or not this.SAFE_MODE:
+                    this._properties = deepcopy(this.properties)
+            else:
+                if not hasattr(this, '_SAFE_MODE') or this.SAFE_MODE:
+                    this.properties = deepcopy(this._properties)
+        
         for sprite in this.sprites:
             sprite.SAFE_MODE = mode
         
         
-    
+    @property
+    def Type(this):
+        return this.object_pack.get_type(this.type)
     
     @property
     def background(this) -> Image.Image:
@@ -175,7 +188,7 @@ class Object(GameObject):
         """
         this.SAFE_MODE = True
         
-        type = this.object_pack.get_type(this.type)
+        type = this.Type
         if type != None:
             type.ready_sprites(this)
         
@@ -227,7 +240,7 @@ class Object(GameObject):
         """
         this.SAFE_MODE = True
         
-        type = this.object_pack.get_type(this.type)
+        type = this.Type
         if type != None:
             type.ready_sprites(this)
         
@@ -464,6 +477,11 @@ class Object(GameObject):
         """
         properties = list(this.properties.keys())
         
+        type = this.Type
+        
+        if type != None:
+            type.ready_properties(this)
+        
         # for property in properties:
         #     if property in this.defaultProperties:
         #         if this.properties[property] == this.defaultProperties[property]:
@@ -581,10 +599,11 @@ class Object(GameObject):
                 this.VertIndices.append(int(index))
     
     def getProperties(this):
-        for prop in this.defaultProperties:
-            this.properties[prop] = this.defaultProperties[prop]
-        for prop in this._properties:
-            this.properties[prop] = this._properties[prop]
+        # for prop in this.defaultProperties:
+        #     if prop not in this.properties:
+        #         this.properties[prop] = this.defaultProperties[prop]
+        for prop in this._level_properties:
+            this.properties[prop] = this._level_properties[prop]
         return this.properties
     
     def _getDefaultProperties(this, xml : etree.ElementBase):
