@@ -20,6 +20,7 @@ from ..utils.XMLTools import strbool
 from ..utils import path
 from ..gameobject import GameObject
 from ..utils import textures
+from ..utils import imageprocessing
 
 class Sprite(GameObject):
     TEMPLATE = b"""<?xml version="1.0"?>
@@ -804,6 +805,8 @@ class Sprite(GameObject):
                 this.textueBasePath = textureBasePath
                 this.properties = properties
                 
+                this.color_filter : tuple[int,int,int,int] = []
+                
                 this.getImage()
                 
                 this.SAFE_MODE = False
@@ -823,9 +826,11 @@ class Sprite(GameObject):
                 if mode:
                     if not this.SAFE_MODE:
                         this._properties = deepcopy(this.properties)
+                        this._color_filters = deepcopy(this.color_filter)
                 else:
                     if this.SAFE_MODE:
                         this.properties = deepcopy(this._properties)
+                        this.color_filter = deepcopy(this._color_filters)
                 
                 this._SAFE_MODE = mode
             
@@ -925,14 +930,26 @@ class Sprite(GameObject):
                 
                 if hasattr(this._image, 'image'):
                     image = this._image.image.copy()
-                    image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
-                    image = image.rotate(this.angleDeg, expand = True)
                 elif isinstance(this._image, Image.Image):
                     image = this._image.copy()
-                    image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
-                    image = image.rotate(this.angleDeg, expand = True)
                 else:
                     image = Image.new('RGBA', (1,1), (0,0,0,0))
+                
+                image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                image = image.rotate(this.angleDeg, expand = True)
+                
+                # for color in this.color_filters:
+                if len(this.color_filter) >= 3:
+                    try:
+                        image = imageprocessing.recolor_image(
+                            image,
+                            this.color_filter
+                        )
+                    except:
+                        pass
+                    # image.show()
+                
+                
                 return image
             @image.setter
             def image(this, image : str):

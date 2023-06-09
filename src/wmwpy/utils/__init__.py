@@ -7,3 +7,5 @@ from . import filesystem
 from .filesystem import Filesystem
 from . import file_types
 from .gif import save_transparent_gif
+from . import imageprocessing
+from . import color

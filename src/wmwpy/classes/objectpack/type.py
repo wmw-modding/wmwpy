@@ -8,11 +8,11 @@ from copy import deepcopy
 
 class Type():
     NAME : str = ''
-    PROPERTIES : dict[str, dict[typing.Literal['type', 'default', 'options'], str | list[str]]] = {
-        'OmegaDamping': {
-            'type' : 'float',
-            'default' : '',
-        },
+    PROPERTIES : dict[str, dict[typing.Literal['type', 'default', 'options'], str | list[str]]] = {}
+    
+    DEFAULT_PROPERTY = {
+        'type' : 'string',
+        'default' : '',
     }
     
     VALUE_TYPES = ['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...']
@@ -110,3 +110,29 @@ class Type():
                     del obj.properties[property]
         
         return obj.properties
+
+    def get_property(
+        self,
+        property : str,
+        obj : 'Object',
+    ):
+        value = obj.properties.get(
+            property,
+            obj.defaultProperties.get(
+                property,
+                self.PROPERTIES.get(
+                    property,
+                    self.DEFAULT_PROPERTY
+                )['default']
+            )
+        )
+        
+        if property in self.PROPERTIES:
+            print(f'{self.PROPERTIES[property]["type"] = }')
+            
+            value = self.value(
+                value,
+                self.PROPERTIES[property]['type']
+            )
+        
+        return value

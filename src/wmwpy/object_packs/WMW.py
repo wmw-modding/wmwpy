@@ -34,15 +34,27 @@ class yswitch(Type):
     def ready_sprites(self, obj: Object):
         super().ready_sprites(obj)
         
-        YSwitchPosition = obj.properties.get('YSwitchPosition', self.PROPERTIES['YSwitchPosition'])
+        YSwitchPosition = obj.properties.get(
+            'YSwitchPosition',
+            obj.defaultProperties.get(
+                'YSwitchPosition',
+                self.PROPERTIES['YSwitchPosition'],
+            )
+        )
         YSwitchPosition = self.value(YSwitchPosition, self.PROPERTIES['YSwitchPosition']['type'])
         
-        ToggleSpriteIndex = obj.properties.get('ToggleSpriteIndex', self.PROPERTIES['ToggleSpriteIndex'])
+        ToggleSpriteIndex = obj.properties.get(
+            'ToggleSpriteIndex',
+            obj.defaultProperties.get(
+                'ToggleSpriteIndex',
+                self.PROPERTIES['ToggleSpriteIndex'],
+            )
+        )
         
         ToggleSpriteIndex = self.value(ToggleSpriteIndex, self.PROPERTIES['ToggleSpriteIndex']['type'])
         
-        print(f'YSwitchPosition: {YSwitchPosition}')
-        print(f'ToggleSpriteIndex: {ToggleSpriteIndex}')
+        # print(f'YSwitchPosition: {YSwitchPosition}')
+        # print(f'ToggleSpriteIndex: {ToggleSpriteIndex}')
         
         if YSwitchPosition != 1:
             YSwitchPosition = 0
@@ -369,7 +381,13 @@ class fluidconverter(Type):
     
     def ready_sprites(self, obj: Object):
         MaskSpriteIndex = self.value(
-            obj.properties.get('MaskSpriteIndex', self.PROPERTIES['MaskSpriteIndex']['default']),
+            obj.properties.get(
+                'MaskSpriteIndex',
+                obj.defaultProperties.get(
+                    'MaskSpriteIndex',
+                    self.PROPERTIES['MaskSpriteIndex']['default']
+                )
+            ),
             self.PROPERTIES['MaskSpriteIndex']['type'],
         )
         
@@ -383,11 +401,14 @@ class fluidconverter(Type):
             "wetmud" : 'MudWet',
         }
         
-        print(f'{MaskSpriteIndex = }')
+        # print(f'{MaskSpriteIndex = }')
         
         OutlinedSprite : Sprite = obj.sprites[MaskSpriteIndex]
         
-        FluidType = obj.properties.get('FluidType', obj.properties.get('FluidType0', 'water')).lower()
+        FluidType = obj.properties.get(
+            'FluidType',
+            obj.properties.get('FluidType0', 'water')
+        ).lower()
         
         image = f"Convert_Icon_{fluids.get(FluidType, 'Water')}_Outlined.png"
         
@@ -402,3 +423,152 @@ class fluidconverter(Type):
         ])
 
 WMWObjectPack.register_type(fluidconverter())
+
+class star(Type):
+    NAME = 'star'
+    PROPERTIES = {
+        "AllowedFluid": {
+            "type": "string",
+            'default' : 'water',
+            "options": [
+                "water",
+                "contaminatedwater",
+                "lava",
+                "steam",
+                "mud",
+                "drymud",
+                "wetmud",
+            ]
+        },
+        "PlatinumType": {
+            "type": "string",
+            'default' : 'normal',
+            "options": [
+                "platinum",
+                "note",
+                "normal"
+            ]
+        },
+        "FillTexture": {
+            "type": "string",
+            'default' : 'none',
+        },
+        "StarType": {
+            "type": "string",
+            'default' : 'normal',
+            "options": [
+                "normal",
+                "allie",
+                "baby",
+                "teleport",
+                "note",
+                "mega"
+            ]
+        },
+        "TeleportMoveEase": {
+            "type": "string",
+            'default' : 'both',
+            "options": [
+                "both",
+                "in",
+                "out"
+            ]
+        },
+        "Burst": {
+            "type": "bit",
+            'default' : '0',
+        },
+        "CutsRock": {
+            "type": "bit",
+            'default' : '0'
+        },
+        "TeleportWaitTime": {
+            "type": "float",
+            'default' : '0',
+        },
+        "TeleportMoveTime": {
+            "type": "float",
+            'default' : '0'
+        },
+        "NumParticlesToHatch": {
+            "type": "int",
+            'default' : '5'
+        },
+        "CutRadius": {
+            "type": "float",
+            'default' : '5'
+        },
+        "BlastRadius": {
+            "type": "float",
+            'default' : "7.5"
+        },
+        "IsSponge": {
+            "type": "bit",
+            'default' : '0'
+        },
+        "CutsDirt": {
+            "type": "bit",
+            'default' : '1'
+        },
+        "IgnoreFluid": {
+            "type": "string",
+            'default' : 'steam',
+            "options": [
+                "water",
+                "contaminatedwater",
+                "lava",
+                "steam",
+                "mud",
+                "drymud",
+                "wetmud",
+            ]
+        },
+        "FillDirection": {
+            "type": "string",
+            'default' : 'up',
+            "options": [
+                "up",
+                "down"
+            ]
+        },
+        "Order": {
+            "type": "int",
+            'default' : '0'
+        },
+        "AllowCollect": {
+            "type": "bit",
+            'default' : '1'
+        },
+        "Color": {
+            "type": "int int int int",
+            'default' : '255 255 255 255',
+            "options": [
+                "150 198 232 255",
+                "195 214 0 255",
+                "183 52 52 255",
+                "209 85 174 255",
+                "237 158 64 255",
+                "107 53 146 255"
+            ]
+        }
+    }
+    
+    def ready_sprites(self, obj: Object):
+        
+        StarType = self.value(
+            obj.properties.get(
+                'StarType',
+                obj.defaultProperties.get(
+                    'StarType',
+                    self.PROPERTIES['StarType']["default"]
+                )
+            ),
+            self.PROPERTIES['StarType']['type']
+        ).lower()
+        
+        if StarType == 'note':
+            color = tuple(self.get_property('Color', obj))
+            
+            obj.sprites[2].animation.frames[0].color_filter = color
+
+WMWObjectPack.register_type(star())
