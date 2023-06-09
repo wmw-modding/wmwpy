@@ -1,3 +1,5 @@
+from __future__ import annotations
+import typing
 import lxml
 from lxml import etree
 import io
@@ -6,7 +8,6 @@ from copy import deepcopy
 from PIL import Image, ImageDraw
 import numpy
 import math
-import typing
 
 LOADED_ImageTk = True
 if LOADED_ImageTk:
@@ -20,7 +21,8 @@ from .sprite import Sprite
 from ..utils.filesystem import *
 from ..utils.rotate import rotate
 from ..utils.gif import save_transparent_gif
-from .objectpack import ObjectPack
+if typing.TYPE_CHECKING:
+    from .objectpack import ObjectPack
 
 from ..utils.XMLTools import strbool
 class Object(GameObject):

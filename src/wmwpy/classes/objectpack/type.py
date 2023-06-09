@@ -1,7 +1,7 @@
 import typing
 from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..object import Object
+# if TYPE_CHECKING:
+from ..object import Object
     
 from copy import deepcopy
 
@@ -17,7 +17,7 @@ class Type():
     
     VALUE_TYPES = ['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...']
     
-    def __init__(self, obj : 'Object') -> None:
+    def __init__(self, obj : 'Object' = None) -> None:
         self.obj = obj
     
     def split_property_num(string) -> tuple[str,str]:
@@ -122,6 +122,22 @@ class Type():
         self,
         property : str,
     ):
+        if not isinstance(self.obj, Object):
+            prop = self.PROPERTIES.get(
+                property,
+                self.DEFAULT_PROPERTY
+            )
+            
+            result = None
+            
+            if 'default' in prop:
+                value = prop['default']
+                type = prop['type']
+                
+                result = self.value(value, type)
+            
+            return result
+        
         value = self.obj.properties.get(
             property,
             self.obj.defaultProperties.get(
@@ -134,8 +150,6 @@ class Type():
         )
         
         if property in self.PROPERTIES:
-            print(f'{self.PROPERTIES[property]["type"] = }')
-            
             value = self.value(
                 value,
                 self.PROPERTIES[property]['type']

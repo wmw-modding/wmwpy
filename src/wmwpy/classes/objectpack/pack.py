@@ -2,6 +2,9 @@ import typing
 
 from .type import Type
 
+if typing.TYPE_CHECKING:
+    from ...classes.object import Object
+
 class ObjectPack():
     def __init__(self) -> None:
         self.types : dict[str, Type] = {}
@@ -17,5 +20,5 @@ class ObjectPack():
         else:
             raise TypeError('type must inherit from the classes.objectpack.type.Type class')
     
-    def get_type(self, object_type : str, obj) -> Type:
+    def get_type(self, object_type : str, obj : 'Object' = None) -> Type:
         return self.types.get(object_type, self.types.get('', None))(obj)
