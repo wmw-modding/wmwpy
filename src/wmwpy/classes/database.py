@@ -60,3 +60,6 @@ class Database(GameObject):
         data = file.write(this.connection)
         
         return data
+
+    def execute(this, *args):
+        return this.cursor.execute(*args)
