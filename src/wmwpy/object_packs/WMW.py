@@ -1,8 +1,10 @@
-from wmwpy.classes.object import Object
+import numpy
+
 from ..classes.object import Object
 from ..classes.sprite import Sprite
 from ..classes.imagelist import Imagelist
 from ..classes.objectpack import ObjectPack, Type
+from ..utils import imageprocessing
 
 WMWObjectPack = ObjectPack()
 
@@ -28,30 +30,35 @@ class yswitch(Type):
         'FirstRightSpout' : {
             'type' : 'int',
             'default' : '0',
+        },
+        "ConnectedSpout#": {
+            "type": "string",
+            "default": 'Spout0'
+        },
+        "ConnectedSpoutProbability#": {
+            "type": "float",
+            "default": "1"
+        },
+        "FirstLeftSpout": {
+            "type": "bit",
+            "default": "1"
+        },
+        "PlugSpriteIndex": {
+            "type": "int",
+            "default": "3"
+        },
+        "ConnectedConverter": {
+            "type": "string",
+            "default": "FluidConverter0"
         }
     }
     
-    def ready_sprites(self, obj: Object):
-        super().ready_sprites(obj)
+    def ready_sprites(self):
+        super().ready_sprites()
         
-        YSwitchPosition = obj.properties.get(
-            'YSwitchPosition',
-            obj.defaultProperties.get(
-                'YSwitchPosition',
-                self.PROPERTIES['YSwitchPosition'],
-            )
-        )
-        YSwitchPosition = self.value(YSwitchPosition, self.PROPERTIES['YSwitchPosition']['type'])
+        YSwitchPosition = self.get_property('YSwitchPosition')
         
-        ToggleSpriteIndex = obj.properties.get(
-            'ToggleSpriteIndex',
-            obj.defaultProperties.get(
-                'ToggleSpriteIndex',
-                self.PROPERTIES['ToggleSpriteIndex'],
-            )
-        )
-        
-        ToggleSpriteIndex = self.value(ToggleSpriteIndex, self.PROPERTIES['ToggleSpriteIndex']['type'])
+        ToggleSpriteIndex = self.get_property('ToggleSpriteIndex')
         
         # print(f'YSwitchPosition: {YSwitchPosition}')
         # print(f'ToggleSpriteIndex: {ToggleSpriteIndex}')
@@ -59,11 +66,9 @@ class yswitch(Type):
         if YSwitchPosition != 1:
             YSwitchPosition = 0
         
-        obj.sprites[ToggleSpriteIndex].angle = (360 / 3) * (YSwitchPosition + 1)
-    
-    
+        self.obj.sprites[ToggleSpriteIndex].angle = (360 / -3) * (YSwitchPosition + 1)
 
-WMWObjectPack.register_type(yswitch())
+WMWObjectPack.register_type(yswitch)
 
 class spout(Type):
     NAME = 'spout'
@@ -314,10 +319,10 @@ class spout(Type):
         }
     }
 
-    def ready_properties(self, obj: Object):
-        return super().ready_properties(obj, include = ['SpoutType', 'FluidType'])
+    def ready_properties(self):
+        return super().ready_properties(include = ['SpoutType', 'FluidType'])
 
-WMWObjectPack.register_type(spout())
+WMWObjectPack.register_type(spout)
 
 class fluidconverter(Type):
     NAME = 'fluidconverter'
@@ -379,17 +384,8 @@ class fluidconverter(Type):
         }
     }
     
-    def ready_sprites(self, obj: Object):
-        MaskSpriteIndex = self.value(
-            obj.properties.get(
-                'MaskSpriteIndex',
-                obj.defaultProperties.get(
-                    'MaskSpriteIndex',
-                    self.PROPERTIES['MaskSpriteIndex']['default']
-                )
-            ),
-            self.PROPERTIES['MaskSpriteIndex']['type'],
-        )
+    def ready_sprites(self):
+        MaskSpriteIndex = self.get_property('MaskSpriteIndex')
         
         fluids = {
             "water" : 'Water',
@@ -403,26 +399,26 @@ class fluidconverter(Type):
         
         # print(f'{MaskSpriteIndex = }')
         
-        OutlinedSprite : Sprite = obj.sprites[MaskSpriteIndex]
+        OutlinedSprite : Sprite = self.obj.sprites[MaskSpriteIndex]
         
-        FluidType = obj.properties.get(
+        FluidType = self.obj.properties.get(
             'FluidType',
-            obj.properties.get('FluidType0', 'water')
+            self.obj.properties.get('FluidType0', 'water')
         ).lower()
         
         image = f"Convert_Icon_{fluids.get(FluidType, 'Water')}_Outlined.png"
         
         OutlinedSprite.animation.frames[0].name = image
     
-    def ready_properties(self, obj: Object):
-        return super().ready_properties(obj, include = [
+    def ready_properties(self):
+        return super().ready_properties(include = [
             'FluidType',
             'FluidType#',
             'StartingFluidType',
             'ConverterType',
         ])
 
-WMWObjectPack.register_type(fluidconverter())
+WMWObjectPack.register_type(fluidconverter)
 
 class star(Type):
     NAME = 'star'
@@ -553,22 +549,153 @@ class star(Type):
         }
     }
     
-    def ready_sprites(self, obj: Object):
+    def ready_sprites(self):
         
-        StarType = self.value(
-            obj.properties.get(
-                'StarType',
-                obj.defaultProperties.get(
-                    'StarType',
-                    self.PROPERTIES['StarType']["default"]
-                )
-            ),
-            self.PROPERTIES['StarType']['type']
-        ).lower()
+        StarType = self.get_property('StarType').lower()
         
         if StarType == 'note':
-            color = tuple(self.get_property('Color', obj))
+            color = tuple(self.get_property('Color'))
             
-            obj.sprites[2].animation.frames[0].color_filter = color
+            try:
+                self.obj.sprites[2].image = imageprocessing.recolor_image(
+                    self.obj.sprites[2].image,
+                    color
+                )
+            except:
+                pass
+            
+            self.obj.sprites[2].animation.frames[0].color_filter = color
 
-WMWObjectPack.register_type(star())
+WMWObjectPack.register_type(star)
+
+class waterballoon(Type):
+    NAME = 'waterballoon'
+    PROPERTIES = {
+        "EdgeSpringK": {
+            "type": "int",
+            "default": "500"
+        },
+        "EdgeSpringDamping": {
+            "type": "int",
+            "default": "1"
+        },
+        "ShapeMatchingK": {
+            "type": "int",
+            "default": "500"
+        },
+        "ShapeMatchingDamping": {
+            "type": "int",
+            "default": "500"
+        },
+        "InternalSpring#": {
+            "type": "int int int int",
+            'default': '1 5 500 10',
+            "options": [
+                "1 5 500 10",
+                "8 0 500 10",
+                "7 11 500 10",
+                "11 3 500 10",
+                "0 4 500 10",
+                "4 8 500 10",
+                "9 1 500 10",
+                "2 6 500 10",
+                "10 2 500 10",
+                "3 7 500 10",
+                "5 9 500 10",
+                "6 10 500 10"
+            ]
+        },
+        "PointMass": {
+            "type": "float",
+            "default": "1"
+        },
+        "InitialParticles": {
+            "type": "string int ...",
+            "default" : 'water 10',
+            "options": [
+                "water",
+                "contaminatedwater",
+                "lava",
+                "steam",
+                "mud",
+                "drymud",
+                "wetmud",
+            ]
+        },
+        "AttachVertIndex": {
+            "type": "int",
+            "default": "6"
+        },
+        "MouthSpriteIndex": {
+            "type": "int",
+            "default": "3"
+        },
+        "CollisionFrictionWorld": {
+            "type": "float",
+            "default": "0.2"
+        },
+        "CollisionElasticityWorld": {
+            "type": "float",
+            "default": "0.05"
+        },
+        "ContaminatedSpriteIndex": {
+            "type": "bit",
+            "default": "1"
+        },
+        "SteamSpriteIndex": {
+            "type": "int",
+            "default": "2"
+        },
+        "MudSpriteIndex": {
+            "type": "int",
+            "default": "4"
+        },
+        "ConnectedSpout": {
+            "type": "string",
+            'default': 'Spout0'
+        },
+        "MaxParticles": {
+            "type": "int",
+            'default' : '70'
+        },
+        "ParticleDryness": {
+            "type": "float",
+            "default": "1.0"
+        }
+    }
+    
+    def ready_sprites(self):
+        fluidSprites = {
+            'contaminatedwater' : self.get_property('ContaminatedSpriteIndex'),
+            'steam' : self.get_property('SteamSpriteIndex'),
+            'mud' : self.get_property('MudSpriteIndex'),
+            'drymud' : self.get_property('MudSpriteIndex'),
+            'wetmud' : self.get_property('MudSpriteIndex'),
+        }
+        
+        InitialParticles = self.get_property('InitialParticles')
+        
+        try:
+            particles = numpy.array(InitialParticles, dtype = object).reshape(round(len(InitialParticles) / 2), 2)
+        except:
+            InitialParticles.append(0)
+            
+            try:
+                particles = numpy.array(InitialParticles, dtype = object).reshape(round(len(InitialParticles) / 2), 2)
+            except:
+                return
+        
+        print(f'{InitialParticles = }')
+        print(f'{particles = }')
+        
+        maxParticles = ['water', 0]
+        
+        for particle in particles:
+            if isinstance(particle[1], (float, int)) and particle[1] > maxParticles[1]:
+                maxParticles = particle
+        
+        if maxParticles[0] in fluidSprites:
+            sprite = fluidSprites[maxParticles[0]]
+            self.obj.sprites[sprite].visible = True
+
+WMWObjectPack.register_type(waterballoon)

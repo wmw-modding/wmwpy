@@ -35,7 +35,7 @@ class Sprite(GameObject):
         gamepath: str = None, assets: str = '/assets',
         baseassets : str = '/',
         properties : dict = {},
-        scale : int = 50,
+        scale : float = 50,
         HD : bool = False,
         TabHD : bool = False,
     ) -> None:
@@ -95,9 +95,11 @@ class Sprite(GameObject):
         if mode:
             if not this.SAFE_MODE:
                 this._properties = deepcopy(this.properties)
+                this._image = None
         else:
             if this.SAFE_MODE:
                 this.properties = deepcopy(this._properties)
+                this._image = None
         
         for animation in this.animations:
             animation.SAFE_MODE = mode
@@ -111,6 +113,11 @@ class Sprite(GameObject):
         Returns:
             PIL.Image.Image: PIL Image
         """
+        if this.SAFE_MODE:
+            if hasattr(this, '_image'):
+                if isinstance(this._image, Image.Image):
+                    return this._image.copy()
+        
         image = this.animation.image.copy()
         gridSize = numpy.array(this.gridSize)
         size = gridSize * this.scale
@@ -119,7 +126,14 @@ class Sprite(GameObject):
         
         image = image.rotate(this.angle, Image.BILINEAR, expand=True)
         
+        this._image = image
         return image
+    @image.setter
+    def image(this, image : Image.Image):
+        if isinstance(image, Image.Image):
+            this._image = image
+        else:
+            raise TypeError('image must be instance of PIL.Image.Image')
     
     @property
     def animation(this) -> 'Sprite.Animation':
@@ -939,14 +953,14 @@ class Sprite(GameObject):
                 image = image.rotate(this.angleDeg, expand = True)
                 
                 # for color in this.color_filters:
-                if len(this.color_filter) >= 3:
-                    try:
-                        image = imageprocessing.recolor_image(
-                            image,
-                            this.color_filter
-                        )
-                    except:
-                        pass
+                # if len(this.color_filter) >= 3:
+                #     try:
+                #         image = imageprocessing.recolor_image(
+                #             image,
+                #             this.color_filter
+                #         )
+                #     except:
+                #         pass
                     # image.show()
                 
                 

@@ -17,8 +17,8 @@ class Type():
     
     VALUE_TYPES = ['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...']
     
-    def __init__(self) -> None:
-        pass
+    def __init__(self, obj : 'Object') -> None:
+        self.obj = obj
     
     def split_property_num(string) -> tuple[str,str]:
         if not isinstance(string, str):
@@ -28,13 +28,20 @@ class Type():
         tail = string[len(head):]
         return head, tail
     
-    def ready_sprites(
-        self,
-        obj : 'Object',
-    ):
+    def ready_sprites(self,):
         pass
     
-    def value(self, value : str, type : typing.Literal['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...'] = 'string'):
+    def value(
+        self,
+        value : str, type : typing.Literal[
+            'string',
+            'float',
+            'int',
+            'bit',
+            'Vector2',
+            'Vector2,...',
+        ] = 'string',
+    ):
         def getint(value : str):
             try:
                 try:
@@ -84,8 +91,8 @@ class Type():
         
         return types.get(type, types['string'])(value)
     
-    def ready_properties(self, obj : 'Object', include : list[str] = []):
-        properties = deepcopy(obj.properties)
+    def ready_properties(self, include : list[str] = []):
+        properties = deepcopy(self.obj.properties)
         
         include += ['Type', 'Angle', 'Filename']
         
@@ -105,20 +112,19 @@ class Type():
                     if prop == property:
                         continue
             
-            if property in obj.defaultProperties:
-                if obj.properties[property] == obj.defaultProperties[property]:
-                    del obj.properties[property]
+            if property in self.obj.defaultProperties:
+                if self.obj.properties[property] == self.obj.defaultProperties[property]:
+                    del self.obj.properties[property]
         
-        return obj.properties
+        return self.obj.properties
 
     def get_property(
         self,
         property : str,
-        obj : 'Object',
     ):
-        value = obj.properties.get(
+        value = self.obj.properties.get(
             property,
-            obj.defaultProperties.get(
+            self.obj.defaultProperties.get(
                 property,
                 self.PROPERTIES.get(
                     property,

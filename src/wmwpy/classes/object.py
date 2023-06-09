@@ -91,6 +91,7 @@ class Object(GameObject):
         
         this.readXML()
         
+        this._properties = deepcopy(this.properties)
         this.SAFE_MODE = False
         
         if isinstance(file, File):
@@ -164,12 +165,12 @@ class Object(GameObject):
         if not isinstance(mode, bool):
             raise TypeError('mode must be True or False')
         
-            if mode:
-                if not hasattr(this, '_SAFE_MODE') or not this.SAFE_MODE:
-                    this._properties = deepcopy(this.properties)
-            else:
-                if not hasattr(this, '_SAFE_MODE') or this.SAFE_MODE:
-                    this.properties = deepcopy(this._properties)
+        if mode:
+            if not hasattr(this, '_SAFE_MODE') or not this.SAFE_MODE:
+                this._properties = deepcopy(this.properties)
+        else:
+            if not hasattr(this, '_SAFE_MODE') or this.SAFE_MODE:
+                this.properties = deepcopy(this._properties)
         
         for sprite in this.sprites:
             sprite.SAFE_MODE = mode
@@ -177,7 +178,7 @@ class Object(GameObject):
         
     @property
     def Type(this):
-        return this.object_pack.get_type(this.type)
+        return this.object_pack.get_type(this.type, this)
     
     @property
     def background(this) -> Image.Image:
@@ -190,7 +191,7 @@ class Object(GameObject):
         
         type = this.Type
         if type != None:
-            type.ready_sprites(this)
+            type.ready_sprites()
         
         this.getOffset()
         
@@ -242,7 +243,7 @@ class Object(GameObject):
         
         type = this.Type
         if type != None:
-            type.ready_sprites(this)
+            type.ready_sprites()
         
         this.getOffset()
         image = Image.new('RGBA', tuple(this.size * this.scale), (0,0,0,0))
@@ -480,7 +481,7 @@ class Object(GameObject):
         type = this.Type
         
         if type != None:
-            type.ready_properties(this)
+            type.ready_properties()
         
         # for property in properties:
         #     if property in this.defaultProperties:
