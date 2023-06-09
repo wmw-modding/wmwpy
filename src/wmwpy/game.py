@@ -47,6 +47,7 @@ class Game():
         this.baseassets = baseassets or this._BASEASSETS
         this.platform = platform
         
+        this.objectpack = object_packs.get_object_pack(this.game)
         
         this.updateFilesystem(load_callback = load_callback)
         
@@ -170,7 +171,7 @@ class Game():
             object = objects.get(object)
         
         if object_pack == None:
-            object_pack = object_packs.get_object_pack(this.game)
+            object_pack = this.objectpack
         
         obj = Object(
             object,
