@@ -60,9 +60,6 @@ class yswitch(Type):
         
         ToggleSpriteIndex = self.get_property('ToggleSpriteIndex')
         
-        # print(f'YSwitchPosition: {YSwitchPosition}')
-        # print(f'ToggleSpriteIndex: {ToggleSpriteIndex}')
-        
         if YSwitchPosition != 1:
             YSwitchPosition = 0
         
@@ -563,8 +560,6 @@ class star(Type):
                 )
             except:
                 pass
-            
-            self.obj.sprites[2].animation.frames[0].color_filter = color
 
 WMWObjectPack.register_type(star)
 
