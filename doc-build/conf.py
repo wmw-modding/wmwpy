@@ -21,13 +21,50 @@ release = wmwpy.__version__
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+import commonmark
+
+import re
+import commonmark
+
+py_attr_re = re.compile(r"\:py\:\w+\:(``[^:`]+``)")
+
+def docstring(app, what, name, obj, options, lines):
+    md  = '\n'.join(lines)
+    ast = commonmark.Parser().parse(md)
+    rst = commonmark.ReStructuredTextRenderer().render(ast)
+    lines.clear()
+    lines += rst.splitlines()
+
+    for i, line in enumerate(lines):
+        while True:
+            match = py_attr_re.search(line)
+            if match is None:
+                break 
+
+            start, end = match.span(1)
+            line_start = line[:start]
+            line_end = line[end:]
+            line_modify = line[start:end]
+            line = line_start + line_modify[1:-1] + line_end
+        lines[i] = line
+
+def setup(app):
+    app.connect('autodoc-process-docstring', docstring)
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
+    'myst_parser',
 ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

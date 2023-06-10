@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   wmwpy.utils.Types
+   wmwpy.utils.file_types
 
 Submodules
 ----------
@@ -20,6 +20,14 @@ wmwpy.utils.XMLTools module
    :undoc-members:
    :show-inheritance:
 
+wmwpy.utils.color module
+------------------------
+
+.. automodule:: wmwpy.utils.color
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 wmwpy.utils.filesystem module
 -----------------------------
 
@@ -28,10 +36,42 @@ wmwpy.utils.filesystem module
    :undoc-members:
    :show-inheritance:
 
+wmwpy.utils.gif module
+----------------------
+
+.. automodule:: wmwpy.utils.gif
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.utils.imageprocessing module
+----------------------------------
+
+.. automodule:: wmwpy.utils.imageprocessing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.utils.logging\_utils module
+---------------------------------
+
+.. automodule:: wmwpy.utils.logging_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 wmwpy.utils.path module
 -----------------------
 
 .. automodule:: wmwpy.utils.path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.utils.rotate module
+-------------------------
+
+.. automodule:: wmwpy.utils.rotate
    :members:
    :undoc-members:
    :show-inheritance:

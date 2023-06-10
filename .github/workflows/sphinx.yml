@@ -14,8 +14,7 @@ jobs:
     - name: Install dependencies
       run:
         sudo apt-get install python3-tk -y &&
-        pip install -U sphinx &&
-        pip install -r requirements.txt
+        pip install -r doc-build/requirements.txt
     
     - name: Upload artifacts
       run:

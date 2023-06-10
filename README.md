@@ -331,7 +331,7 @@ py -m build
 # Building docs
  To build the docs, make sure sphinx is installed
  ```
-pip install -U sphinx
+pip install -r doc-build/requirements.txt
  ```
 
  You then need to run
