@@ -5,6 +5,22 @@ from ..utils.filesystem import *
 
 
 class Location(GameObject):
+    """Location object for location xml files in WMW2.
+    
+    Attributes:
+        backgrounds (list[dict[str,str]]): List of backgrounds.
+        levels (list[dict[str,str]]): List of levels.
+        widgets (list[dict[str,str]]): List of widgets.
+        sprites (list[dict[str,str]]): List of sprites (if any).
+        armatures (list[dict[str,str]]): List of Armatures.
+        waterPaths (list[dict[str,str]]): List of WaterPaths.
+        atlases (list[dict[str,str]]): List of Atlases.
+        expertAtlases (list[dict[str,str]]): List of ExpertAtlases.
+        transitionPiece (list[dict[str,str]]): List of TransitionPieces.
+        expertModeAssets (list[dict[str,str]]): List of ExpertModeAssets.
+        audios (list[dict[str,str]]): List of Audios.
+    """
+    
     def __init__(
         this,
         file : File | str | bytes,
@@ -13,6 +29,15 @@ class Location(GameObject):
         assets: str = '/assets',
         baseassets: str = '/',
     ) -> None:
+        """Location in WMW2.
+
+        Args:
+            file (File | str | bytes): XML file for the Location.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.
+        """
         super().__init__(filesystem, gamepath, assets, baseassets)
         
         this.file = super().get_file(file)
@@ -34,6 +59,8 @@ class Location(GameObject):
         this.read()
     
     def read(this):
+        """Read the XML file.
+        """
         if this.xml == None:
             return
         

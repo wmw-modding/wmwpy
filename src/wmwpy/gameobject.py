@@ -19,7 +19,7 @@ class GameObject():
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
-            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.
         """
         this.gamepath = gamepath
         this.assets = assets

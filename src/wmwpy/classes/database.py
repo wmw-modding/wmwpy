@@ -12,6 +12,15 @@ class Database(GameObject):
         assets: str = '/assets',
         baseassets: str = '/',
     ) -> None:
+        """Game database object, which contains an sqlite3 database.
+
+        Args:
+            database (str | bytes | File): The database file.
+            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
+            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
+            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+        """
         super().__init__(filesystem, gamepath, assets, baseassets)
         
         this.connection = None
@@ -32,6 +41,11 @@ class Database(GameObject):
     
     @property
     def connection(this) -> sqlite3.Connection:
+        """The sqlite3 python database object.
+
+        Returns:
+            sqlite3.Connection: sqlite3 database connection
+        """
         return this._connection
     @connection.setter
     def connection(this, connection : sqlite3.Connection):
@@ -46,7 +60,15 @@ class Database(GameObject):
         this._connection = connection
         this.cursor = this._connection.cursor()
         
-    def export(this, filename : str = None):
+    def export(this, filename : str = None) -> bytes:
+        """Export the database into the filesystem.
+
+        Args:
+            filename (str, optional): The filename of the database. Defaults to None.
+
+        Returns:
+            bytes: Output file in bytes.
+        """
         if filename == None:
             filename = this.filename
         else:
@@ -59,7 +81,15 @@ class Database(GameObject):
         
         data = file.write(this.connection)
         
-        return data
+        return file.rawdata.getvalue()
 
     def execute(this, *args):
+        """Execute sql on the database. See sqlite3.Cursor.execute for paramaters.
+
+        Args:
+            The arguments for sqlite3.Cursor.execute()
+
+        Returns:
+            sqlite3.Cursor: The sqlite3 Cursor object.
+        """
         return this.cursor.execute(*args)

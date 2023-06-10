@@ -38,9 +38,10 @@ class Imagelist(GameObject):
             filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.
             gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
             assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
-            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.
             HD (bool, optional): Use HD images. Defaults to False.
             TabHD (bool, optional): Use TabHD images. Defaults to False.
+            save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.
         
         Raises:
             FileNotFoundError: Filesystem is not usable and no gamepath.
@@ -92,6 +93,9 @@ class Imagelist(GameObject):
     
     def read(this, save_images : bool = False):
         """Read the imagelist xml.
+
+        Args:
+            save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.
         """
         this.format = this.Format.IMAGELIST
         
@@ -123,6 +127,12 @@ class Imagelist(GameObject):
             this.pages.append(page)
     
     def update(this, gap : tuple[int,int] = (1,1), auto_fit = False):
+        """Update the atlas image.
+
+        Args:
+            gap (tuple[int,int], optional): The gap between images. Defaults to (1,1).
+            auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
+        """
         for page in this.pages:
             page.update(gap = gap, auto_fit = auto_fit)
     
@@ -180,11 +190,11 @@ class Imagelist(GameObject):
         
         if this.format == this.Format.IMAGELIST:
             page = this.pages[0]
-            xml = page.getXML(type = this.format)
+            xml = page.getXML(format = this.format)
         else:
             xml = etree.Element('Imagelist')
             for page in this.pages:
-                xml.append(page.getXML(type = this.format))
+                xml.append(page.getXML(format = this.format))
             
         xmloutput = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
         
@@ -236,8 +246,31 @@ class Imagelist(GameObject):
         image : PIL.Image.Image,
         properties : dict = {},
         page : int | str = 0,
+        replace = False
     ):
-        pass
+        """Add image to imagelist.
+
+        Args:
+            name (str): Name of image file used in-game.
+            image (PIL.Image.Image): Image to use.
+            properties (dict, optional): Additional properties for image. Defaults to {}.
+            replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.
+
+        Raises:
+            NameError: Image already exists.
+        
+        Returns:
+            Imagelist.Page.Image: Resulting imagelist image.
+        """
+        page : Imagelist.Page = this.getPage(page)
+        
+        if page != None:
+            return page.add(
+                name = name,
+                image = image,
+                properties = properties,
+                replace = replace,
+            )
     
     def get(this, name : str):
         """Get image from imagelist.
@@ -263,7 +296,18 @@ class Imagelist(GameObject):
         for page in this.pages:
             page.removeImageFiles()
     
-    def getPage(this, id = 0):
+    def getPage(this, id : int | str = 0) -> 'Imagelist.Page':
+        """Get the page with this id / index.
+
+        Args:
+            id (int | str, optional): The id or index of the page. Defaults to 0.
+
+        Raises:
+            TypeError: id must be int or str
+
+        Returns:
+            Imagelist.Page: The page that has the id or index.
+        """
         if isinstance(id, (int, float)):
             id = int(id)
             return this.pages[id]
@@ -291,6 +335,7 @@ class Imagelist(GameObject):
                 gamepath (str, optional): Gamepath used if filesystem is not specified. Defaults to None.
                 assets (str, optional): Assets path relative to gamepath. Only used if filesystem is not specified. Defaults to '/assets'.
                 HD (bool, optional): Use HD graphics. Defaults to False.
+                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.
             """
             super().__init__(filesystem, gamepath, assets)
             
@@ -307,6 +352,9 @@ class Imagelist(GameObject):
         
         def read(this, save_images : bool = False):
             """Read xml.
+            
+            Args:
+                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.
             """
             this.properties = deepcopy(this.xml.attrib)
     
@@ -354,7 +402,7 @@ class Imagelist(GameObject):
             this.properties['textureBasePath'] = path
         
         @property
-        def file(this):
+        def file(this) -> str:
             """The path to the atlas file to use in this ImageList
 
             Returns:
@@ -407,6 +455,8 @@ class Imagelist(GameObject):
     
         def getImages(this, save_images = False):
             """Get images from xml.
+            Args:
+                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.
             """
             for element in this.xml:
                 if element is etree.Comment:
@@ -439,8 +489,8 @@ class Imagelist(GameObject):
                 name : str,
                 image : PIL.Image.Image,
                 properties : dict = {},
-                replace = False
-            ):
+                replace = False,
+            ) -> 'Imagelist.Page.Image':
             """Add image to imagelist.
 
             Args:
@@ -451,6 +501,9 @@ class Imagelist(GameObject):
 
             Raises:
                 NameError: Image already exists.
+            
+            Returns:
+                Imagelist.Page.Image: Resulting imagelist image.
             """
             if name in this.images:
                 # print(f'Warning: "{name}" already in imagelist.')
@@ -475,6 +528,12 @@ class Imagelist(GameObject):
             return texture
         
         def update(this, gap : tuple[int,int] = (1,1), auto_fit = False):
+            """Update the atlas image.
+
+            Args:
+                gap (tuple[int,int], optional): The gap between images. Defaults to (1,1).
+                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
+            """
             this._getRects(gap = gap, auto_fit = auto_fit)
             this._updateAtlas()
             
@@ -486,6 +545,7 @@ class Imagelist(GameObject):
             Args:
                 gap (tuple, optional): Gap between each image. Defaults to (1,1).
                 filename (str, optional): Filename of image. Defaults to `file` property.
+                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
                 format (str, optional): Format to save image as. Defaults to 'webp'.
 
             Returns:
@@ -508,12 +568,12 @@ class Imagelist(GameObject):
             
             return this.atlas
         
-        def getXML(this, filename = None, type : int = 1):
+        def getXML(this, filename = None, format : int = 1):
             """Generates the xml for the page / imagelist.
 
             Args:
                 filename (str, optional): Name of image. Defaults to file property.
-                type (int, optional): Type of file. 0 for `Page`, 1 for `Imagelist`. Defaults to 1.
+                format (int, optional): Format of file. 0 for `Imagelist`, 1 for `Page`. Defaults to 1.
 
             Returns:
                 lxml.etree.Element: lxml Element.
@@ -521,7 +581,7 @@ class Imagelist(GameObject):
             if filename != None:
                 this.file = filename
             
-            tag = 'Page' if type else 'Imagelist'
+            tag = 'Page' if format else 'Imagelist'
             
             xml : etree.ElementBase = etree.Element(tag, **this.properties)
             
@@ -543,7 +603,9 @@ class Imagelist(GameObject):
 
             Args:
                 gap (tuple, optional): Gap between images. Defaults to (1,1).
+                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
             """
+
             x, y = gap
             maxheight = maxwidth = 0
             row = column = 0
@@ -579,7 +641,12 @@ class Imagelist(GameObject):
                 this.imgSize = (this.imgSize[0], y)
             
                 
-        def _updateAtlas(this):
+        def _updateAtlas(this) -> PIL.Image.Image:
+            """Update the atlas image.
+
+            Returns:
+                PIL.Image.Image: PIL Image.
+            """
             atlas : PIL.Image.Image = PIL.Image.new('RGBA', this.imgSize)
             
             for image in this.images:
@@ -610,6 +677,7 @@ class Imagelist(GameObject):
                     gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.
                     assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to '/assets'.
                     baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
+                    save_image (bool, optional): Save the current image in the filesystem on load. Defaults to False.
                 """
                 super().__init__(filesystem, gamepath, assets, baseassets)
 
@@ -713,6 +781,11 @@ class Imagelist(GameObject):
             
             @property
             def image(this):
+                """The resulting PIL Image.
+
+                Returns:
+                    PIL.Image.Image: PIL Image.
+                """
                 if this._image == None:
                     this.getImage()
                 

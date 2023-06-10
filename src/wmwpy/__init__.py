@@ -29,12 +29,12 @@ def load(
     Args:
         gamepath (str): Folder to extracted game.
         platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
-        game (str, optional): Which game is being loaded. A full list of games is in the `gametemplate.GAMES` variable. Defaults to 'WMW'. 
+        game (str, optional): Which game is being loaded. A full list of games is in `gametemplate.GAMES`. Defaults to 'WMW'. 
         assets (str, optional): Relative path to assets folder. Defaults to '/assets'.
         db (str, optional): Relative path to database file from assets folder. Defaults to '/Data/water.db'.
-        profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`
-        baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
-        load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
+        profile (str, optional): Relative path to profile file in WMW2. Defaults to `None`.
+        baseassets (str, optional): Base assets path within the assets folder, e.g. '/perry/' in wmp. Defaults to '/'.
+        load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to `None`.
     """
     
     game = game.upper()
@@ -61,12 +61,3 @@ def load(
         load_callback = load_callback,
         baseassets = baseassets,
     )
-    # except:
-    #     return Game(
-    #         gamepath = gamepath,
-    #         assets = assets,
-    #         db = db,
-    #         profile = profile,
-    #         load_callback = load_callback,
-    #         baseassets = baseassets,
-    #     )

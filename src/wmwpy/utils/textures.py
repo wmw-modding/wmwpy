@@ -66,10 +66,23 @@ class Texture(GameObject):
             raise TypeError('image must be PIL.Image.Image, Waltex, or filesystem.File.')
         
     @property
-    def size(this):
+    def size(this) -> tuple[int,int]:
+        """The size of the image.
+
+        Returns:
+            tuple[int,int]: (width,height)
+        """
         return this.image.size
 
-    def save(this, filename = None):
+    def save(this, filename : str = None) -> File:
+        """Save the image to the filesystem.
+
+        Args:
+            filename (str, optional): Path to save the image to. Defaults to None.
+
+        Returns:
+            File: wmwpy File object.
+        """
         if filename == None:
             filename = this.filename
         else:
@@ -95,6 +108,7 @@ class HDFile(GameObject):
         assets: str = '/assets',
         baseassets: str = '/',
     ) -> None:
+        
         super().__init__(filesystem, gamepath, assets, baseassets)
         
         if isinstance(file, File):

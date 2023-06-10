@@ -10,6 +10,19 @@ from .classes import *
 from . import object_packs
 
 class Game():
+    """The wmwpy Game object.
+
+    Attributes:
+        gamepath (str): The path to the game directory on disk.
+        assets (str): The relative path from the game directory to the assets folder (e.g. '/assets').
+        baseassets (str): The base assets path inside the assets folder, e.g. '/Perry' in WMP.
+        db (str): The path to the database file.
+        profile (str): The path to the profile in WMW2.
+        platform (Literal['android','ios']): The platform this extracted game is on.
+        object_pack (ObjectPack): The ObjectPack for this game.
+    
+    """
+    
     _DB = '/Data/water.db'
     _BASEASSETS = '/'
     _PROFILE = None
@@ -18,7 +31,8 @@ class Game():
     
     def __init__(
         this,
-        gamepath : str, assets : str = '/assets',
+        gamepath : str,
+        assets : str = '/assets',
         db : str = '/Data/water.db',
         profile : str = None,
         baseassets : str = '/',
@@ -47,11 +61,16 @@ class Game():
         this.baseassets = baseassets or this._BASEASSETS
         this.platform = platform
         
-        this.objectpack = object_packs.get_object_pack(this.game)
+        this.object_pack = object_packs.get_object_pack(this.game)
         
         this.updateFilesystem(load_callback = load_callback)
         
     def updateFilesystem(this, load_callback : typing.Callable[[int, str, int], typing.Any] = None):
+        """Update the current filesystem.
+
+        Args:
+            load_callback (Callable[[int, str, int], typing.Any], optional): A callback to be ran while loading the filesystem. Defaults to None.
+        """
         this.filesystem = Filesystem(this.gamepath, this.assets)
         this.filesystem.getAssets(load_callback = load_callback)
     
@@ -76,14 +95,22 @@ class Game():
         ignore_errors : bool = False,
         HD = False,
         TabHD = False,
-        object_pack = None,
+        object_pack : object_packs.ObjectPack = None,
     ):
-        """
-        Load level
+        """Load Level
 
         Args:
+            this (_type_): _description_
             xmlPath (str, optional): Path to xml file. Defaults to None.
             imagePath (str, optional): Path to image file. Defaults to None.
+            load_callback (Callable[[int, str, int], typing.Any], optional): A callback function to be called while loading the level. Defaults to None.
+            ignore_errors (bool, optional): Whether to ignore errors while loading the level. Defaults to False.
+            HD (bool, optional): Use HD images. Defaults to False.
+            TabHD (bool, optional): Use TabHD images. Defaults to False.
+            object_pack (classes.objectpack.pack.ObjectPack, optional): The object pack to use. Defaults to the game object pack.
+
+        Returns:
+            classes.level.Level: wmwpy Level object.
         """
         logging.debug(f'Game: xml input: {xmlPath}')
         
@@ -124,7 +151,7 @@ class Game():
             logging.debug(f'Game: xml path: {xml.path}')
         
         if object_pack == None:
-            object_pack = object_packs.get_object_pack(this.game)
+            object_pack = this.object_pack
         
         level = Level(
             xml = xml,
@@ -158,6 +185,7 @@ class Game():
             object (str): Path to `.hs` object file.
             HD (bool, optional): Use HD images. Defaults to False.
             TabHD (bool, optional): Use TabHD images. Defaults to False.
+            object_pack (classes.objectpack.pack.ObjectPack, optional): The object pack to use. Defaults to the game object pack.
 
         Returns:
             classes.object.Object: Where's My Water? object.
@@ -171,7 +199,7 @@ class Game():
             object = objects.get(object)
         
         if object_pack == None:
-            object_pack = this.objectpack
+            object_pack = this.object_pack
         
         obj = Object(
             object,
@@ -203,6 +231,7 @@ class Game():
             imagelist (str): Path to `.imagelist` file. Defaults to None
             HD (bool, optional): Use HD images. Defaults to False.
             TabHD (bool, optional): Use TabHD images. Defaults to False.
+            save_images (bool, optional): Whether to save all the images in the filesystem. Note: it can take longer to load if this is True. Defaults to False.
 
         Returns:
             classes.imagelist.Imagelist: Imagelist object.
@@ -304,7 +333,15 @@ class Game():
     def Layout(this, layout : str):
         raise NotImplementedError('load layout is not implemented yet.')
     
-    def Location(this, location : str):
+    def Location(this, location : str) -> Location:
+        """Load Location in `WMW2`
+
+        Args:
+            location (str): The path to the location xml file.
+
+        Returns:
+            Location: wmwpy Location object.
+        """
         locations = this.filesystem.get(path.joinPath(this.baseassets, '/Locations'))
         if locations == None:
             locations = this.filesystem
@@ -321,7 +358,15 @@ class Game():
         )
         
     
-    def Database(this, path : str = None):
+    def Database(this, path : str = None) -> Database:
+        """Load the game database.
+
+        Args:
+            path (str, optional): Path to the database file. Defaults to `Game.db`.
+
+        Returns:
+            Database: Game Database object.
+        """
         if path == None:
             path = this.db
         
@@ -329,7 +374,11 @@ class Game():
         
         return Database(file)
     
-    def FileManifest(this, writeFile : bool = True, filename : str = '/FileManifest.txt'):
+    def FileManifest(
+        this,
+        writeFile : bool = True,
+        filename : str = '/FileManifest.txt',
+    ):
         """Generate the `FileManifest.txt` file needed for some games, such as WMM. This just generates a text file with the paths to every file in the `assets` folder (which includes the `FileManifest.txt` file).
 
         Args:

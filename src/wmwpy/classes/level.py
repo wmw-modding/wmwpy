@@ -22,6 +22,18 @@ from ..gameobject import GameObject
 from .objectpack.pack import ObjectPack
 
 class Level(GameObject):
+    """
+    The Level object.
+    
+    Attributes:
+        HD (bool): Using HD graphics
+        TabHD (bool): Using TabHD graphics.
+        object_pack (ObjectPack): The ObjectPack that is being used for all the objects.
+        objects (list[Object]): List of Objects currently in this level.
+        properties (dict[str,str]:) All the Level properties.
+        challenges (list[Level.Challenge]): List of WMW2 challenges in this level.
+        room (tuple[float,float]): The room element in WMW levels. I have no idea what this does, but it still should be kept, even though it doesn't actually do anything.
+    """
     XML_TEMPLATE = b"""<?xml version="1.0"?>
     <Objects>
     </Objects>

@@ -26,6 +26,24 @@ if typing.TYPE_CHECKING:
 
 from ..utils.XMLTools import strbool
 class Object(GameObject):
+    """wmwpy Object.
+    
+    Attributes:
+        HD (bool): Using HD images.
+        TabHD (bool): Using TabHD images.
+        sprites (list[Sprite]): List of sprites.
+        shapes (list[Shape]): List of Shapes.
+        UVs (list[tuple[int,int]]): List of UVs (on the balloon object).
+        VertIndices (list[int]): List of VertIndices (on the balloon object).
+        defaultProperties (dict[str,str]): Dictionary of the object default properties (the ones in the object .hs files).
+        properties (dict[str,str]): Dictionary of the object properties (the ones in the level xml).
+        name (str): The object name.
+        id (int): The object id.
+        frame (int): The current animation frame.
+        object_pack (ObjectPack): The game Object Pack.
+        scale (float): The image scale.
+    """
+    
     def __init__(
         this,
         file : str | bytes | File,
@@ -55,6 +73,7 @@ class Object(GameObject):
             scale (int, optional): The image scale. Defaults to 10.
             HD (bool, optional): Use HD images. Defaults to False.
             TabHD (bool, optional): Use TabHD images. Defaults to False.
+            object_pack (ObjectPack, optional): The game Object Pack to use in this object. If None, it will not try to use any object types. Defaults to None.
         """
         
         super().__init__(filesystem, gamepath, assets, baseassets)
@@ -100,7 +119,12 @@ class Object(GameObject):
             this.filename = file.path
             
     @property
-    def frame(this):
+    def frame(this) -> int:
+        """The current animation frame.
+
+        Returns:
+            int: Current frame.
+        """
         return this._frame
     @frame.setter
     def frame(this, value : int):
@@ -155,7 +179,12 @@ class Object(GameObject):
     
     
     @property
-    def SAFE_MODE(this):
+    def SAFE_MODE(this) -> bool:
+        """Safe mode allows the properties to be modified without carrying onto the level xml.
+
+        Returns:
+            bool: The current state.
+        """
         if not hasattr(this, '_SAFE_MODE'):
             this._SAFE_MODE = False
         
@@ -476,10 +505,8 @@ class Object(GameObject):
         return output
     
     def updateProperties(this):
-        """Update properties. Deletes any properties that are the same as defaultProperties.
+        """Update properties. Deletes any properties that are the same as defaultProperties, unless specified by the object type in the ObjectPack.
         """
-        properties = list(this.properties.keys())
-        
         type = this.Type
         
         if type != None:
@@ -602,6 +629,12 @@ class Object(GameObject):
                 this.VertIndices.append(int(index))
     
     def getProperties(this):
+        """Get the object properties.
+
+        Returns:
+            dict[str,str]: The properties dictionary.
+        """
+        
         # for prop in this.defaultProperties:
         #     if prop not in this.properties:
         #         this.properties[prop] = this.defaultProperties[prop]
@@ -736,7 +769,12 @@ class Object(GameObject):
             save_file = filename,
         )
     
-    def copy(this):
+    def copy(this) -> Object:
+        """Creates a copy of this object (aka, get the object again).
+
+        Returns:
+            Object: New Object.
+        """
         return Object(
             this.file,
             filesystem = this.filesystem,
@@ -749,6 +787,11 @@ class Object(GameObject):
         )
 
 class Shape(GameObject):
+    """Shape object for wmwpy Object.
+
+    Attributes:
+        points (list[tuple[float,float]]): List of shape points.
+    """
     def __init__(this, xml : etree.ElementBase = None) -> None:
         """Shape for Object
 
