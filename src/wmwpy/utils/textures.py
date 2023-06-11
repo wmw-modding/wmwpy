@@ -49,7 +49,15 @@ class Texture(GameObject):
             else:
                 this.filename = this._file.path
             
-            this._file = getHDFile(this._file)
+            this._file = getHDFile(
+                this._file,
+                HD = this.HD,
+                TabHD = this.TabHD,
+                filesystem = this.filesystem,
+                gamepath = this.gamepath,
+                assets = this.assets,
+                baseassets = this.baseassets,
+            )
         else:
             this.filename = ''
         
@@ -61,6 +69,9 @@ class Texture(GameObject):
         elif isinstance(this._file, Image.Image):
             this.image = this._file
         elif isinstance(this._file, File):
+            this.image = this._file.read()
+        elif isinstance(this._file, str):
+            this._file = this.filesystem.get(this._file)
             this.image = this._file.read()
         else:
             raise TypeError('image must be PIL.Image.Image, Waltex, or filesystem.File.')
@@ -108,7 +119,6 @@ class HDFile(GameObject):
         assets: str = '/assets',
         baseassets: str = '/',
     ) -> None:
-        
         super().__init__(filesystem, gamepath, assets, baseassets)
         
         if isinstance(file, File):
@@ -133,6 +143,8 @@ class HDFile(GameObject):
             if this.filesystem.exists(filename):
                 return filename
         
+        this.TabHD = False
+        
         if this.HD:
             filename = f'{name}-HD{extension}'
             if this.filesystem == None:
@@ -140,6 +152,8 @@ class HDFile(GameObject):
 
             if this.filesystem.exists(filename):
                 return filename
+        
+        this.HD = False
         
         return this.file
 

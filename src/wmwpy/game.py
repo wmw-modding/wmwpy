@@ -242,6 +242,11 @@ class Game():
             textures = this.filesystem
         
         if not isinstance(imagelist, File):
+            if isinstance(imagelist, str):
+                split = os.path.splitext(imagelist)
+                if split[1] == '':
+                    imagelist = ''.join([split[0], '.imagelist'])
+                
             imagelist = textures.get(imagelist)
         
         imagelistObject = Imagelist(
@@ -251,10 +256,6 @@ class Game():
             TabHD = TabHD,
             save_images = save_images,
         )
-        if isinstance(imagelist, File):
-            imagelistObject.filename = imagelist.path
-        else:
-            imagelistObject.filename = imagelist
         
         return imagelistObject
     

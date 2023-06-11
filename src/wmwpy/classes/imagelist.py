@@ -1,4 +1,4 @@
-from ..utils.textures import getHDFile, getTextueSettings, getTexture
+from ..utils.textures import getHDFile, HDFile, getTextueSettings, getTexture
 from ..utils.filesystem import *
 from ..utils import joinPath, Texture
 from ..gameobject import GameObject
@@ -54,7 +54,7 @@ class Imagelist(GameObject):
         
         if isinstance(file, str):
             this.filename = file
-            file = getHDFile(
+            newFile = HDFile(
                 file,
                 HD = this.HD,
                 TabHD = this.TabHD,
@@ -63,9 +63,13 @@ class Imagelist(GameObject):
                 assets = this.assets,
                 baseassets = this.baseassets,
             )
+
+            file = newFile.filename
+            this.HD = newFile.HD
+            this.TabHD = newFile.TabHD
         elif isinstance(file, File):
             this.filename = file.path
-            file = getHDFile(
+            newFile = HDFile(
                 file.path,
                 HD = this.HD,
                 TabHD = this.TabHD,
@@ -74,6 +78,10 @@ class Imagelist(GameObject):
                 assets = this.assets,
                 baseassets = this.baseassets,
             )
+
+            file = newFile.filename
+            this.HD = newFile.HD
+            this.TabHD = newFile.TabHD
         else:
             this.filename = ''
         
@@ -82,6 +90,9 @@ class Imagelist(GameObject):
         
         this.file = super().get_file(file, template = this.TEMPLATE)
 
+        if isinstance(this.file, io.BytesIO):
+            this.file.seek(0)
+        
         this.xml : etree.ElementBase = etree.parse(this.file).getroot()
         
         this.pages : list[Imagelist.Page] = []
@@ -163,6 +174,13 @@ class Imagelist(GameObject):
         else:
             this.filename = path
         
+        # if path != None:
+        #     path = getHDFile(
+        #         path,
+        #         HD = this.HD,
+        #         TabHD = this.TabHD,
+        #     )
+        
         if removeImageFiles:
             this.removeImageFiles()
         
@@ -177,7 +195,7 @@ class Imagelist(GameObject):
                         filename = f'{filename}_split_{str(index)}.{imageFormat}'
                         
                         page.file = filename
-                        page.exportAtlas(filename = getHDFile(filename, this.HD, this.TabHD), format = imageFormat)
+                        page.exportAtlas(filename = filename, format = imageFormat)
                         
                 else:
                     page = this.pages[0]
@@ -186,7 +204,7 @@ class Imagelist(GameObject):
                     filename = f'{filename}.{imageFormat}'
                     
                     page.file = filename
-                    page.exportAtlas(filename = getHDFile(filename, this.HD, this.TabHD), format = imageFormat)
+                    page.exportAtlas(filename = filename, format = imageFormat)
         
         if this.format == this.Format.IMAGELIST:
             page = this.pages[0]
@@ -199,6 +217,8 @@ class Imagelist(GameObject):
         xmloutput = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='utf-8')
         
         if path != None:
+            path = getHDFile(path, HD = this.HD, TabHD = this.TabHD)
+            
             if (file := this.filesystem.get(path)) != None:
                 if isinstance(file, Folder):
                     raise TypeError(f'Path {path} is not a file.')
@@ -379,7 +399,7 @@ class Imagelist(GameObject):
         @imgSize.setter
         def imgSize(this, size : tuple | list | str):
             if isinstance(size, (list, tuple)):
-                this.properties['imgSize'] = ''.join([str(a) for a in size])
+                this.properties['imgSize'] = ' '.join([str(a) for a in size])
             elif isinstance(size, str):
                 this.properties['imgSize'] = size
             else:
@@ -409,14 +429,7 @@ class Imagelist(GameObject):
                 str: Path to atlas file.
             """
             if 'file' in this.properties:
-                return getHDFile(
-                    this.properties['file'],
-                    HD = this.HD,
-                    TabHD = this.TabHD,
-                    filesystem = this.filesystem,
-                    assets = this.assets,
-                    baseassets = this.baseassets,
-                )
+                return this.properties['file']
             else:
                 return ''
         @file.setter
@@ -447,10 +460,16 @@ class Imagelist(GameObject):
             if this.file in ['', None]:
                 image = Texture(PIL.Image.new('RGBA', this.imgSize))
                 this.atlas = image.image.copy()
-                
-            elif this.filesystem.exists(this.file):
-                file = this.filesystem.get(this.file)
-                image = Texture(file.read())
+            else:
+                image = Texture(
+                    this.file,
+                    HD = this.HD,
+                    TabHD = this.TabHD,
+                    filesystem = this.filesystem,
+                    gamepath = this.gamepath,
+                    assets = this.assets,
+                    baseassets = this.baseassets,
+                )
                 this.atlas = image.image.copy()
     
         def getImages(this, save_images = False):
@@ -534,6 +553,9 @@ class Imagelist(GameObject):
                 gap (tuple[int,int], optional): The gap between images. Defaults to (1,1).
                 auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
             """
+            for image in this.images:
+                image.getImage()
+            
             this._getRects(gap = gap, auto_fit = auto_fit)
             this._updateAtlas()
             
@@ -561,6 +583,8 @@ class Imagelist(GameObject):
             
             this.file = filename
             
+            filename = getHDFile(filename, this.HD, this.TabHD)
+            
             if this.filesystem.exists(filename):
                 this.filesystem.get(filename).rawdata = file
             else:
@@ -581,7 +605,10 @@ class Imagelist(GameObject):
             if filename != None:
                 this.file = filename
             
-            tag = 'Page' if format else 'Imagelist'
+            tag = 'Page' if format else 'ImageList'
+            
+            this.imgSize = this.atlas.size
+            
             
             xml : etree.ElementBase = etree.Element(tag, **this.properties)
             
@@ -848,7 +875,11 @@ class Imagelist(GameObject):
                 Returns:
                     str: Full filepath in the Filesystem
                 """
-                return this.filesystem.get(this.name).path
+                file = this.filesystem.get(this.name)
+                if file != None:
+                    return file.path
+                
+                return this.name
             
             def __str__(self) -> str:
                 return etree.tostring(self.getXML()).decode()
