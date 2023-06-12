@@ -1,6 +1,7 @@
-from ..utils.textures import getHDFile, HDFile, getTextueSettings, getTexture
+from .texture import Texture
+from ..utils.textures import getHDFile, HDFile
 from ..utils.filesystem import *
-from ..utils import joinPath, Texture
+from ..utils.path import joinPath
 from ..gameobject import GameObject
 
 import numpy
@@ -150,9 +151,9 @@ class Imagelist(GameObject):
     def export(
         this,
         path : str = None,
-        exportImage : bool = False,
-        imageFormat : str = 'webp',
-        removeImageFiles : bool = False,
+        exportImage : bool = True,
+        format : str = 'webp',
+        removeImageFiles : bool = True,
     ):
         """Export the xml of the imagelist.
 
@@ -192,19 +193,19 @@ class Imagelist(GameObject):
                         index += 1
                         
                         filename = os.path.splitext(path)[0]
-                        filename = f'{filename}_split_{str(index)}.{imageFormat}'
+                        filename = f'{filename}_split_{str(index)}.{format}'
                         
                         page.file = filename
-                        page.exportAtlas(filename = filename, format = imageFormat)
+                        page.exportAtlas(filename = filename, format = format)
                         
                 else:
                     page = this.pages[0]
                     
                     filename = os.path.splitext(path)[0]
-                    filename = f'{filename}.{imageFormat}'
+                    filename = f'{filename}.{format}'
                     
                     page.file = filename
-                    page.exportAtlas(filename = filename, format = imageFormat)
+                    page.exportAtlas(filename = filename, format = format)
         
         if this.format == this.Format.IMAGELIST:
             page = this.pages[0]
@@ -576,7 +577,7 @@ class Imagelist(GameObject):
             this.update(gap = gap, auto_fit = auto_fit)
             file = io.BytesIO()
             
-            this.atlas.save(file, format=format)
+            this.atlas.save(file, format=format, lossless = True, exact = True)
             
             if filename == None:
                 filename = f'{os.path.splitext(this.file)[0]}.{format}'

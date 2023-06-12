@@ -4,13 +4,13 @@ __author__ = 'ego-lay-atman-bay'
 import typing
 import logging
 
-from .game import Game
 from . import utils
 from . import classes
 from . import Font
 from .classes import widget
 from .gametemplate import GAMES
 from .utils import filesystem
+from .game import Game
 
 __all__ = ['load', 'Game', 'utils', 'classes', 'GAMES', 'filesystem']
 

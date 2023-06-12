@@ -1,4 +1,4 @@
-from .textures import Texture
+from ..classes.texture import Texture
 from . import textures
 from .waltex import WaltexImage, Waltex
 from . import XMLTools

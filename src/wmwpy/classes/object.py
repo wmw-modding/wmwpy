@@ -209,7 +209,8 @@ class Object(GameObject):
         
     @property
     def Type(this):
-        return this.object_pack.get_type(this.type, this)
+        if this.object_pack != None:
+            return this.object_pack.get_type(this.type, this)
     
     @property
     def background(this) -> Image.Image:

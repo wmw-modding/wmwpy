@@ -3,8 +3,8 @@ import typing
 import logging
 
 from .utils.filesystem import *
-from .utils import Texture
-from .utils import path
+from .classes.texture import Texture
+from .utils.path import joinPath
 from .classes import *
 
 from . import object_packs
@@ -114,7 +114,7 @@ class Game():
         """
         logging.debug(f'Game: xml input: {xmlPath}')
         
-        levels = this.filesystem.get(path.joinPath(this.baseassets, '/Levels'))
+        levels = this.filesystem.get(joinPath(this.baseassets, '/Levels'))
         if levels == None:
             levels = this.filesystem
         
@@ -191,7 +191,7 @@ class Game():
             classes.object.Object: Where's My Water? object.
         """
         
-        objects = this.filesystem.get(path.joinPath(this.baseassets, '/Objects'))
+        objects = this.filesystem.get(joinPath(this.baseassets, '/Objects'))
         if objects == None:
             objects = this.filesystem
         
@@ -237,7 +237,7 @@ class Game():
             classes.imagelist.Imagelist: Imagelist object.
         """
         
-        textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        textures = this.filesystem.get(joinPath(this.baseassets, '/Textures'))
         if textures == None:
             textures = this.filesystem
         
@@ -278,7 +278,7 @@ class Game():
             classes.sprite.Sprite: Sprite object.
         """
         
-        sprites = this.filesystem.get(path.joinPath(this.baseassets, '/Sprites'))
+        sprites = this.filesystem.get(joinPath(this.baseassets, '/Sprites'))
         if sprites == None:
             sprites = this.filesystem
         
@@ -317,7 +317,7 @@ class Game():
             utils.textures.Texture: Texture object.
         """
         
-        textures = this.filesystem.get(path.joinPath(this.baseassets, '/Textures'))
+        textures = this.filesystem.get(joinPath(this.baseassets, '/Textures'))
         if textures == None:
             textures = this.filesystem
         
@@ -343,7 +343,7 @@ class Game():
         Returns:
             Location: wmwpy Location object.
         """
-        locations = this.filesystem.get(path.joinPath(this.baseassets, '/Locations'))
+        locations = this.filesystem.get(joinPath(this.baseassets, '/Locations'))
         if locations == None:
             locations = this.filesystem
         
@@ -374,6 +374,24 @@ class Game():
         file = this.filesystem.get(path)
         
         return Database(file)
+
+    def TextureSettings(this, path : str = None):
+        if path == None:
+            file = this.filesystem.get(joinPath(this.baseassets, '/Data/textureSettings.xml'))
+        elif isinstance(path, str):
+            file = this.filesystem.get(path)
+        elif isinstance(path, File):
+            file = path
+        else:
+            file = this.filesystem.get(joinPath(this.baseassets, '/Data/textureSettings.xml'))
+
+        return TextureSettings(
+            file,
+            filesystem = this.filesystem,
+            assets = this.assets,
+            gamepath = this.gamepath,
+            baseassets = this.baseassets,
+        )
     
     def FileManifest(
         this,

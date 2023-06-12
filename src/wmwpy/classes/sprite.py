@@ -19,7 +19,7 @@ from ..utils.gif import save_transparent_gif
 from ..utils.XMLTools import strbool
 from ..utils import path
 from ..gameobject import GameObject
-from ..utils.textures import Texture
+from .texture import Texture
 
 class Sprite(GameObject):
     """wmwpy Sprite.
@@ -134,6 +134,10 @@ class Sprite(GameObject):
         
         image = this.animation.image.copy()
         gridSize = numpy.array(this.gridSize)
+        
+        print(f'{gridSize = }')
+        print(f'{this.scale = }')
+        
         size = gridSize * this.scale
         size = [abs(round(x)) for x in size]
         image = image.resize(size)
