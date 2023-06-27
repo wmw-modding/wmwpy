@@ -26,11 +26,11 @@ class TextureSettings(GameObject):
                 '/Data/textureSettings.xml',
             ))
             
-            print(f'{file}')
-            print(joinPath(
-                this.baseassets,
-                '/Data/textureSettings.xml',
-            ))
+            # print(f'{file}')
+            # print(joinPath(
+            #     this.baseassets,
+            #     '/Data/textureSettings.xml',
+            # ))
         
         this.file = super().get_file(file)
         

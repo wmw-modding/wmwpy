@@ -680,8 +680,8 @@ class waterballoon(Type):
             except:
                 return
         
-        print(f'{InitialParticles = }')
-        print(f'{particles = }')
+        # print(f'{InitialParticles = }')
+        # print(f'{particles = }')
         
         maxParticles = ['water', 0]
         
