@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.imagelist &#8212; wmwpy 0.4.1-beta documentation</title>
+    <title>wmwpy.classes.imagelist &#8212; wmwpy 0.5.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -29,9 +30,10 @@
           <div class="body" role="main">
             
   <h1>Source code for wmwpy.classes.imagelist</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..Utils.textures</span> <span class="kn">import</span> <span class="n">getHDFile</span><span class="p">,</span> <span class="n">getTextueSettings</span><span class="p">,</span> <span class="n">getTexture</span>
-<span class="kn">from</span> <span class="nn">..Utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">..Utils</span> <span class="kn">import</span> <span class="n">joinPath</span><span class="p">,</span> <span class="n">Texture</span>
+<span></span><span class="kn">from</span> <span class="nn">.texture</span> <span class="kn">import</span> <span class="n">Texture</span>
+<span class="kn">from</span> <span class="nn">..utils.textures</span> <span class="kn">import</span> <span class="n">getHDFile</span><span class="p">,</span> <span class="n">HDFile</span>
+<span class="kn">from</span> <span class="nn">..utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..utils.path</span> <span class="kn">import</span> <span class="n">joinPath</span>
 <span class="kn">from</span> <span class="nn">..gameobject</span> <span class="kn">import</span> <span class="n">GameObject</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -69,9 +71,10 @@
 <span class="sd">            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.</span>
 <span class="sd">            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.</span>
 <span class="sd">            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to &#39;/assets&#39;.</span>
-<span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
+<span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.</span>
 <span class="sd">            HD (bool, optional): Use HD images. Defaults to False.</span>
 <span class="sd">            TabHD (bool, optional): Use TabHD images. Defaults to False.</span>
+<span class="sd">            save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.</span>
 <span class="sd">        </span>
 <span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: Filesystem is not usable and no gamepath.</span>
@@ -83,7 +86,8 @@
         <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">TabHD</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="n">newFile</span> <span class="o">=</span> <span class="n">HDFile</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
                 <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
                 <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
@@ -92,8 +96,13 @@
                 <span class="n">assets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">,</span>
                 <span class="n">baseassets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span><span class="p">,</span>
             <span class="p">)</span>
+
+            <span class="n">file</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">filename</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">HD</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">HD</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">TabHD</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">newFile</span> <span class="o">=</span> <span class="n">HDFile</span><span class="p">(</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
                 <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
                 <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
@@ -102,17 +111,25 @@
                 <span class="n">assets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">,</span>
                 <span class="n">baseassets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span><span class="p">,</span>
             <span class="p">)</span>
+
+            <span class="n">file</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">filename</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">HD</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">HD</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">newFile</span><span class="o">.</span><span class="n">TabHD</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TEMPLATE</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
         <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">pages</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Imagelist</span><span class="o">.</span><span class="n">Page</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">IMAGELIST</span>
-        <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
         <span class="c1"># this.images = {}</span>
 
@@ -120,6 +137,9 @@
     
 <div class="viewcode-block" id="Imagelist.read"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">save_images</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the imagelist xml.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">IMAGELIST</span>
         
@@ -150,12 +170,22 @@
             
             <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page</span><span class="p">)</span></div>
     
+<div class="viewcode-block" id="Imagelist.update"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the atlas image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gap (tuple[int,int], optional): The gap between images. Defaults to (1,1).</span>
+<span class="sd">            auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span><span class="p">,</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="n">auto_fit</span><span class="p">)</span></div>
+    
 <div class="viewcode-block" id="Imagelist.export"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">path</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exportImage</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">imageFormat</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;webp&#39;</span><span class="p">,</span>
-        <span class="n">removeImageFiles</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">exportImage</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="nb">format</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;webp&#39;</span><span class="p">,</span>
+        <span class="n">removeImageFiles</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Export the xml of the imagelist.</span>
 
@@ -177,6 +207,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">path</span>
         
+        <span class="c1"># if path != None:</span>
+        <span class="c1">#     path = getHDFile(</span>
+        <span class="c1">#         path,</span>
+        <span class="c1">#         HD = this.HD,</span>
+        <span class="c1">#         TabHD = this.TabHD,</span>
+        <span class="c1">#     )</span>
+        
         <span class="k">if</span> <span class="n">removeImageFiles</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">removeImageFiles</span><span class="p">()</span>
         
@@ -188,40 +225,46 @@
                         <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
                         
                         <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">_split_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">imageFormat</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">_split_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s1">&#39;</span>
                         
                         <span class="n">page</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">filename</span>
-                        <span class="n">page</span><span class="o">.</span><span class="n">exportAtlas</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">),</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">imageFormat</span><span class="p">)</span>
+                        <span class="n">page</span><span class="o">.</span><span class="n">exportAtlas</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="p">)</span>
                         
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">page</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     
                     <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">imageFormat</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s1">&#39;</span>
                     
                     <span class="n">page</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">filename</span>
-                    <span class="n">page</span><span class="o">.</span><span class="n">exportAtlas</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">),</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">imageFormat</span><span class="p">)</span>
+                    <span class="n">page</span><span class="o">.</span><span class="n">exportAtlas</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="n">this</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">IMAGELIST</span><span class="p">:</span>
             <span class="n">page</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">xml</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">getXML</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">getXML</span><span class="p">(</span><span class="nb">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">xml</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Imagelist&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
-                <span class="n">xml</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">getXML</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
+                <span class="n">xml</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">getXML</span><span class="p">(</span><span class="nb">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
             
-        <span class="n">output</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">xmloutput</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">path</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span> <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">)</span>
+            
             <span class="k">if</span> <span class="p">(</span><span class="n">file</span> <span class="o">:=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">Folder</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> is not a file.&#39;</span><span class="p">)</span>
                 
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xmloutput</span><span class="p">)</span>
                 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">xmloutput</span><span class="p">)</span>
         
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;xml&#39;</span> <span class="p">:</span> <span class="n">xmloutput</span><span class="p">,</span>
+            <span class="s1">&#39;images&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">atlas</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">]</span>
+        <span class="p">}</span>
         
         <span class="k">return</span> <span class="n">output</span></div>
     
@@ -249,7 +292,38 @@
         <span class="n">this</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">IMAGELIST</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">pages</span> <span class="o">=</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span></div>
-                
+    
+<div class="viewcode-block" id="Imagelist.add"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">image</span> <span class="p">:</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span>
+        <span class="n">properties</span> <span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">page</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add image to imagelist.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of image file used in-game.</span>
+<span class="sd">            image (PIL.Image.Image): Image to use.</span>
+<span class="sd">            properties (dict, optional): Additional properties for image. Defaults to {}.</span>
+<span class="sd">            replace (bool, optional): Whether to replace existing image if there is a conflict. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NameError: Image already exists.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Imagelist.Page.Image: Resulting imagelist image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">page</span> <span class="p">:</span> <span class="n">Imagelist</span><span class="o">.</span><span class="n">Page</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getPage</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">page</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">page</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">,</span>
+                <span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span><span class="p">,</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="n">replace</span><span class="p">,</span>
+            <span class="p">)</span></div>
     
 <div class="viewcode-block" id="Imagelist.get"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get image from imagelist.</span>
@@ -275,6 +349,26 @@
         <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
             <span class="n">page</span><span class="o">.</span><span class="n">removeImageFiles</span><span class="p">()</span></div>
     
+<div class="viewcode-block" id="Imagelist.getPage"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.getPage">[docs]</a>    <span class="k">def</span> <span class="nf">getPage</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="nb">id</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Imagelist.Page&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the page with this id / index.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int | str, optional): The id or index of the page. Defaults to 0.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: id must be int or str</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Imagelist.Page: The page that has the id or index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">pages</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;id must be int or str&#39;</span><span class="p">)</span></div>
+    
 <div class="viewcode-block" id="Imagelist.Page"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page">[docs]</a>    <span class="k">class</span> <span class="nc">Page</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="n">this</span><span class="p">,</span>
@@ -294,6 +388,7 @@
 <span class="sd">                gamepath (str, optional): Gamepath used if filesystem is not specified. Defaults to None.</span>
 <span class="sd">                assets (str, optional): Assets path relative to gamepath. Only used if filesystem is not specified. Defaults to &#39;/assets&#39;.</span>
 <span class="sd">                HD (bool, optional): Use HD graphics. Defaults to False.</span>
+<span class="sd">                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">)</span>
             
@@ -310,6 +405,9 @@
         
 <div class="viewcode-block" id="Imagelist.Page.read"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.read">[docs]</a>        <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">save_images</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Read xml.</span>
+<span class="sd">            </span>
+<span class="sd">            Args:</span>
+<span class="sd">                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="o">.</span><span class="n">attrib</span><span class="p">)</span>
     
@@ -334,7 +432,7 @@
         <span class="nd">@imgSize</span><span class="o">.</span><span class="n">setter</span>
         <span class="k">def</span> <span class="nf">imgSize</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">size</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;imgSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">size</span><span class="p">])</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;imgSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">size</span><span class="p">])</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;imgSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
             <span class="k">else</span><span class="p">:</span>
@@ -357,21 +455,14 @@
             <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;textureBasePath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
         
         <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;The path to the atlas file to use in this ImageList</span>
 
 <span class="sd">            Returns:</span>
 <span class="sd">                str: Path to atlas file.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">getHDFile</span><span class="p">(</span>
-                    <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">],</span>
-                    <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
-                    <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
-                    <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
-                    <span class="n">assets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">,</span>
-                    <span class="n">baseassets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="s1">&#39;&#39;</span>
         <span class="nd">@file</span><span class="o">.</span><span class="n">setter</span>
@@ -400,16 +491,22 @@
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Get atlas image.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-                <span class="n">image</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span><span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">))</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                
-            <span class="k">elif</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">):</span>
-                <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
-                <span class="n">image</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+                <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span><span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">))</span><span class="o">.</span><span class="n">image</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span>
+                    <span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
+                    <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+                    <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
+                    <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+                    <span class="n">gamepath</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span>
+                    <span class="n">assets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">,</span>
+                    <span class="n">baseassets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">image</span></div>
     
 <div class="viewcode-block" id="Imagelist.Page.getImages"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.getImages">[docs]</a>        <span class="k">def</span> <span class="nf">getImages</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">save_images</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Get images from xml.</span>
+<span class="sd">            Args:</span>
+<span class="sd">                save_images (bool, optional): Save images in filesystem. Note: this may take more time to load the imagelist. Defaults to False.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
@@ -442,8 +539,8 @@
                 <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                 <span class="n">image</span> <span class="p">:</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span>
                 <span class="n">properties</span> <span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
-                <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="p">):</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Imagelist.Page.Image&#39;</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Add image to imagelist.</span>
 
 <span class="sd">            Args:</span>
@@ -454,6 +551,9 @@
 
 <span class="sd">            Raises:</span>
 <span class="sd">                NameError: Image already exists.</span>
+<span class="sd">            </span>
+<span class="sd">            Returns:</span>
+<span class="sd">                Imagelist.Page.Image: Resulting imagelist image.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
                 <span class="c1"># print(f&#39;Warning: &quot;{name}&quot; already in imagelist.&#39;)</span>
@@ -464,33 +564,57 @@
             
             <span class="n">texture</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span>
                 <span class="n">image</span><span class="p">,</span>
-                <span class="n">properties</span>
+                <span class="n">properties</span><span class="p">,</span>
+                <span class="n">textureBasePath</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">textureBasePath</span><span class="p">,</span>
+                <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+                <span class="n">gamepath</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span><span class="p">,</span>
+                <span class="n">assets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span><span class="p">,</span>
+                <span class="n">save_image</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">texture</span><span class="p">)</span>
             
-            <span class="n">this</span><span class="o">.</span><span class="n">_getRects</span><span class="p">()</span></div>
+            <span class="n">this</span><span class="o">.</span><span class="n">_getRects</span><span class="p">()</span>
+            
+            <span class="k">return</span> <span class="n">texture</span></div>
         
-<div class="viewcode-block" id="Imagelist.Page.exportAtlas"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.exportAtlas">[docs]</a>        <span class="k">def</span> <span class="nf">exportAtlas</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="nb">format</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;webp&#39;</span><span class="p">,</span> <span class="p">):</span>
+<div class="viewcode-block" id="Imagelist.Page.update"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.update">[docs]</a>        <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Update the atlas image.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                gap (tuple[int,int], optional): The gap between images. Defaults to (1,1).</span>
+<span class="sd">                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
+                <span class="n">image</span><span class="o">.</span><span class="n">getImage</span><span class="p">()</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">_getRects</span><span class="p">(</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span><span class="p">,</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="n">auto_fit</span><span class="p">)</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_updateAtlas</span><span class="p">()</span>
+            
+            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span></div>
+        
+<div class="viewcode-block" id="Imagelist.Page.exportAtlas"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.exportAtlas">[docs]</a>        <span class="k">def</span> <span class="nf">exportAtlas</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">format</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;webp&#39;</span><span class="p">,</span> <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Export the atlas image into the Filesystem. This function recreates the imagelist, so you need to also export the xml using `getXML()`.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                gap (tuple, optional): Gap between each image. Defaults to (1,1).</span>
 <span class="sd">                filename (str, optional): Filename of image. Defaults to `file` property.</span>
+<span class="sd">                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.</span>
 <span class="sd">                format (str, optional): Format to save image as. Defaults to &#39;webp&#39;.</span>
 
 <span class="sd">            Returns:</span>
 <span class="sd">                PIL.Image.Image: PIL Image.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">_getRects</span><span class="p">(</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span><span class="p">)</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">_updateAtlas</span><span class="p">()</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span><span class="p">,</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="n">auto_fit</span><span class="p">)</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
             
-            <span class="n">this</span><span class="o">.</span><span class="n">atlas</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">atlas</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">lossless</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">exact</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
             
             <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s1">&#39;</span>
             
             <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">filename</span>
+            
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">getHDFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">)</span>
             
             <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">rawdata</span> <span class="o">=</span> <span class="n">file</span>
@@ -499,12 +623,12 @@
             
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span></div>
         
-<div class="viewcode-block" id="Imagelist.Page.getXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.getXML">[docs]</a>        <span class="k">def</span> <span class="nf">getXML</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">type</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Imagelist.Page.getXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.getXML">[docs]</a>        <span class="k">def</span> <span class="nf">getXML</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Generates the xml for the page / imagelist.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                filename (str, optional): Name of image. Defaults to file property.</span>
-<span class="sd">                type (int, optional): Type of file. 0 for `Page`, 1 for `Imagelist`. Defaults to 1.</span>
+<span class="sd">                format (int, optional): Format of file. 0 for `Imagelist`, 1 for `Page`. Defaults to 1.</span>
 
 <span class="sd">            Returns:</span>
 <span class="sd">                lxml.etree.Element: lxml Element.</span>
@@ -512,7 +636,10 @@
             <span class="k">if</span> <span class="n">filename</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">filename</span>
             
-            <span class="n">tag</span> <span class="o">=</span> <span class="s1">&#39;Page&#39;</span> <span class="k">if</span> <span class="nb">type</span> <span class="k">else</span> <span class="s1">&#39;Imagelist&#39;</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="s1">&#39;Page&#39;</span> <span class="k">if</span> <span class="nb">format</span> <span class="k">else</span> <span class="s1">&#39;ImageList&#39;</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span><span class="o">.</span><span class="n">size</span>
+            
             
             <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="o">**</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
             
@@ -525,22 +652,23 @@
 <div class="viewcode-block" id="Imagelist.Page.removeImageFiles"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.removeImageFiles">[docs]</a>        <span class="k">def</span> <span class="nf">removeImageFiles</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Remove all image files from filesystem.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">removeFile</span><span class="p">()</span></div>
+            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
+                <span class="n">image</span><span class="o">.</span><span class="n">removeFile</span><span class="p">()</span></div>
             
         
-        <span class="k">def</span> <span class="nf">_getRects</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="k">def</span> <span class="nf">_getRects</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">gap</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">auto_fit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Update the rect for all images.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                gap (tuple, optional): Gap between images. Defaults to (1,1).</span>
+<span class="sd">                auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
+
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">gap</span>
             <span class="n">maxheight</span> <span class="o">=</span> <span class="n">maxwidth</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">0</span>
             
             <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
-                <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span><span class="p">]</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
                 
                 <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">maxwidth</span><span class="p">:</span>
@@ -565,19 +693,35 @@
             
             <span class="n">y</span> <span class="o">+=</span> <span class="n">maxheight</span> <span class="o">+</span> <span class="n">gap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             
-            <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">auto_fit</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxwidth</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span> <span class="o">=</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
             
                 
-        <span class="k">def</span> <span class="nf">_updateAtlas</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_updateAtlas</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Update the atlas image.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                PIL.Image.Image: PIL Image.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">atlas</span> <span class="p">:</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">imgSize</span><span class="p">)</span>
             
             <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
-                <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span><span class="p">]</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">atlas</span>
                 <span class="n">atlas</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
             
             <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">atlas</span>
+            
+            <span class="c1"># this.atlas = Texture(</span>
+            <span class="c1">#     atlas,</span>
+            <span class="c1">#     filesystem = this.filesystem,</span>
+            <span class="c1">#     gamepath = this.gamepath,</span>
+            <span class="c1">#     assets = this.assets,</span>
+            <span class="c1">#     baseassets = this.baseassets,</span>
+            <span class="c1">#     HD = this.HD,</span>
+            <span class="c1">#     TabHD = this.TabHD,</span>
+            <span class="c1"># )</span>
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">atlas</span>
     
 <div class="viewcode-block" id="Imagelist.Page.Image"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.Image">[docs]</a>        <span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
@@ -589,6 +733,7 @@
                 <span class="n">filesystem</span><span class="p">:</span> <span class="n">Filesystem</span> <span class="o">|</span> <span class="n">Folder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+                <span class="n">baseassets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
                 <span class="n">save_image</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Image for Imagelist</span>
@@ -599,19 +744,18 @@
 <span class="sd">                    filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.</span>
 <span class="sd">                    gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.</span>
 <span class="sd">                    assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to &#39;/assets&#39;.</span>
+<span class="sd">                    baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
+<span class="sd">                    save_image (bool, optional): Save the current image in the filesystem on load. Defaults to False.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
-                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">)</span>
+                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
 
                 <span class="n">this</span><span class="o">.</span><span class="n">atlas</span> <span class="o">=</span> <span class="n">atlas</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">textureBasePath</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">textureBasePath</span>
-
-                <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-
                 <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
-                
+
                 <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="kc">None</span>
-                
+
                 <span class="k">if</span> <span class="n">save_image</span><span class="p">:</span>
                     <span class="n">this</span><span class="o">.</span><span class="n">getImage</span><span class="p">()</span>
             
@@ -689,7 +833,7 @@
             
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">                </span><span class="sd">&quot;&quot;&quot;The name of the iamge</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The name of the image</span>
 
 <span class="sd">                Returns:</span>
 <span class="sd">                    str: image name</span>
@@ -705,6 +849,11 @@
             
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The resulting PIL Image.</span>
+
+<span class="sd">                Returns:</span>
+<span class="sd">                    PIL.Image.Image: PIL Image.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">this</span><span class="o">.</span><span class="n">getImage</span><span class="p">()</span>
                 
@@ -726,18 +875,37 @@
                 <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">::]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
                 <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span></div>
 
-<div class="viewcode-block" id="Imagelist.Page.Image.show"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.Image.show">[docs]</a>            <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
-<span class="w">                </span><span class="sd">&quot;&quot;&quot;Show image with default image viewer.</span>
+<div class="viewcode-block" id="Imagelist.Page.Image.show"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.Image.show">[docs]</a>            <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Calls the PIL.Image.Image.show() method.</span>
+<span class="sd">                </span>
+<span class="sd">                ---</span>
+<span class="sd">                #### Description copied from the PIL library</span>
+<span class="sd">                </span>
+<span class="sd">                Displays this image. This method is mainly intended for debugging purposes.</span>
+
+<span class="sd">                This method calls PIL.ImageShow.show internally. You can use</span>
+<span class="sd">                PIL.ImageShow.register to override its default behavior.</span>
+
+<span class="sd">                The image is first saved to a temporary file. By default, it will be in PNG format.</span>
+
+<span class="sd">                On Unix, the image is then opened using the **display**, **eog** or **xv** utility, depending on which one can be found.</span>
+
+<span class="sd">                On macOS, the image is opened with the native Preview application.</span>
+
+<span class="sd">                On Windows, the image is opened with the standard PNG display utility.</span>
+
+<span class="sd">                Args:</span>
+<span class="sd">                    title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+                <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
             
-<div class="viewcode-block" id="Imagelist.Page.Image.getXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.Image.getXML">[docs]</a>            <span class="k">def</span> <span class="nf">getXML</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<div class="viewcode-block" id="Imagelist.Page.Image.getXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.imagelist.Imagelist.Page.Image.getXML">[docs]</a>            <span class="k">def</span> <span class="nf">getXML</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s1">&#39;Image&#39;</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Get xml for image.</span>
 
 <span class="sd">                Returns:</span>
 <span class="sd">                    lxml.etree.Element: lxml element</span>
 <span class="sd">                &quot;&quot;&quot;</span>
-                <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+                <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="o">**</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
                 
                 <span class="k">return</span> <span class="n">xml</span></div>
             
@@ -760,7 +928,6 @@
                     <span class="n">replace</span> <span class="o">=</span> <span class="n">replace</span><span class="p">,</span>
                 <span class="p">)</span></div>
             
-            
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Image filepath in the Filesystem</span>
@@ -768,7 +935,17 @@
 <span class="sd">                Returns:</span>
 <span class="sd">                    str: Full filepath in the Filesystem</span>
 <span class="sd">                &quot;&quot;&quot;</span>
-                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">path</span></div></div></div>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">file</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">path</span>
+                
+                <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span>
+            
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXML</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXML</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div></div></div>
 
 </pre></div>
 
@@ -788,10 +965,6 @@
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../wmwpy.html">wmwpy package</a></li>
-</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -830,7 +1003,7 @@
       &copy;2023, ego-lay-atman-bay.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
     </div>

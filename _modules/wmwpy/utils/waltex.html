@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wmwpy.utils.waltex &#8212; wmwpy 0.5.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wmwpy.utils.waltex</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Thanks to @campbellsonic for the wrapRawData script. It was originally written in C#, I just rewrote it in python. I couldn&#39;t have done it without them.</span>
+
+<span class="c1"># usage:</span>
+<span class="c1"># waltex.py --help</span>
+
+<span class="c1"># import numpy</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageFile</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="c1"># import json</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">filetype</span>
+
+    <span class="k">class</span> <span class="nc">_WaltexFile</span><span class="p">(</span><span class="n">filetype</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
+        <span class="n">MIME</span> <span class="o">=</span> <span class="s1">&#39;image/waltex&#39;</span>
+        <span class="n">EXTENSION</span> <span class="o">=</span> <span class="s1">&#39;waltex&#39;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Waltex file extension class for the `filetype` module</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">_WaltexFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">mime</span><span class="o">=</span><span class="n">_WaltexFile</span><span class="o">.</span><span class="n">MIME</span><span class="p">,</span>
+                <span class="n">extension</span><span class="o">=</span><span class="n">_WaltexFile</span><span class="o">.</span><span class="n">EXTENSION</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span>
+                    <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x57</span> <span class="ow">and</span>
+                    <span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x41</span> <span class="ow">and</span>
+                    <span class="n">buf</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x4C</span> <span class="ow">and</span>
+                    <span class="n">buf</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x54</span><span class="p">)</span>
+
+    <span class="n">filetype</span><span class="o">.</span><span class="n">add_type</span><span class="p">(</span><span class="n">_WaltexFile</span><span class="p">())</span>
+<span class="c1"># filetype.guess()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># optional filetype addition</span>
+    <span class="k">pass</span>
+
+<span class="c1"># add waltex image to PIL</span>
+<span class="c1"># Thanks to Mark Setchell for most of this code https://stackoverflow.com/a/75511423/17129659</span>
+<span class="k">def</span> <span class="nf">_accept</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">prefix</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;WALT&quot;</span>
+
+<span class="k">class</span> <span class="nc">_WaltexImageFile</span><span class="p">(</span><span class="n">ImageFile</span><span class="o">.</span><span class="n">ImageFile</span><span class="p">):</span>
+
+    <span class="n">HEADER_LENGTH</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">HEADER_MAGIC</span> <span class="o">=</span> <span class="s1">&#39;4sBBHH6s&#39;</span>
+    <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;WALTEX&quot;</span>
+    <span class="n">format_description</span> <span class="o">=</span> <span class="s2">&quot;Waltex walaber texture image&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">HEADER_LENGTH</span><span class="p">)</span>
+        <span class="n">magic</span><span class="p">,</span> <span class="n">vers</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">HEADER_MAGIC</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+
+        <span class="c1"># size in pixels (width, height)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span>
+
+        <span class="c1"># mode setting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;RGBA&#39;</span>
+
+        <span class="c1"># Decoder</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># RGBA8888</span>
+            <span class="c1"># Just use built-in raw decoder</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tile</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HEADER_LENGTH</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># RGBA4444</span>
+            <span class="c1"># Use raw decoder with custom RGBA;4B unpacker</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tile</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HEADER_LENGTH</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;RGBA;4B&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Format </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s1"> is not supported yet.</span><span class="se">\n</span><span class="s1">Please go to https://github.com/wmw-modding/wmwpy/issues and report the issue. Please include the file too.&#39;</span><span class="p">)</span>
+
+<span class="c1"># regester file type in PIL</span>
+<span class="n">Image</span><span class="o">.</span><span class="n">register_open</span><span class="p">(</span><span class="n">_WaltexImageFile</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">_WaltexImageFile</span><span class="p">,</span> <span class="n">_accept</span><span class="p">)</span>
+
+<span class="n">Image</span><span class="o">.</span><span class="n">register_extensions</span><span class="p">(</span>
+    <span class="n">_WaltexImageFile</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;.waltex&quot;</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># main class</span>
+ 
+<div class="viewcode-block" id="Waltex"><a class="viewcode-back" href="../../../wmwpy.utils.html#wmwpy.utils.waltex.Waltex">[docs]</a><span class="k">class</span> <span class="nc">Waltex</span><span class="p">():</span>
+    <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;waltex&#39;</span>
+    <span class="n">format_description</span> <span class="o">=</span> <span class="s2">&quot;Walaber image file&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">,</span>
+        <span class="n">byte_order</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;little&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Waltex image</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (str | bytes): Waltex file. Can be path to file, contents of file as bytes, or file-like object.</span>
+<span class="sd">            byte_order (str, optional): &#39;little&#39; or &#39;big&#39;. Defaults to &#39;little&#39;.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: file has to be a &#39;str&#39;, &#39;bytes&#39; or file-like object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">_colorspecs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
+                <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba8888&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;byte_order&#39;</span><span class="p">:</span> <span class="s1">&#39;big&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgb565&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;byte_order&#39;</span><span class="p">:</span> <span class="s1">&#39;little&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba5551&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;byte_order&#39;</span><span class="p">:</span> <span class="s1">&#39;little&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba4444&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;byte_order&#39;</span><span class="p">:</span> <span class="s1">&#39;little&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">)):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">rawdata</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">rawdata</span> <span class="o">=</span> <span class="n">file</span>
+        
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+            <span class="n">rawdata</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rawdata</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">rawdata</span> <span class="o">=</span> <span class="n">rawdata</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file has to be a &#39;str&#39;, &#39;bytes&#39; or file-like object.&quot;</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">byte_order</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Waltex.read"><a class="viewcode-back" href="../../../wmwpy.utils.html#wmwpy.utils.waltex.Waltex.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">byte_order</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the waltex image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            byte_order (str, optional): The byte order. Can be &#39;little&#39; or &#39;big&#39;. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            PIL.Image.Image: PIL Image object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">byte_order</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">byte_order</span>
+            
+        <span class="n">header</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
+            
+        <span class="n">this</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">colorspec</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_colorspecs</span><span class="p">[</span><span class="n">this</span><span class="o">.</span><span class="n">format</span><span class="p">]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">),</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">))</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">byte_order</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">colorspec</span><span class="p">[</span><span class="s1">&#39;byte_order&#39;</span><span class="p">]</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">==</span> <span class="s1">&#39;little&#39;</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">WaltexImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">rawdata</span><span class="p">,</span> <span class="n">byte_order</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">_WaltexImageFile</span><span class="o">.</span><span class="n">format</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format_description</span> <span class="o">=</span> <span class="n">_WaltexImageFile</span><span class="o">.</span><span class="n">format_description</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return size of image</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[int,int]: tuple(width, height)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span></div>
+
+<span class="c1"># legacy functions for reading waltex image</span>
+<div class="viewcode-block" id="WaltexImage"><a class="viewcode-back" href="../../../wmwpy.utils.html#wmwpy.utils.waltex.WaltexImage">[docs]</a><span class="k">def</span> <span class="nf">WaltexImage</span><span class="p">(</span><span class="n">path</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span> <span class="n">premultiplyAlpha</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dePremultiplyAlpha</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">endian</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ### Depracted</span>
+<span class="sd">    Use `Image.load()` instead.</span>
+<span class="sd">    </span>
+<span class="sd">    I am only keeping this just in case you need to load RGB565 (01) or RGBA5551 (02) waltex format.</span>
+<span class="sd">    </span>
+<span class="sd">    ---</span>
+<span class="sd">    </span>
+<span class="sd">    Get image from `waltex` file</span>
+
+<span class="sd">    Data on image can be found in coorisponding `imagelist` or in `Data/TextureSettings.xml`.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to `waltex` image</span>
+<span class="sd">        premultiplyAlpha (bool, optional): Defaults to False.</span>
+<span class="sd">        dePremultiplyAlpha (bool, optional): Defaults to False.</span>
+<span class="sd">        endian (str, optional): Endian mode. Set to &#39;big&#39; to use big endian. Defaults to &#39;little&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        PIL.Image.Image: Pillow image.</span>
+<span class="sd">    ---</span>
+<span class="sd">    Thanks to @campbellsonic for the `WrapRawData()` function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">colorOrder</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">bytesPerPixel</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bpprgba</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># print(colorspace, bytesPerPixel, colorOrder, bpprgba)</span>
+    
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">rawdata</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">rawdata</span> <span class="o">=</span> <span class="n">path</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+        <span class="n">rawdata</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file has to be a &#39;str&#39;, &#39;bytes&#39; or file-like object.&quot;</span><span class="p">)</span>
+    
+        
+    <span class="c1"># print(filetype.guess(rawdata))</span>
+        
+    <span class="k">if</span> <span class="n">filetype</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span><span class="o">.</span><span class="n">MIME</span> <span class="o">!=</span> <span class="s1">&#39;image/waltex&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;File is not a waltex&#39;</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    <span class="nb">format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+    <span class="n">pading</span> <span class="o">=</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
+    
+    <span class="n">colorspecs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
+            <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba8888&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgb565&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba5551&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bpp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+            <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="s1">&#39;rgba4444&#39;</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+    
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">colorspecs</span><span class="p">[</span><span class="nb">format</span><span class="p">]</span>
+    <span class="n">colorOrder</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;order&#39;</span><span class="p">]</span>
+    <span class="n">bpprgba</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;bpp&#39;</span><span class="p">]</span>
+    <span class="n">bytesPerPixel</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">bpprgba</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+    
+    <span class="n">image</span> <span class="o">=</span> <span class="n">WrapRawData</span><span class="p">(</span><span class="n">rawdata</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">bytesPerPixel</span><span class="p">,</span> <span class="n">bpprgba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bpprgba</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bpprgba</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bpprgba</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colorOrder</span><span class="p">,</span> <span class="n">premultiplyAlpha</span><span class="p">,</span> <span class="n">dePremultiplyAlpha</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">endian</span><span class="p">)</span>
+    
+    <span class="n">image</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+    
+    <span class="k">return</span> <span class="n">image</span></div>
+
+<div class="viewcode-block" id="WrapRawData"><a class="viewcode-back" href="../../../wmwpy.utils.html#wmwpy.utils.waltex.WrapRawData">[docs]</a><span class="k">def</span> <span class="nf">WrapRawData</span><span class="p">(</span><span class="n">rawData</span> <span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">width</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bytesPerPixel</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">redBits</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">greenBits</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blueBits</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">alphaBits</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">colorOrder</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">premultiplyAlpha</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dePremultiplyAlpha</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">offset</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">endian</span> <span class="o">=</span> <span class="s1">&#39;little&#39;</span><span class="p">):</span>
+    <span class="n">_8BIT_MASK</span> <span class="o">=</span> <span class="mf">256.0</span>
+    <span class="n">OUTBITDEPTH</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">DEBUG_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="n">colorOrder</span> <span class="o">=</span> <span class="n">colorOrder</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">endian</span> <span class="o">==</span> <span class="s1">&#39;little&#39;</span><span class="p">:</span>
+        <span class="n">colorOrder</span> <span class="o">=</span> <span class="n">colorOrder</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># width and height are switched due to how PIL creates an image from array</span>
+    <span class="c1"># image = [[(0, 0, 0, 0)] * height] * width</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">redMask</span> <span class="o">=</span> <span class="n">GenerateBinaryMask</span><span class="p">(</span><span class="n">redBits</span><span class="p">)</span>
+    <span class="n">greenMask</span> <span class="o">=</span> <span class="n">GenerateBinaryMask</span><span class="p">(</span><span class="n">greenBits</span><span class="p">)</span>
+    <span class="n">blueMask</span> <span class="o">=</span> <span class="n">GenerateBinaryMask</span><span class="p">(</span><span class="n">blueBits</span><span class="p">)</span>
+    <span class="n">alphaMask</span> <span class="o">=</span> <span class="n">GenerateBinaryMask</span><span class="p">(</span><span class="n">alphaBits</span><span class="p">)</span>
+    
+    <span class="n">redMax</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">redBits</span><span class="p">)</span>
+    <span class="n">greenMax</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">greenBits</span><span class="p">)</span>
+    <span class="n">blueMax</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">blueBits</span><span class="p">)</span>
+    <span class="n">alphaMax</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">alphaBits</span><span class="p">)</span>
+    
+    <span class="c1"># determine number of loops needed to get every pixel</span>
+    <span class="n">numLoops</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)</span> <span class="o">/</span> <span class="n">bytesPerPixel</span><span class="p">)</span>
+    
+    <span class="c1"># loop for each set of bytes (one pixel)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numLoops</span><span class="p">):</span>
+        <span class="n">pixel</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># read all bytes for this pixel</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bytesPerPixel</span><span class="p">):</span>
+            <span class="n">nextByte</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">bytesPerPixel</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]</span>
+            
+            <span class="c1"># print(f&#39;Read byte: {hex(nextByte)}&#39;)</span>
+            
+            <span class="c1"># move the byte up</span>
+            <span class="c1"># if (reverseBytes)</span>
+            <span class="n">nextByte</span> <span class="o">=</span> <span class="n">nextByte</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">j</span><span class="p">)</span>
+            <span class="c1"># else</span>
+            <span class="c1"># pixel = pixel &lt;&lt; 8</span>
+            
+            <span class="c1"># append the next one</span>
+            <span class="n">pixel</span> <span class="o">+=</span> <span class="n">nextByte</span>
+            <span class="c1"># print(f&#39;Pixel is now: {hex(pixel)}&#39;)</span>
+            
+        <span class="c1"># print(f&#39;Pixel: {pixel}&#39;)</span>
+        
+        <span class="c1"># get RGBA values from the pixel</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">g</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># loop for each channel</span>
+        <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colorOrder</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&amp;</span> <span class="n">redMask</span>
+                <span class="n">pixel</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&gt;&gt;</span> <span class="n">redBits</span>
+                
+            <span class="k">elif</span> <span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;g&#39;</span><span class="p">:</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&amp;</span> <span class="n">greenMask</span>
+                <span class="n">pixel</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&gt;&gt;</span> <span class="n">greenBits</span>
+            
+            <span class="k">elif</span> <span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&amp;</span> <span class="n">blueMask</span>
+                <span class="n">pixel</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&gt;&gt;</span> <span class="n">blueBits</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&amp;</span> <span class="n">alphaMask</span>
+                <span class="n">pixel</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">&gt;&gt;</span> <span class="n">alphaBits</span>
+                
+        <span class="c1"># print(f&#39;Before scale:\nR: {r} G: {g} B: {b} A: {a}&#39;)</span>
+        
+        <span class="c1"># scale colors to 8-bit depth (not sure which method is better)</span>
+        
+        <span class="c1"># via floating point division</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">redMax</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="p">((</span><span class="n">_8BIT_MASK</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">redMax</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">greenMax</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="p">((</span><span class="n">_8BIT_MASK</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">greenMax</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">blueMax</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="p">((</span><span class="n">_8BIT_MASK</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">blueMax</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">alphaMax</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="p">((</span><span class="n">_8BIT_MASK</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">alphaMax</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        
+        <span class="c1"># via bit shifting</span>
+        <span class="c1"># rShift = OUTBITDEPTH - redBits</span>
+        <span class="c1"># gShift = OUTBITDEPTH - greenBits</span>
+        <span class="c1"># bShift = OUTBITDEPTH - blueBits</span>
+        <span class="c1"># aShift = OUTBITDEPTH - alphaBits</span>
+        <span class="c1"># r = (r &lt;&lt; rShift) + (r &gt;&gt; (redBits - rShift))</span>
+        <span class="c1"># g = (g &lt;&lt; gShift) + (r &gt;&gt; (greenBits - gShift))</span>
+        <span class="c1"># b = (b &lt;&lt; bShift) + (r &gt;&gt; (blueBits - bShift))</span>
+        <span class="c1"># a = (a &lt;&lt; aShift) + (a &gt;&gt; (alphaBits - aShift))</span>
+        
+        <span class="c1"># print(f&#39;After scale:\nR: {r} G: {g} B: {b} A: {a}&#39;)</span>
+        
+        <span class="c1"># if there are no bits allotted for an alpha channel, make pixel opaque rather than invisible</span>
+        <span class="k">if</span> <span class="n">alphaBits</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="mi">255</span>
+            
+        <span class="c1"># a = 255</span>
+            
+        <span class="k">if</span> <span class="n">dePremultiplyAlpha</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">)</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="n">premultiplyAlpha</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mf">255.0</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="mf">255.0</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="mf">255.0</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
+            
+        <span class="c1"># set the pixel</span>
+        <span class="n">rgba</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="c1"># print(rgba)</span>
+        <span class="c1"># image[x][y] = rgba</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">rgba</span><span class="p">)</span>
+        
+        <span class="c1"># break after first pixel if in debug mode</span>
+        
+        
+        <span class="c1"># iterate coordinates</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">width</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># if (y &gt; (height - 300) or y % 100 == 0):</span>
+            <span class="c1">#     print(f&#39;Line {y} of {height} done&#39;)</span>
+            <span class="c1">#     if (DEBUG_MODE):</span>
+            <span class="c1">#         break</span>
+                
+        <span class="c1"># if there&#39;s extra data (like the door overlays in the lawns), stop once the height is reached</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">height</span><span class="p">:</span>
+            <span class="k">break</span>
+        
+    
+    <span class="k">return</span> <span class="n">image</span></div>
+
+<div class="viewcode-block" id="GenerateBinaryMask"><a class="viewcode-back" href="../../../wmwpy.utils.html#wmwpy.utils.waltex.GenerateBinaryMask">[docs]</a><span class="k">def</span> <span class="nf">GenerateBinaryMask</span><span class="p">(</span><span class="n">numOnes</span><span class="p">):</span>
+    <span class="n">binaryMask</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numOnes</span><span class="p">):</span>
+        <span class="n">binaryMask</span> <span class="o">*=</span> <span class="mi">2</span>
+        <span class="n">binaryMask</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="k">return</span> <span class="n">binaryMask</span></div>
+
+<span class="c1"># test code</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s1">&#39;usage:</span><span class="se">\n</span><span class="s1">    waltex.py &lt;input&gt; [arguments]</span><span class="se">\n\n</span><span class="s1">arguments:</span><span class="se">\n</span><span class="s1">    --help -h     displays this help message</span><span class="se">\n\n</span><span class="s1">    --output -o   output of image</span><span class="se">\n</span><span class="s1">                    --output &lt;filename&gt;</span><span class="se">\n\n</span><span class="s1">    --show -s     shows image with default image viewer</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">helpargs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;--help&#39;</span><span class="p">,</span> <span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">helpargs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">help</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># with open(path, &#39;rb&#39;) as file:</span>
+        <span class="c1">#     rawData = file.read()</span>
+
+        <span class="c1"># image = WaltexImage(path)</span>
+        <span class="c1"># image.show()</span>
+
+        <span class="c1"># new fast method</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">Waltex</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">::]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
+                <span class="n">arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">]:</span>
+                    <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;--show&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">]:</span>
+                    <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../wmwpy.html">wmwpy</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

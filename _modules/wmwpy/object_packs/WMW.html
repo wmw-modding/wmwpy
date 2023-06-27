@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wmwpy.object_packs.WMW &#8212; wmwpy 0.5.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wmwpy.object_packs.WMW</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">..classes.object</span> <span class="kn">import</span> <span class="n">Object</span>
+<span class="kn">from</span> <span class="nn">..classes.sprite</span> <span class="kn">import</span> <span class="n">Sprite</span>
+<span class="kn">from</span> <span class="nn">..classes.imagelist</span> <span class="kn">import</span> <span class="n">Imagelist</span>
+<span class="kn">from</span> <span class="nn">..classes.objectpack</span> <span class="kn">import</span> <span class="n">ObjectPack</span><span class="p">,</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">imageprocessing</span>
+
+<span class="n">WMWObjectPack</span> <span class="o">=</span> <span class="n">ObjectPack</span><span class="p">()</span>
+
+<div class="viewcode-block" id="yswitch"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.yswitch">[docs]</a><span class="k">class</span> <span class="nc">yswitch</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;yswitch&#39;</span>
+    <span class="n">PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;YSwitchPosition&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;bit&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;ToggleSpriteIndex&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;WindowSpriteIndex&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;PlugSpriteIndex&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;3&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;FirstRightSpout&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedSpout#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s1">&#39;Spout0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedSpoutProbability#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FirstLeftSpout&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PlugSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedConverter&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;FluidConverter0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<div class="viewcode-block" id="yswitch.ready_sprites"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.yswitch.ready_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ready_sprites</span><span class="p">()</span>
+        
+        <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;YSwitchPosition&#39;</span><span class="p">)</span>
+        
+        <span class="n">ToggleSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ToggleSpriteIndex&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">YSwitchPosition</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">ToggleSpriteIndex</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">/</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">YSwitchPosition</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div></div>
+
+<span class="n">WMWObjectPack</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">yswitch</span><span class="p">)</span>
+
+<div class="viewcode-block" id="spout"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.spout">[docs]</a><span class="k">class</span> <span class="nc">spout</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;spout&#39;</span>
+    <span class="n">PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;SpoutType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;OpenSpout&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;options&#39;</span> <span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;Drain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;TouchSpout&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;OpenSpout&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;DrainSpout&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FluidType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;options&#39;</span> <span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ExpulsionAngle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0.0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ExpulsionAngleVariation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0.0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleSpeed&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;OffsetToMouth&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0 0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;OffsetVariation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0.0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NumberParticles&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;-1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Timer#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;bit float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1 1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticlesPerSecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;3&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Limit&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedSpout#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;Spout0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedSpoutProbability#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleQueueThreshold&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Goal&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;bit&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;GoalPreset&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;Swampy&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;options&#39;</span> <span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;Swampy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Cranky&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Allie&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ValveIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;bit&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;particlespersecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticlesSpeed&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticplesPerSecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;15&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedYSwitchPort#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;right&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;SprinklerSteps&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;SprinklerWidth&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Blockable&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedConverter&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s1">&#39;FluidConerter0&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleDryness&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ExplusionAngleVariation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumBaseAngle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumCenterOffsetA&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span> <span class="p">:</span> <span class="s1">&#39;0 0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumCenterOffsetB&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span> <span class="p">:</span> <span class="s1">&#39;0 0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumForce&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;100&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumMaxD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;80&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumMaxForce&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s1">&#39;80&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumOn&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumRaycastOffset&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumFriction&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleCount&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;AngleVariation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Mute&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NumParticles&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PartilcesPerSecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;5&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticlePerSeconds&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumMaxAngle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VacuumMinAngle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PerticlesPerSecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NoCutHole&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticlesQueueThreshold&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleQueueThreshhold&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleOffset&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0 0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleVariation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticlePerSecond&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;-1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;xParticleQueueThreshold&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;IsMysterious&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Absorber&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;OffsetToBlock&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0 0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="spout.ready_properties"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.spout.ready_properties">[docs]</a>    <span class="k">def</span> <span class="nf">ready_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SpoutType&#39;</span><span class="p">,</span> <span class="s1">&#39;FluidType&#39;</span><span class="p">])</span></div></div>
+
+<span class="n">WMWObjectPack</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">spout</span><span class="p">)</span>
+
+<div class="viewcode-block" id="fluidconverter"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.fluidconverter">[docs]</a><span class="k">class</span> <span class="nc">fluidconverter</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;fluidconverter&#39;</span>
+    <span class="n">PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ConverterType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;dynamic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;static&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FluidType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FluidType#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MaskSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;OutlineSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;StartingFluidType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<div class="viewcode-block" id="fluidconverter.ready_sprites"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.fluidconverter.ready_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MaskSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;MaskSpriteIndex&#39;</span><span class="p">)</span>
+        
+        <span class="n">fluids</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;water&quot;</span> <span class="p">:</span> <span class="s1">&#39;Water&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;contaminatedwater&quot;</span> <span class="p">:</span> <span class="s1">&#39;Poison&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;lava&quot;</span> <span class="p">:</span> <span class="s1">&#39;Ooze&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;steam&quot;</span> <span class="p">:</span> <span class="s1">&#39;Steam&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;mud&quot;</span> <span class="p">:</span> <span class="s1">&#39;MudDry&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;drymud&quot;</span> <span class="p">:</span> <span class="s1">&#39;MudDry&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;wetmud&quot;</span> <span class="p">:</span> <span class="s1">&#39;MudWet&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># print(f&#39;{MaskSpriteIndex = }&#39;)</span>
+        
+        <span class="n">OutlinedSprite</span> <span class="p">:</span> <span class="n">Sprite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">MaskSpriteIndex</span><span class="p">]</span>
+        
+        <span class="n">FluidType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s1">&#39;FluidType&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FluidType0&#39;</span><span class="p">,</span> <span class="s1">&#39;water&#39;</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        
+        <span class="n">image</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Convert_Icon_</span><span class="si">{</span><span class="n">fluids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FluidType</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Water&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_Outlined.png&quot;</span>
+        
+        <span class="n">OutlinedSprite</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">image</span></div>
+    
+<div class="viewcode-block" id="fluidconverter.ready_properties"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.fluidconverter.ready_properties">[docs]</a>    <span class="k">def</span> <span class="nf">ready_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;FluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;FluidType#&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;StartingFluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ConverterType&#39;</span><span class="p">,</span>
+        <span class="p">])</span></div></div>
+
+<span class="n">WMWObjectPack</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">fluidconverter</span><span class="p">)</span>
+
+<div class="viewcode-block" id="star"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.star">[docs]</a><span class="k">class</span> <span class="nc">star</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;star&#39;</span>
+    <span class="n">PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;AllowedFluid&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PlatinumType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;platinum&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;note&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;normal&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FillTexture&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;StarType&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;allie&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;baby&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;teleport&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;note&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mega&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;TeleportMoveEase&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;both&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;in&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;out&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Burst&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;CutsRock&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;TeleportWaitTime&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;TeleportMoveTime&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NumParticlesToHatch&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;5&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;CutRadius&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;5&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;BlastRadius&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s2">&quot;7.5&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;IsSponge&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;CutsDirt&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;IgnoreFluid&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;steam&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FillDirection&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;up&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;up&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;down&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Order&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;AllowCollect&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;1&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Color&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int int int int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;255 255 255 255&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;150 198 232 255&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;195 214 0 255&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;183 52 52 255&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;209 85 174 255&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;237 158 64 255&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;107 53 146 255&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<div class="viewcode-block" id="star.ready_sprites"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.star.ready_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">StarType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;StarType&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">StarType</span> <span class="o">==</span> <span class="s1">&#39;note&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;Color&#39;</span><span class="p">))</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageprocessing</span><span class="o">.</span><span class="n">recolor_image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="n">color</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span></div></div>
+
+<span class="n">WMWObjectPack</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">star</span><span class="p">)</span>
+
+<div class="viewcode-block" id="waterballoon"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.waterballoon">[docs]</a><span class="k">class</span> <span class="nc">waterballoon</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;waterballoon&#39;</span>
+    <span class="n">PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;EdgeSpringK&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;500&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;EdgeSpringDamping&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ShapeMatchingK&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;500&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ShapeMatchingDamping&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;500&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;InternalSpring#&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int int int int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;1 5 500 10&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;1 5 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;8 0 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;7 11 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;11 3 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;0 4 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;4 8 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;9 1 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;2 6 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;10 2 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;3 7 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;5 9 500 10&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;6 10 500 10&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PointMass&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;InitialParticles&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string int ...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span> <span class="p">:</span> <span class="s1">&#39;water 10&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;contaminatedwater&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;steam&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;drymud&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wetmud&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;AttachVertIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MouthSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;CollisionFrictionWorld&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;CollisionElasticityWorld&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0.05&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ContaminatedSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bit&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;SteamSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MudSpriteIndex&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectedSpout&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Spout0&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MaxParticles&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;default&#39;</span> <span class="p">:</span> <span class="s1">&#39;70&#39;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ParticleDryness&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<div class="viewcode-block" id="waterballoon.ready_sprites"><a class="viewcode-back" href="../../../wmwpy.object_packs.html#wmwpy.object_packs.WMW.waterballoon.ready_sprites">[docs]</a>    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fluidSprites</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;contaminatedwater&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ContaminatedSpriteIndex&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;steam&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;SteamSpriteIndex&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;mud&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;MudSpriteIndex&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;drymud&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;MudSpriteIndex&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;wetmud&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;MudSpriteIndex&#39;</span><span class="p">),</span>
+        <span class="p">}</span>
+        
+        <span class="n">InitialParticles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;InitialParticles&#39;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">particles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">InitialParticles</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">InitialParticles</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">InitialParticles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">particles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">InitialParticles</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">InitialParticles</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">return</span>
+        
+        <span class="c1"># print(f&#39;{InitialParticles = }&#39;)</span>
+        <span class="c1"># print(f&#39;{particles = }&#39;)</span>
+        
+        <span class="n">maxParticles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;water&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="n">particles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">particle</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">and</span> <span class="n">particle</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxParticles</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">maxParticles</span> <span class="o">=</span> <span class="n">particle</span>
+        
+        <span class="k">if</span> <span class="n">maxParticles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fluidSprites</span><span class="p">:</span>
+            <span class="n">sprite</span> <span class="o">=</span> <span class="n">fluidSprites</span><span class="p">[</span><span class="n">maxParticles</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">sprite</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<span class="n">WMWObjectPack</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="n">waterballoon</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../wmwpy.html">wmwpy</a><ul>
+  <li><a href="../object_packs.html">wmwpy.object_packs</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,40 +1,16 @@
 wmwpy.classes package
 =====================
 
-.. Subpackages
-.. -----------
+Subpackages
+-----------
 
-.. .. toctree::
-..    :maxdepth: 4
+.. toctree::
+   :maxdepth: 4
 
-..    wmwpy.classes.widget
+   wmwpy.classes.objectpack
 
 Submodules
 ----------
-
-wmwpy.classes.imagelist module
-------------------------------
-
-.. automodule:: wmwpy.classes.imagelist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. wmwpy.classes.curves module
-.. ---------------------------
-
-.. .. automodule:: wmwpy.classes.curves
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-.. wmwpy.classes.layout module
-.. ---------------------------
-
-.. .. automodule:: wmwpy.classes.layout
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
 
 wmwpy.classes.level module
 --------------------------
@@ -60,13 +36,29 @@ wmwpy.classes.sprite module
    :undoc-members:
    :show-inheritance:
 
-.. wmwpy.classes.Widgets module
-.. ----------------------------
+wmwpy.classes.imagelist module
+------------------------------
 
-.. .. automodule:: wmwpy.classes.Widgets
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
+.. automodule:: wmwpy.classes.imagelist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.classes.location module
+-----------------------------
+
+.. automodule:: wmwpy.classes.location
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.classes.database module
+-----------------------------
+
+.. automodule:: wmwpy.classes.database
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------

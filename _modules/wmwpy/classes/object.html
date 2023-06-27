@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.object &#8212; wmwpy 0.4.1-beta documentation</title>
+    <title>wmwpy.classes.object &#8212; wmwpy 0.5.0-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -29,7 +30,9 @@
           <div class="body" role="main">
             
   <h1>Source code for wmwpy.classes.object</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">lxml</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">lxml</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -37,7 +40,6 @@
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="n">LOADED_ImageTk</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">if</span> <span class="n">LOADED_ImageTk</span><span class="p">:</span>
@@ -48,12 +50,32 @@
 
 <span class="kn">from</span> <span class="nn">..gameobject</span> <span class="kn">import</span> <span class="n">GameObject</span>
 <span class="kn">from</span> <span class="nn">.sprite</span> <span class="kn">import</span> <span class="n">Sprite</span>
-<span class="kn">from</span> <span class="nn">..Utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">..Utils.rotate</span> <span class="kn">import</span> <span class="n">rotate</span>
-<span class="kn">from</span> <span class="nn">..Utils.gif</span> <span class="kn">import</span> <span class="n">save_transparent_gif</span>
+<span class="kn">from</span> <span class="nn">..utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..utils.rotate</span> <span class="kn">import</span> <span class="n">rotate</span>
+<span class="kn">from</span> <span class="nn">..utils.gif</span> <span class="kn">import</span> <span class="n">save_transparent_gif</span>
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.objectpack</span> <span class="kn">import</span> <span class="n">ObjectPack</span>
 
-<span class="kn">from</span> <span class="nn">..Utils.XMLTools</span> <span class="kn">import</span> <span class="n">strbool</span>
+<span class="kn">from</span> <span class="nn">..utils.XMLTools</span> <span class="kn">import</span> <span class="n">strbool</span>
 <div class="viewcode-block" id="Object"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object">[docs]</a><span class="k">class</span> <span class="nc">Object</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;wmwpy Object.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        HD (bool): Using HD images.</span>
+<span class="sd">        TabHD (bool): Using TabHD images.</span>
+<span class="sd">        sprites (list[Sprite]): List of sprites.</span>
+<span class="sd">        shapes (list[Shape]): List of Shapes.</span>
+<span class="sd">        UVs (list[tuple[int,int]]): List of UVs (on the balloon object).</span>
+<span class="sd">        VertIndices (list[int]): List of VertIndices (on the balloon object).</span>
+<span class="sd">        defaultProperties (dict[str,str]): Dictionary of the object default properties (the ones in the object .hs files).</span>
+<span class="sd">        properties (dict[str,str]): Dictionary of the object properties (the ones in the level xml).</span>
+<span class="sd">        name (str): The object name.</span>
+<span class="sd">        id (int): The object id.</span>
+<span class="sd">        frame (int): The current animation frame.</span>
+<span class="sd">        object_pack (ObjectPack): The game Object Pack.</span>
+<span class="sd">        scale (float): The image scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">File</span><span class="p">,</span>
@@ -67,6 +89,7 @@
         <span class="n">scale</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">HD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">TabHD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">object_pack</span> <span class="p">:</span> <span class="n">ObjectPack</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get game object. Game object is `.hs` file.</span>
 
@@ -82,13 +105,14 @@
 <span class="sd">            scale (int, optional): The image scale. Defaults to 10.</span>
 <span class="sd">            HD (bool, optional): Use HD images. Defaults to False.</span>
 <span class="sd">            TabHD (bool, optional): Use TabHD images. Defaults to False.</span>
+<span class="sd">            object_pack (ObjectPack, optional): The game Object Pack to use in this object. If None, it will not try to use any object types. Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         
-        <span class="n">this</span><span class="o">.</span><span class="n">_properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">this</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">pos</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -109,6 +133,8 @@
         <span class="n">this</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">this</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
         
+        <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">=</span> <span class="n">object_pack</span>
+        
         <span class="n">this</span><span class="o">.</span><span class="n">_background</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sprite</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_foreground</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sprite</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ImageTk.PhotoImage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -118,11 +144,19 @@
         
         <span class="n">this</span><span class="o">.</span><span class="n">readXML</span><span class="p">()</span>
         
+        <span class="n">this</span><span class="o">.</span><span class="n">_properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+        
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
             <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">path</span>
             
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The current animation frame.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Current frame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_frame</span>
     <span class="nd">@frame</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -171,7 +205,44 @@
         <span class="n">this</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">max</span> <span class="o">-</span> <span class="nb">min</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">])</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
         
+        
+        
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_offset</span></div>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">SAFE_MODE</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Safe mode allows the properties to be modified without carrying onto the level xml.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: The current state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="s1">&#39;_SAFE_MODE&#39;</span><span class="p">):</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_SAFE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_SAFE_MODE</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_SAFE_MODE</span>
+    
+    <span class="nd">@SAFE_MODE</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">SAFE_MODE</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">mode</span> <span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;mode must be True or False&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="s1">&#39;_SAFE_MODE&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="s1">&#39;_SAFE_MODE&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_properties</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">sprites</span><span class="p">:</span>
+            <span class="n">sprite</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="n">mode</span>
+        
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Type</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">background</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
@@ -180,6 +251,12 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            PIL.Image.Image: PIL Image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Type</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">type</span><span class="o">.</span><span class="n">ready_sprites</span><span class="p">()</span>
+        
         <span class="n">this</span><span class="o">.</span><span class="n">getOffset</span><span class="p">()</span>
         
         <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
@@ -202,6 +279,7 @@
             <span class="p">)</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">rotateImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">image</span>
     
     <span class="nd">@property</span>
@@ -225,6 +303,12 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            PIL.Image.Image: PIL Image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Type</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">type</span><span class="o">.</span><span class="n">ready_sprites</span><span class="p">()</span>
+        
         <span class="n">this</span><span class="o">.</span><span class="n">getOffset</span><span class="p">()</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
         
@@ -246,11 +330,12 @@
             <span class="p">)</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">rotateImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         
+        <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">image</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">foreground_PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ImageTk.PhotoImage&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Foregound Tkinter PhotoImage</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Foreground Tkinter PhotoImage</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            ImageTk.PhotoImage: Tkinter PhotoImage</span>
@@ -453,9 +538,12 @@
         <span class="k">return</span> <span class="n">output</span></div>
     
 <div class="viewcode-block" id="Object.updateProperties"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object.updateProperties">[docs]</a>    <span class="k">def</span> <span class="nf">updateProperties</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update properties. Deletes any properties that are the same as defaultProperties.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update properties. Deletes any properties that are the same as defaultProperties, unless specified by the object type in the ObjectPack.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">properties</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">Type</span>
+        
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">type</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">()</span></div>
         
         <span class="c1"># for property in properties:</span>
         <span class="c1">#     if property in this.defaultProperties:</span>
@@ -501,7 +589,7 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Object filename based on the `Filename` proprty</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Object filename based on the `Filename` property</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;Filename&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span>
@@ -542,15 +630,20 @@
             
             <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Sprite&#39;</span><span class="p">:</span>
                 <span class="n">attributes</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span>
-                <span class="n">sprite</span> <span class="o">=</span> <span class="n">Sprite</span><span class="p">(</span>
-                    <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]),</span>
-                    <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
-                    <span class="n">properties</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">,</span>
-                    <span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
-                    <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
-                    <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">this</span><span class="o">.</span><span class="n">sprites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span>
+                
+                <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
+                
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+                
+                    <span class="n">sprite</span> <span class="o">=</span> <span class="n">Sprite</span><span class="p">(</span>
+                        <span class="n">file</span> <span class="o">=</span> <span class="n">file</span><span class="p">,</span>
+                        <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+                        <span class="n">properties</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">,</span>
+                        <span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
+                        <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+                        <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">this</span><span class="o">.</span><span class="n">sprites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sprite</span><span class="p">)</span>
     
     <span class="k">def</span> <span class="nf">_getUVs</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">xml</span><span class="p">:</span>
@@ -569,10 +662,17 @@
                 <span class="n">this</span><span class="o">.</span><span class="n">VertIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
     
 <div class="viewcode-block" id="Object.getProperties"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object.getProperties">[docs]</a>    <span class="k">def</span> <span class="nf">getProperties</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="p">:</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">_properties</span><span class="p">:</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the object properties.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[str,str]: The properties dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># for prop in this.defaultProperties:</span>
+        <span class="c1">#     if prop not in this.properties:</span>
+        <span class="c1">#         this.properties[prop] = this.defaultProperties[prop]</span>
+        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span></div>
     
     <span class="k">def</span> <span class="nf">_getDefaultProperties</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span><span class="p">):</span>
@@ -689,7 +789,7 @@
             <span class="n">filename</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="k">else</span> <span class="n">this</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.gif&#39;</span>
             
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="w"> </span><span class="si">= }</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># print(f&#39;{filename = }&#39;)</span>
         
         <span class="n">animation</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getAnimation</span><span class="p">(</span>
             <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">,</span>
@@ -700,9 +800,31 @@
             <span class="n">animation</span><span class="p">[</span><span class="s1">&#39;frames&#39;</span><span class="p">],</span>
             <span class="n">durations</span> <span class="o">=</span> <span class="n">animation</span><span class="p">[</span><span class="s1">&#39;frame_duration&#39;</span><span class="p">],</span>
             <span class="n">save_file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span>
+        <span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Object.copy"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Object</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a copy of this object (aka, get the object again).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Object: New Object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Object</span><span class="p">(</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
+            <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+            <span class="n">properties</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
+            <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+            <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Shape"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Shape">[docs]</a><span class="k">class</span> <span class="nc">Shape</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shape object for wmwpy Object.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        points (list[tuple[float,float]]): List of shape points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Shape for Object</span>
 
@@ -804,10 +926,6 @@
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../wmwpy.html">wmwpy package</a></li>
-</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -846,7 +964,7 @@
       &copy;2023, ego-lay-atman-bay.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
     </div>

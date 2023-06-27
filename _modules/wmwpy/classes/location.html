@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wmwpy.classes.location &#8212; wmwpy 0.5.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wmwpy.classes.location</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+
+<span class="kn">from</span> <span class="nn">..gameobject</span> <span class="kn">import</span> <span class="n">GameObject</span>
+<span class="kn">from</span> <span class="nn">..utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.location.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Location object for location xml files in WMW2.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        backgrounds (list[dict[str,str]]): List of backgrounds.</span>
+<span class="sd">        levels (list[dict[str,str]]): List of levels.</span>
+<span class="sd">        widgets (list[dict[str,str]]): List of widgets.</span>
+<span class="sd">        sprites (list[dict[str,str]]): List of sprites (if any).</span>
+<span class="sd">        armatures (list[dict[str,str]]): List of Armatures.</span>
+<span class="sd">        waterPaths (list[dict[str,str]]): List of WaterPaths.</span>
+<span class="sd">        atlases (list[dict[str,str]]): List of Atlases.</span>
+<span class="sd">        expertAtlases (list[dict[str,str]]): List of ExpertAtlases.</span>
+<span class="sd">        transitionPiece (list[dict[str,str]]): List of TransitionPieces.</span>
+<span class="sd">        expertModeAssets (list[dict[str,str]]): List of ExpertModeAssets.</span>
+<span class="sd">        audios (list[dict[str,str]]): List of Audios.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">file</span> <span class="p">:</span> <span class="n">File</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">,</span>
+        <span class="n">filesystem</span><span class="p">:</span> <span class="n">Filesystem</span> <span class="o">|</span> <span class="n">Folder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Location in WMW2.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (File | str | bytes): XML file for the Location.</span>
+<span class="sd">            filesystem (Filesystem | Folder, optional): Filesystem to use. Defaults to None.</span>
+<span class="sd">            gamepath (str, optional): Game path. Only used if filesystem not specified. Defaults to None.</span>
+<span class="sd">            assets (str, optional): Assets path relative to game path. Only used if filesystem not specified. Defaults to &#39;/assets&#39;.</span>
+<span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">backgrounds</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">levels</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">widgets</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">sprites</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">armatures</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">waterPaths</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">atlases</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">expertAtlases</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">transitionPiece</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">expertModeAssets</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">audios</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Location.read"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.location.Location.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the XML file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">backgrounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">sprites</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">armatures</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">waterPaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">atlases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">expertAtlases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">transitionPiece</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">expertModeAssets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">audios</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Backgrounds&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getBackgrounds</span><span class="p">,</span>
+            <span class="s1">&#39;Levels&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getLevels</span><span class="p">,</span>
+            <span class="s1">&#39;Widgets&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getWidgets</span><span class="p">,</span>
+            <span class="s1">&#39;Armatures&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getArmatures</span><span class="p">,</span>
+            <span class="s1">&#39;WaterPaths&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getWaterPaths</span><span class="p">,</span>
+            <span class="s1">&#39;Atlases&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">xml</span><span class="p">,</span> <span class="n">atlases</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">atlases</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getAtlasses</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">atlases</span><span class="p">),</span>
+            <span class="s1">&#39;ExpertAtlases&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">xml</span><span class="p">,</span> <span class="n">atlases</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">expertAtlases</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getAtlasses</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">atlases</span><span class="p">),</span>
+            <span class="s1">&#39;TransitionPiece&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getTransitionPieces</span><span class="p">,</span>
+            <span class="s1">&#39;ExpertModeAssets&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getExpertModeAssets</span><span class="p">,</span>
+            <span class="s1">&#39;Audios&#39;</span> <span class="p">:</span> <span class="n">this</span><span class="o">.</span><span class="n">_getAudios</span><span class="p">,</span>
+        <span class="p">}</span>
+        
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+                <span class="n">tags</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">](</span><span class="n">element</span><span class="p">)</span></div>
+        
+    <span class="k">def</span> <span class="nf">_getBackgrounds</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">backgrounds</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">backgrounds</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Background&#39;</span><span class="p">:</span>
+                <span class="n">background</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">background</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">backgrounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">background</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getLevels</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">levels</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Level&#39;</span><span class="p">:</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">level</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getWidgets</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">widgets</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">widgets</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Widget&#39;</span><span class="p">:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">widget</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+            
+    <span class="k">def</span> <span class="nf">_getArmatures</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">armatures</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">armatures</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Armature&#39;</span><span class="p">:</span>
+                <span class="n">armature</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">armature</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">armatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">armature</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getWaterPaths</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">waterPaths</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">waterPaths</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;WaterPath&#39;</span><span class="p">:</span>
+                <span class="n">waterPath</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="n">el</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="n">el</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+                        <span class="n">waterPath</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Properties&#39;</span><span class="p">:</span>
+                        <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+                        
+                        <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">el</span><span class="p">:</span>
+                            <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                            
+                            <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            
+                            <span class="k">if</span> <span class="nb">property</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Property&#39;</span><span class="p">:</span>
+                                <span class="n">properties</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+                        
+                        <span class="n">waterPath</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">properties</span>
+                
+                <span class="n">this</span><span class="o">.</span><span class="n">waterPaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">waterPath</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getAtlasses</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">,</span> <span class="n">atlases</span> <span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atlases</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">atlases</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">atlases</span>
+        
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">xml</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Atlas&#39;</span><span class="p">:</span>
+                <span class="n">atlas</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                
+                <span class="k">for</span> <span class="n">FileName</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="n">FileName</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="n">FileName</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">atlas</span> <span class="o">=</span> <span class="n">FileName</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+                
+                <span class="n">atlases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atlas</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getTransitionPieces</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">transitionPieces</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">transitionPieces</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;TransitionPiece&#39;</span><span class="p">:</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">level</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_getExpertModeAssets</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">expertModeAssets</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">expertModeAssets</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Asset&#39;</span><span class="p">:</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">expertModeAssets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+    
+    <span class="k">def</span> <span class="nf">_getAudios</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">audios</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">audios</span><span class="p">:</span>
+            <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+            
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Audio&#39;</span><span class="p">:</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="nb">property</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span>
+                    
+                    <span class="k">if</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">level</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+                <span class="n">this</span><span class="o">.</span><span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../wmwpy.html">wmwpy</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

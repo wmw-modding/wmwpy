@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wmwpy.gametemplate &#8212; wmwpy 0.5.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wmwpy.gametemplate</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">.game</span> <span class="kn">import</span> <span class="n">Game</span>
+
+<span class="c1"># Where&#39;s My Water?</span>
+<div class="viewcode-block" id="WMW"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMW">[docs]</a><span class="k">class</span> <span class="nc">WMW</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">_PROFILE</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMW&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WMWF"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMWF">[docs]</a><span class="k">class</span> <span class="nc">WMWF</span><span class="p">(</span><span class="n">WMW</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMWF&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="c1"># Where&#39;s My Perry?</span>
+<div class="viewcode-block" id="WMP"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMP">[docs]</a><span class="k">class</span> <span class="nc">WMP</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMP&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/water.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WMPF"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMPF">[docs]</a><span class="k">class</span> <span class="nc">WMPF</span><span class="p">(</span><span class="n">WMP</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry-Lite.db&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMPF&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/water-Lite.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="c1"># Where&#39;s My Mickey?</span>
+<div class="viewcode-block" id="WMM"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMM">[docs]</a><span class="k">class</span> <span class="nc">WMM</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/Data/perry.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMM&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/Data/perry.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WMMF"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMMF">[docs]</a><span class="k">class</span> <span class="nc">WMMF</span><span class="p">(</span><span class="n">WMM</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/Data/perry-Lite.db&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMMF&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/Data/perry-Lite.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Mickey/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="c1"># Where&#39;s My XiYangYang?</span>
+<div class="viewcode-block" id="WMXYY"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMXYY">[docs]</a><span class="k">class</span> <span class="nc">WMXYY</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMXYY&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/water.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">databasekey</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WMWFXYY"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMWFXYY">[docs]</a><span class="k">class</span> <span class="nc">WMWFXYY</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMWFXYY&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/water.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">databasekey</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="c1"># Where&#39;s My Water 2?</span>
+<div class="viewcode-block" id="WMW2"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMW2">[docs]</a><span class="k">class</span> <span class="nc">WMW2</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Water/Data/perry.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Water/&#39;</span>
+    <span class="n">_PROFILE</span> <span class="o">=</span> <span class="s1">&#39;/Water/Data/factory_profile.json&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMW2&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Water/Data/perry.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Water/Data/factory_profile.json&#39;</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Water/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="c1"># Where&#39;s My Holiday?</span>
+<div class="viewcode-block" id="WMH"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMH">[docs]</a><span class="k">class</span> <span class="nc">WMH</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span>
+    <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMH&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="WMH.mode"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMH.mode">[docs]</a>    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">mode</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;wmw&#39;</span><span class="p">,</span> <span class="s1">&#39;wmp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;wmw&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Switch game mode from &#39;wmw&#39; to &#39;wmp&#39; and vice verca.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode (str, optional): Mode. Can be &#39;wmw&#39; or &#39;wmp&#39;. Defaults to &#39;wmw&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;wmw&#39;</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water-Lite.db&#39;</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;wmp&#39;</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry-Lite.db&#39;</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="s1">&#39;/Perry&#39;</span>
+            
+            <span class="n">this</span><span class="o">.</span><span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/perry-Lite.db&#39;</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/Perry&#39;</span>
+
+        <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span></div></div>
+
+<div class="viewcode-block" id="WMS"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.WMS">[docs]</a><span class="k">class</span> <span class="nc">WMS</span><span class="p">(</span><span class="n">WMPF</span><span class="p">):</span>
+    <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMS&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="n">this</span><span class="p">,</span>
+        <span class="n">gamepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">assets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Content&#39;</span><span class="p">,</span>
+        <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/Data/water-Lite.db&#39;</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">baseassets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/Perry/&#39;</span><span class="p">,</span>
+        <span class="n">load_callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">db</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="p">,</span> <span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span><span class="p">,</span> <span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">)</span></div>
+
+<span class="n">GAMES</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Game</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="register_game"><a class="viewcode-back" href="../../wmwpy.html#wmwpy.gametemplate.register_game">[docs]</a><span class="k">def</span> <span class="nf">register_game</span><span class="p">(</span><span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">class_</span> <span class="p">:</span> <span class="n">Game</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a game template</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the game. E.G. &#39;WMW&#39;</span>
+<span class="sd">        class_ (Game): A class that has been inherited by the `Game` object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: class has to be inherited by Game</span>
+<span class="sd">        TypeError: name must be a string</span>
+<span class="sd">        NameError: game already exists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="n">class_</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="vm">__class__</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">Game</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;class has to be inherited by Game&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;name must be a string&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">GAMES</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;game &quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; already exists&#39;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">GAMES</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_</span></div>
+
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMW&#39;</span><span class="p">,</span> <span class="n">WMW</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMWF&#39;</span><span class="p">,</span> <span class="n">WMWF</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMP&#39;</span><span class="p">,</span> <span class="n">WMP</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMPF&#39;</span><span class="p">,</span> <span class="n">WMPF</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMM&#39;</span><span class="p">,</span> <span class="n">WMM</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMMXL&#39;</span><span class="p">,</span> <span class="n">WMM</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMMF&#39;</span><span class="p">,</span> <span class="n">WMMF</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMXYY&#39;</span><span class="p">,</span> <span class="n">WMXYY</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMWFXYY&#39;</span><span class="p">,</span> <span class="n">WMWFXYY</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMW2&#39;</span><span class="p">,</span><span class="n">WMW2</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMH&#39;</span><span class="p">,</span><span class="n">WMH</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMV&#39;</span><span class="p">,</span><span class="n">WMH</span><span class="p">)</span>
+<span class="n">register_game</span><span class="p">(</span><span class="s1">&#39;WMS&#39;</span><span class="p">,</span><span class="n">WMS</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../wmwpy.html">wmwpy</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

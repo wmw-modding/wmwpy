@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>wmwpy.object_packs package &#8212; wmwpy 0.5.0-beta documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="wmwpy-object-packs-package">
+<h1>wmwpy.object_packs package<a class="headerlink" href="#wmwpy-object-packs-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-wmwpy.object_packs.WMW">
+<span id="wmwpy-object-packs-wmw-module"></span><h2>wmwpy.object_packs.WMW module<a class="headerlink" href="#module-wmwpy.object_packs.WMW" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.fluidconverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.WMW.</span></span><span class="sig-name descname"><span class="pre">fluidconverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object"><span class="pre">Object</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#fluidconverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.fluidconverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.type.Type" title="wmwpy.classes.objectpack.type.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.fluidconverter.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fluidconverter'</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.fluidconverter.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.fluidconverter.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'options'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ConverterType':</span> <span class="pre">{'default':</span> <span class="pre">'static',</span> <span class="pre">'options':</span> <span class="pre">['dynamic',</span> <span class="pre">'static'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'FluidType':</span> <span class="pre">{'default':</span> <span class="pre">'water',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'FluidType#':</span> <span class="pre">{'default':</span> <span class="pre">'water',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'MaskSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'OutlineSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'2',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'StartingFluidType':</span> <span class="pre">{'default':</span> <span class="pre">'water',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'}}</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.fluidconverter.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.fluidconverter.ready_properties">
+<span class="sig-name descname"><span class="pre">ready_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#fluidconverter.ready_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.fluidconverter.ready_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ready the properties before they are put into the level xml. By default, properties that are equal to their default property counterpart are removed, except ‘Type’, ‘Angle’, and ‘Filename’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>include</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of properties to always keep. Defaults to [].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new properties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str,str]</p>
+</dd>
+</dl>
+<p>To use this inside a custom Type, just call the super() with the include argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">fluidconverter</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;fluidconverter&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;FluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;FluidType#&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;StartingFluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ConverterType&#39;</span><span class="p">,</span>
+        <span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.fluidconverter.ready_sprites">
+<span class="sig-name descname"><span class="pre">ready_sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#fluidconverter.ready_sprites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.fluidconverter.ready_sprites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sprites ready for generating the object image.</p>
+<p>In this method, you can modify any object or sprites properties to generate the correct image based on the object properties. There are also many methods that can be used to make the process easier.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">yswitch</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;yswitch&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;YSwitchPosition&#39;</span><span class="p">)</span>
+
+        <span class="n">ToggleSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ToggleSpriteIndex&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">YSwitchPosition</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">ToggleSpriteIndex</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">/</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">YSwitchPosition</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also modify sprite images directly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">wmwpy.utils</span> <span class="kn">import</span> <span class="n">imageprocessing</span>
+
+<span class="k">class</span> <span class="nc">star</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;star&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">StarType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;StarType&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">StarType</span> <span class="o">==</span> <span class="s1">&#39;note&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;Color&#39;</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageprocessing</span><span class="o">.</span><span class="n">recolor_image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="n">color</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.spout">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.WMW.</span></span><span class="sig-name descname"><span class="pre">spout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object"><span class="pre">Object</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#spout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.spout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.type.Type" title="wmwpy.classes.objectpack.type.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.spout.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'spout'</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.spout.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.spout.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'options'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Absorber':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'AngleVariation':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'Blockable':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'ConnectedConverter':</span> <span class="pre">{'default':</span> <span class="pre">'FluidConerter0',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ConnectedSpout#':</span> <span class="pre">{'default':</span> <span class="pre">'Spout0',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ConnectedSpoutProbability#':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ConnectedYSwitchPort#':</span> <span class="pre">{'default':</span> <span class="pre">'left',</span> <span class="pre">'options':</span> <span class="pre">['left',</span> <span class="pre">'right'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ExplusionAngleVariation':</span> <span class="pre">{'default':</span> <span class="pre">'2',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ExpulsionAngle':</span> <span class="pre">{'default':</span> <span class="pre">'0.0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ExpulsionAngleVariation':</span> <span class="pre">{'default':</span> <span class="pre">'0.0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'FluidType':</span> <span class="pre">{'default':</span> <span class="pre">'water',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'Goal':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'GoalPreset':</span> <span class="pre">{'default':</span> <span class="pre">'Swampy',</span> <span class="pre">'options':</span> <span class="pre">['Swampy',</span> <span class="pre">'Cranky',</span> <span class="pre">'Allie'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'IsMysterious':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'Limit':</span> <span class="pre">{'default':</span> <span class="pre">'60',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'Mute':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'NoCutHole':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'NumParticles':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'NumberParticles':</span> <span class="pre">{'default':</span> <span class="pre">'-1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'OffsetToBlock':</span> <span class="pre">{'default':</span> <span class="pre">'0</span> <span class="pre">0',</span> <span class="pre">'type':</span> <span class="pre">'float</span> <span class="pre">float'},</span> <span class="pre">'OffsetToMouth':</span> <span class="pre">{'default':</span> <span class="pre">'0</span> <span class="pre">0',</span> <span class="pre">'type':</span> <span class="pre">'float</span> <span class="pre">float'},</span> <span class="pre">'OffsetVariation':</span> <span class="pre">{'default':</span> <span class="pre">'0.0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ParticleCount':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticleDryness':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ParticleOffset':</span> <span class="pre">{'default':</span> <span class="pre">'0</span> <span class="pre">0',</span> <span class="pre">'type':</span> <span class="pre">'float</span> <span class="pre">float'},</span> <span class="pre">'ParticlePerSecond':</span> <span class="pre">{'default':</span> <span class="pre">'-1',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticlePerSeconds':</span> <span class="pre">{'default':</span> <span class="pre">'15',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticleQueueThreshhold':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticleQueueThreshold':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticleSpeed':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ParticleVariation':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticlesPerSecond':</span> <span class="pre">{'default':</span> <span class="pre">'3',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ParticlesQueueThreshold':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticlesSpeed':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticplesPerSecond':</span> <span class="pre">{'default':</span> <span class="pre">'15',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'PartilcesPerSecond':</span> <span class="pre">{'default':</span> <span class="pre">'5',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'PerticlesPerSecond':</span> <span class="pre">{'default':</span> <span class="pre">'15',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'SpoutType':</span> <span class="pre">{'default':</span> <span class="pre">'OpenSpout',</span> <span class="pre">'options':</span> <span class="pre">['Drain',</span> <span class="pre">'TouchSpout',</span> <span class="pre">'OpenSpout',</span> <span class="pre">'DrainSpout'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'SprinklerSteps':</span> <span class="pre">{'default':</span> <span class="pre">'4',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'SprinklerWidth':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'Timer#':</span> <span class="pre">{'default':</span> <span class="pre">'1</span> <span class="pre">1',</span> <span class="pre">'type':</span> <span class="pre">'bit</span> <span class="pre">float'},</span> <span class="pre">'VacuumBaseAngle':</span> <span class="pre">{'default':</span> <span class="pre">'90',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumCenterOffsetA':</span> <span class="pre">{'default':</span> <span class="pre">'0</span> <span class="pre">0',</span> <span class="pre">'type':</span> <span class="pre">'int</span> <span class="pre">int'},</span> <span class="pre">'VacuumCenterOffsetB':</span> <span class="pre">{'default':</span> <span class="pre">'0</span> <span class="pre">0',</span> <span class="pre">'type':</span> <span class="pre">'int</span> <span class="pre">int'},</span> <span class="pre">'VacuumForce':</span> <span class="pre">{'default':</span> <span class="pre">'100',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumFriction':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'VacuumMaxAngle':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumMaxD':</span> <span class="pre">{'default':</span> <span class="pre">'80',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumMaxForce':</span> <span class="pre">{'default':</span> <span class="pre">'80',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumMinAngle':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'VacuumOn':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'VacuumRaycastOffset':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ValveIndex':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'particlespersecond':</span> <span class="pre">{'default':</span> <span class="pre">'3',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'xParticleQueueThreshold':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'}}</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.spout.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.spout.ready_properties">
+<span class="sig-name descname"><span class="pre">ready_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#spout.ready_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.spout.ready_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ready the properties before they are put into the level xml. By default, properties that are equal to their default property counterpart are removed, except ‘Type’, ‘Angle’, and ‘Filename’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>include</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of properties to always keep. Defaults to [].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new properties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str,str]</p>
+</dd>
+</dl>
+<p>To use this inside a custom Type, just call the super() with the include argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">fluidconverter</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;fluidconverter&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;FluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;FluidType#&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;StartingFluidType&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ConverterType&#39;</span><span class="p">,</span>
+        <span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.star">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.WMW.</span></span><span class="sig-name descname"><span class="pre">star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object"><span class="pre">Object</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#star"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.star" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.type.Type" title="wmwpy.classes.objectpack.type.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.star.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'star'</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.star.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.star.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'options'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'AllowCollect':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'AllowedFluid':</span> <span class="pre">{'default':</span> <span class="pre">'water',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'BlastRadius':</span> <span class="pre">{'default':</span> <span class="pre">'7.5',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'Burst':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'Color':</span> <span class="pre">{'default':</span> <span class="pre">'255</span> <span class="pre">255</span> <span class="pre">255</span> <span class="pre">255',</span> <span class="pre">'options':</span> <span class="pre">['150</span> <span class="pre">198</span> <span class="pre">232</span> <span class="pre">255',</span> <span class="pre">'195</span> <span class="pre">214</span> <span class="pre">0</span> <span class="pre">255',</span> <span class="pre">'183</span> <span class="pre">52</span> <span class="pre">52</span> <span class="pre">255',</span> <span class="pre">'209</span> <span class="pre">85</span> <span class="pre">174</span> <span class="pre">255',</span> <span class="pre">'237</span> <span class="pre">158</span> <span class="pre">64</span> <span class="pre">255',</span> <span class="pre">'107</span> <span class="pre">53</span> <span class="pre">146</span> <span class="pre">255'],</span> <span class="pre">'type':</span> <span class="pre">'int</span> <span class="pre">int</span> <span class="pre">int</span> <span class="pre">int'},</span> <span class="pre">'CutRadius':</span> <span class="pre">{'default':</span> <span class="pre">'5',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'CutsDirt':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'CutsRock':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'FillDirection':</span> <span class="pre">{'default':</span> <span class="pre">'up',</span> <span class="pre">'options':</span> <span class="pre">['up',</span> <span class="pre">'down'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'FillTexture':</span> <span class="pre">{'default':</span> <span class="pre">'none',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'IgnoreFluid':</span> <span class="pre">{'default':</span> <span class="pre">'steam',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'IsSponge':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'NumParticlesToHatch':</span> <span class="pre">{'default':</span> <span class="pre">'5',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'Order':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'PlatinumType':</span> <span class="pre">{'default':</span> <span class="pre">'normal',</span> <span class="pre">'options':</span> <span class="pre">['platinum',</span> <span class="pre">'note',</span> <span class="pre">'normal'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'StarType':</span> <span class="pre">{'default':</span> <span class="pre">'normal',</span> <span class="pre">'options':</span> <span class="pre">['normal',</span> <span class="pre">'allie',</span> <span class="pre">'baby',</span> <span class="pre">'teleport',</span> <span class="pre">'note',</span> <span class="pre">'mega'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'TeleportMoveEase':</span> <span class="pre">{'default':</span> <span class="pre">'both',</span> <span class="pre">'options':</span> <span class="pre">['both',</span> <span class="pre">'in',</span> <span class="pre">'out'],</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'TeleportMoveTime':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'TeleportWaitTime':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'float'}}</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.star.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.star.ready_sprites">
+<span class="sig-name descname"><span class="pre">ready_sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#star.ready_sprites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.star.ready_sprites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sprites ready for generating the object image.</p>
+<p>In this method, you can modify any object or sprites properties to generate the correct image based on the object properties. There are also many methods that can be used to make the process easier.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">yswitch</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;yswitch&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;YSwitchPosition&#39;</span><span class="p">)</span>
+
+        <span class="n">ToggleSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ToggleSpriteIndex&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">YSwitchPosition</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">ToggleSpriteIndex</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">/</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">YSwitchPosition</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also modify sprite images directly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">wmwpy.utils</span> <span class="kn">import</span> <span class="n">imageprocessing</span>
+
+<span class="k">class</span> <span class="nc">star</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;star&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">StarType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;StarType&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">StarType</span> <span class="o">==</span> <span class="s1">&#39;note&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;Color&#39;</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageprocessing</span><span class="o">.</span><span class="n">recolor_image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="n">color</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.waterballoon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.WMW.</span></span><span class="sig-name descname"><span class="pre">waterballoon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object"><span class="pre">Object</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#waterballoon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.waterballoon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.type.Type" title="wmwpy.classes.objectpack.type.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.waterballoon.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'waterballoon'</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.waterballoon.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.waterballoon.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'options'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'AttachVertIndex':</span> <span class="pre">{'default':</span> <span class="pre">'6',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'CollisionElasticityWorld':</span> <span class="pre">{'default':</span> <span class="pre">'0.05',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'CollisionFrictionWorld':</span> <span class="pre">{'default':</span> <span class="pre">'0.2',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ConnectedSpout':</span> <span class="pre">{'default':</span> <span class="pre">'Spout0',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ContaminatedSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'EdgeSpringDamping':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'EdgeSpringK':</span> <span class="pre">{'default':</span> <span class="pre">'500',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'InitialParticles':</span> <span class="pre">{'default':</span> <span class="pre">'water</span> <span class="pre">10',</span> <span class="pre">'options':</span> <span class="pre">['water',</span> <span class="pre">'contaminatedwater',</span> <span class="pre">'lava',</span> <span class="pre">'steam',</span> <span class="pre">'mud',</span> <span class="pre">'drymud',</span> <span class="pre">'wetmud'],</span> <span class="pre">'type':</span> <span class="pre">'string</span> <span class="pre">int</span> <span class="pre">...'},</span> <span class="pre">'InternalSpring#':</span> <span class="pre">{'default':</span> <span class="pre">'1</span> <span class="pre">5</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'options':</span> <span class="pre">['1</span> <span class="pre">5</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'8</span> <span class="pre">0</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'7</span> <span class="pre">11</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'11</span> <span class="pre">3</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'0</span> <span class="pre">4</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'4</span> <span class="pre">8</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'9</span> <span class="pre">1</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'2</span> <span class="pre">6</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'10</span> <span class="pre">2</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'3</span> <span class="pre">7</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'5</span> <span class="pre">9</span> <span class="pre">500</span> <span class="pre">10',</span> <span class="pre">'6</span> <span class="pre">10</span> <span class="pre">500</span> <span class="pre">10'],</span> <span class="pre">'type':</span> <span class="pre">'int</span> <span class="pre">int</span> <span class="pre">int</span> <span class="pre">int'},</span> <span class="pre">'MaxParticles':</span> <span class="pre">{'default':</span> <span class="pre">'70',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'MouthSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'3',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'MudSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'4',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ParticleDryness':</span> <span class="pre">{'default':</span> <span class="pre">'1.0',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'PointMass':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'ShapeMatchingDamping':</span> <span class="pre">{'default':</span> <span class="pre">'500',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ShapeMatchingK':</span> <span class="pre">{'default':</span> <span class="pre">'500',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'SteamSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'2',</span> <span class="pre">'type':</span> <span class="pre">'int'}}</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.waterballoon.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.waterballoon.ready_sprites">
+<span class="sig-name descname"><span class="pre">ready_sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#waterballoon.ready_sprites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.waterballoon.ready_sprites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sprites ready for generating the object image.</p>
+<p>In this method, you can modify any object or sprites properties to generate the correct image based on the object properties. There are also many methods that can be used to make the process easier.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">yswitch</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;yswitch&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;YSwitchPosition&#39;</span><span class="p">)</span>
+
+        <span class="n">ToggleSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ToggleSpriteIndex&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">YSwitchPosition</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">ToggleSpriteIndex</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">/</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">YSwitchPosition</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also modify sprite images directly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">wmwpy.utils</span> <span class="kn">import</span> <span class="n">imageprocessing</span>
+
+<span class="k">class</span> <span class="nc">star</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;star&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">StarType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;StarType&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">StarType</span> <span class="o">==</span> <span class="s1">&#39;note&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;Color&#39;</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageprocessing</span><span class="o">.</span><span class="n">recolor_image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="n">color</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.yswitch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.WMW.</span></span><span class="sig-name descname"><span class="pre">yswitch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.html#wmwpy.classes.object.Object" title="wmwpy.classes.object.Object"><span class="pre">Object</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#yswitch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.yswitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.type.Type" title="wmwpy.classes.objectpack.type.Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.yswitch.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'yswitch'</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.yswitch.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.yswitch.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'options'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ConnectedConverter':</span> <span class="pre">{'default':</span> <span class="pre">'FluidConverter0',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ConnectedSpout#':</span> <span class="pre">{'default':</span> <span class="pre">'Spout0',</span> <span class="pre">'type':</span> <span class="pre">'string'},</span> <span class="pre">'ConnectedSpoutProbability#':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'float'},</span> <span class="pre">'FirstLeftSpout':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'bit'},</span> <span class="pre">'FirstRightSpout':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'PlugSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'3',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'ToggleSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'1',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'WindowSpriteIndex':</span> <span class="pre">{'default':</span> <span class="pre">'2',</span> <span class="pre">'type':</span> <span class="pre">'int'},</span> <span class="pre">'YSwitchPosition':</span> <span class="pre">{'default':</span> <span class="pre">'0',</span> <span class="pre">'type':</span> <span class="pre">'bit'}}</span></em><a class="headerlink" href="#wmwpy.object_packs.WMW.yswitch.PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="wmwpy.object_packs.WMW.yswitch.ready_sprites">
+<span class="sig-name descname"><span class="pre">ready_sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs/WMW.html#yswitch.ready_sprites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.WMW.yswitch.ready_sprites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sprites ready for generating the object image.</p>
+<p>In this method, you can modify any object or sprites properties to generate the correct image based on the object properties. There are also many methods that can be used to make the process easier.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="k">class</span> <span class="nc">yswitch</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;yswitch&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;YSwitchPosition&#39;</span><span class="p">)</span>
+
+        <span class="n">ToggleSpriteIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;ToggleSpriteIndex&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">YSwitchPosition</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">YSwitchPosition</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="n">ToggleSpriteIndex</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">/</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">YSwitchPosition</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also modify sprite images directly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wmwpy.classes.objectpacks</span> <span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">wmwpy.utils</span> <span class="kn">import</span> <span class="n">imageprocessing</span>
+
+<span class="k">class</span> <span class="nc">star</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;star&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready_sprites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">StarType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;StarType&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">StarType</span> <span class="o">==</span> <span class="s1">&#39;note&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;Color&#39;</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">imageprocessing</span><span class="o">.</span><span class="n">recolor_image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">sprites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="n">color</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-wmwpy.object_packs">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wmwpy.object_packs" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.object_packs.get_object_pack">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.</span></span><span class="sig-name descname"><span class="pre">get_object_pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'WMW'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.pack.ObjectPack" title="wmwpy.classes.objectpack.pack.ObjectPack"><span class="pre">ObjectPack</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/wmwpy/object_packs.html#get_object_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.get_object_pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wmwpy.object_packs.register_object_pack">
+<span class="sig-prename descclassname"><span class="pre">wmwpy.object_packs.</span></span><span class="sig-name descname"><span class="pre">register_object_pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wmwpy.classes.objectpack.html#wmwpy.classes.objectpack.pack.ObjectPack" title="wmwpy.classes.objectpack.pack.ObjectPack"><span class="pre">ObjectPack</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wmwpy/object_packs.html#register_object_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#wmwpy.object_packs.register_object_pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">wmwpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, ego-lay-atman-bay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/wmwpy.object_packs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

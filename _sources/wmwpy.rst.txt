@@ -1,22 +1,15 @@
 wmwpy package
 =============
 
-Module contents
----------------
-
-.. automodule:: wmwpy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
 .. toctree::
    :maxdepth: 4
 
-   wmwpy.Utils
    wmwpy.classes
+   wmwpy.object_packs
+   wmwpy.utils
 
 Submodules
 ----------
@@ -33,6 +26,22 @@ wmwpy.gameobject module
 -----------------------
 
 .. automodule:: wmwpy.gameobject
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+wmwpy.gametemplate module
+-------------------------
+
+.. automodule:: wmwpy.gametemplate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: wmwpy
    :members:
    :undoc-members:
    :show-inheritance:
