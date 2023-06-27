@@ -85,8 +85,8 @@ class Texture(GameObject):
 
         this.textureSettings = this._textureSettings.get(this.filename)
 
-        if this.textureSettings.premultiplyAlpha:
-            this.image = this.image.convert('RGBa')
+        # if not this.textureSettings.premultiplyAlpha:
+        #     this.image = this.image.convert('RGBa')
 
     @property
     def size(this) -> tuple[int,int]:
@@ -115,3 +115,27 @@ class Texture(GameObject):
         file = this.filesystem.add(filename, fileio, replace = True)
 
         return file
+    
+    def show(self, *args, **kwargs):
+        """Calls the PIL.Image.Image.show() method.
+        
+        ---
+        #### Description copied from the PIL library
+        
+        Displays this image. This method is mainly intended for debugging purposes.
+
+        This method calls PIL.ImageShow.show internally. You can use
+        PIL.ImageShow.register to override its default behavior.
+
+        The image is first saved to a temporary file. By default, it will be in PNG format.
+
+        On Unix, the image is then opened using the **display**, **eog** or **xv** utility, depending on which one can be found.
+
+        On macOS, the image is opened with the native Preview application.
+
+        On Windows, the image is opened with the standard PNG display utility.
+
+        Args:
+            title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.
+        """
+        return self.image.show(*args, **kwargs)
