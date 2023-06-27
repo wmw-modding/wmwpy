@@ -92,7 +92,7 @@ class Waltex():
     def __init__(
         this,
         file : str | bytes,
-        byte_order : str = 'little'
+        byte_order : str = 'little',
     ) -> None:
         """Waltex image
 
@@ -109,21 +109,25 @@ class Waltex():
                 'order': 'rgba',
                 'bpp': [8,8,8,8],
                 'spec': 'rgba8888',
+                'byte_order': 'big',
             },
             {
                 'order': 'rgb',
                 'bpp': [5,6,5],
                 'spec': 'rgb565',
+                'byte_order': 'little',
             },
             {
                 'order': 'rgba',
                 'bpp': [5,5,5,1],
                 'spec': 'rgba5551',
+                'byte_order': 'little',
             },
             {
                 'order': 'rgba',
                 'bpp': [4,4,4,4],
                 'spec': 'rgba4444',
+                'byte_order': 'little',
             },
         ]
         
@@ -146,7 +150,7 @@ class Waltex():
         this.file = file
         this.rawdata = io.BytesIO(rawdata)
         
-        this.read(byte_order=this._byte_order)
+        this.read()
     
     def read(this, byte_order : str = None) -> Image.Image:
         """Read the waltex image.
@@ -168,13 +172,16 @@ class Waltex():
         size = (int.from_bytes(header[6:8], byteorder='little'), int.from_bytes(header[8:10], byteorder='little'))
         this.image = Image.new('RGBA', size)
         
+        if not byte_order:
+            this._byte_order = this.colorspec['byte_order']
+        
         try:
             this.image = Image.open(this.rawdata)
-            if byte_order == 'little':
+            if this._byte_order == 'little':
                 A, B, G, R = this.image.split()
                 this.image = Image.merge('RGBA', (R,G,B,A))
         except:
-            this.image = WaltexImage(this.rawdata, byte_order = byte_order)
+            this.image = WaltexImage(this.rawdata, byte_order = this._byte_order)
         
         this.image.format = _WaltexImageFile.format
         this.image.format_description = _WaltexImageFile.format_description
