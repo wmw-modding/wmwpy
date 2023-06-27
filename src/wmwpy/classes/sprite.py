@@ -135,8 +135,8 @@ class Sprite(GameObject):
         image = this.animation.image.copy()
         gridSize = numpy.array(this.gridSize)
         
-        print(f'{gridSize = }')
-        print(f'{this.scale = }')
+        # print(f'{gridSize = }')
+        # print(f'{this.scale = }')
         
         size = gridSize * this.scale
         size = [abs(round(x)) for x in size]
@@ -869,7 +869,7 @@ class Sprite(GameObject):
 
             Attributes:
                 atlas (Imagelist): The atlas for this Frame.
-                textueBasePath (str): The textureBasePath for this Frame.
+                textureBasePath (str): The textureBasePath for this Frame.
                 properties (dict[str,str]): The frame properties.
             """
             
@@ -897,7 +897,7 @@ class Sprite(GameObject):
                 super().__init__(filesystem, gamepath, assets, baseassets)
                 
                 this.atlas = atlas
-                this.textueBasePath = textureBasePath
+                this.textureBasePath = textureBasePath
                 this.properties = properties
                 
                 this.color_filter : tuple[int,int,int,int] = []
@@ -1150,7 +1150,7 @@ class Sprite(GameObject):
                 this.updateProperties()
                 return etree.Element('Frame', **this.properties)
             
-            def show(this, title: str | None = None):
+            def show(this, *args, **kwargs):
                 """Calls the PIL.Image.Image.show() method.
                 
                 ---
@@ -1159,7 +1159,7 @@ class Sprite(GameObject):
                 Displays this image. This method is mainly intended for debugging purposes.
 
                 This method calls PIL.ImageShow.show internally. You can use
-                PIL.ImageShow.register to override its default behaviour.
+                PIL.ImageShow.register to override its default behavior.
 
                 The image is first saved to a temporary file. By default, it will be in PNG format.
 
@@ -1172,4 +1172,4 @@ class Sprite(GameObject):
                 Args:
                     title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.
                 """
-                return this.image.show(title = title)
+                return this.image.show(*args, **kwargs)

@@ -303,7 +303,7 @@ class Object(GameObject):
     
     @property
     def foreground_PhotoImage(this) -> 'ImageTk.PhotoImage':
-        """Foregound Tkinter PhotoImage
+        """Foreground Tkinter PhotoImage
 
         Returns:
             ImageTk.PhotoImage: Tkinter PhotoImage
@@ -557,7 +557,7 @@ class Object(GameObject):
     
     @property
     def filename(this) -> str | None:
-        """Object filename based on the `Filename` proprty
+        """Object filename based on the `Filename` property
         """
         if 'Filename' in this.properties:
             return this.properties['Filename']
@@ -757,7 +757,7 @@ class Object(GameObject):
             filename = this.name if this.name not in ['', None] else this.type if this.type not in ['', None] else os.path.basename(this.filename)
             filename = os.path.splitext(filename)[0] + '.gif'
             
-            print(f'{filename = }')
+            # print(f'{filename = }')
         
         animation = this.getAnimation(
             duration = duration,

@@ -459,10 +459,9 @@ class Imagelist(GameObject):
             """Get atlas image.
             """
             if this.file in ['', None]:
-                image = Texture(PIL.Image.new('RGBA', this.imgSize))
-                this.atlas = image.image.copy()
+                this.atlas = Texture(PIL.Image.new('RGBA', this.imgSize)).image
             else:
-                image = Texture(
+                this.atlas = Texture(
                     this.file,
                     HD = this.HD,
                     TabHD = this.TabHD,
@@ -470,8 +469,7 @@ class Imagelist(GameObject):
                     gamepath = this.gamepath,
                     assets = this.assets,
                     baseassets = this.baseassets,
-                )
-                this.atlas = image.image.copy()
+                ).image
     
         def getImages(this, save_images = False):
             """Get images from xml.
@@ -682,6 +680,16 @@ class Imagelist(GameObject):
                 atlas.paste(image.image, image.rect[0:2])
             
             this.atlas = atlas
+            
+            # this.atlas = Texture(
+            #     atlas,
+            #     filesystem = this.filesystem,
+            #     gamepath = this.gamepath,
+            #     assets = this.assets,
+            #     baseassets = this.baseassets,
+            #     HD = this.HD,
+            #     TabHD = this.TabHD,
+            # )
             return this.atlas
     
         class Image(GameObject):
@@ -793,7 +801,7 @@ class Imagelist(GameObject):
             
             @property
             def name(this) -> str:
-                """The name of the iamge
+                """The name of the image
 
                 Returns:
                     str: image name
@@ -835,10 +843,29 @@ class Imagelist(GameObject):
                 this._image.save(this.rawdata, format = os.path.splitext(this.name)[1][1::].upper())
                 return this._image
 
-            def show(this):
-                """Show image with default image viewer.
+            def show(this, *args, **kwargs):
+                """Calls the PIL.Image.Image.show() method.
+                
+                ---
+                #### Description copied from the PIL library
+                
+                Displays this image. This method is mainly intended for debugging purposes.
+
+                This method calls PIL.ImageShow.show internally. You can use
+                PIL.ImageShow.register to override its default behavior.
+
+                The image is first saved to a temporary file. By default, it will be in PNG format.
+
+                On Unix, the image is then opened using the **display**, **eog** or **xv** utility, depending on which one can be found.
+
+                On macOS, the image is opened with the native Preview application.
+
+                On Windows, the image is opened with the standard PNG display utility.
+
+                Args:
+                    title (str | None, optional): Optional title to use for the image window, where possible.. Defaults to None.
                 """
-                this.image.show()
+                this.image.show(*args, **kwargs)
             
             def getXML(this, tag = 'Image'):
                 """Get xml for image.

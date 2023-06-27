@@ -376,7 +376,7 @@ class Level(GameObject):
             filename (str | Object): Filename for object. If it's a wmwpy.classes.Object class, then it will use that instead.
             properties (dict, optional): Object properties. Defaults to {}.
             pos (tuple[x,y], optional): Position of object in level. Defaults to (0,0).
-            name (str, optional): Name of object. May get renamed if object with name alread exists. Defaults to 'Obj'.
+            name (str, optional): Name of object. May get renamed if object with name already exists. Defaults to 'Obj'.
 
         Returns:
             Object: wmwpy Object.
@@ -487,7 +487,7 @@ class Level(GameObject):
             this.id = this.xml.get('id', '')
             
             for element in this.xml:
-                # so I can acess the attributes in vscode
+                # so I can access the attributes in vscode
                 element : etree.ElementBase
                 
                 if element is etree.Comment:

@@ -84,7 +84,7 @@ class Database(GameObject):
         return file.rawdata.getvalue()
 
     def execute(this, *args):
-        """Execute sql on the database. See sqlite3.Cursor.execute for paramaters.
+        """Execute sql on the database. See sqlite3.Cursor.execute for parameters.
 
         Args:
             The arguments for sqlite3.Cursor.execute()
