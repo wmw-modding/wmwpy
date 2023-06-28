@@ -76,14 +76,14 @@ class Texture(GameObject):
         else:
             raise TypeError('image must be PIL.Image.Image, Waltex, or filesystem.File.')
         
-        this._textureSettings = TextureSettings(
-            filesystem = this.filesystem,
-            gamepath = this.gamepath,
-            assets = this.assets,
-            baseassets = this.baseassets,
-        )
+        # this._textureSettings = TextureSettings(
+        #     filesystem = this.filesystem,
+        #     gamepath = this.gamepath,
+        #     assets = this.assets,
+        #     baseassets = this.baseassets,
+        # )
 
-        this.textureSettings = this._textureSettings.get(this.filename)
+        # this.textureSettings = this._textureSettings.get(this.filename)
 
         # if not this.textureSettings.premultiplyAlpha:
         #     this.image = this.image.convert('RGBa')
