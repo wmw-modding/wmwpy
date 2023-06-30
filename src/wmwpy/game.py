@@ -1,6 +1,7 @@
 import os
 import typing
 import logging
+from copy import deepcopy
 
 from .utils.filesystem import *
 from .classes.texture import Texture
@@ -26,6 +27,15 @@ class Game():
     _DB = '/Data/water.db'
     _BASEASSETS = '/'
     _PROFILE = None
+    _LEVEL_MATERIALS : dict[str, dict[typing.Literal[
+        'rgb',
+        'type',
+        'image',
+        'outlined',
+        'outline_thickness',
+        'outline_color',
+        'outline_ignore_materials',
+    ], str | tuple[int,int,int] | bool | int | float | list[str]]] = {}
     
     game = 'WMW'
     
@@ -38,7 +48,17 @@ class Game():
         baseassets : str = '/',
         platform : typing.Literal['android', 'ios'] = 'android',
         load_callback : typing.Callable[[int, str, int], typing.Any] = None,
+        level_materials : dict[str, dict[typing.Literal[
+            'rgb',
+            'type',
+            'image',
+            'outlined',
+            'outline_thickness',
+            'outline_color',
+            'outline_ignore_materials',
+        ], str | tuple[int,int,int] | bool | int | float | list[str]]] = None
     ) -> None:
+        
         """load game
 
         Args:
@@ -49,6 +69,57 @@ class Game():
             baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`
             platform (Literal['android', 'ios'], optional): What platform this game is for. Can be 'android' or 'ios'. Defaults to 'android'.
             load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.
+            level_materials (dict[str, dict[Literal['rgb','type','image','outlined','outline_thickness','outline_color','outline_ignore_materials',], str | tuple[int,int,int] | bool | int | float | list[str]]], optional): Level materials in a level. You should not have to set this (if you're using `wmwpy.load`). Defaults to None.
+        
+        ## Level materials example
+            You should not need to use this if you're using `wmwpy.load('...', game = 'WMW')`
+        
+            ```python
+            level_materials = {
+                'air': {
+                    'rgb': (255,255,255),
+                    'type': 'solid',
+                    'outlined': False,
+                },
+                'dirt': {
+                    'rgb': (113,91,49),
+                    'type': 'solid',
+                    'image': '/Textures/dirt.webp',
+                    'outlined': True,
+                    'outline_thickness': 2,
+                    'outline_color': (255,255,255),
+                },
+                'rock': {
+                    'rgb': (71,71,71),
+                    'type': 'solid',
+                    'image': '/Textures/rock.webp',
+                    'outlined': True,
+                    'outline_thickness': 2,
+                    'outline_color': (255,255,255),
+                    'outline_ignore_materials': [
+                        'rock_shadow',
+                        'rock_hilight',
+                    ]
+                },
+                'rock_hilight': { # That's how it's spelled in the games files
+                    'rgb': (166,166,166),
+                    'type': 'solid',
+                    'image': '/Textures/rock_hilight.webp',
+                    'outlined': True,
+                    'outline_thickness': 2,
+                    'outline_color': (255,255,255),
+                    'outline_ignore_materials': [
+                        'rock',
+                        'rock_shadow',
+                    ]
+                },
+                'water': {
+                    'rgb': (43, 33, 254),
+                    'type': 'particle',
+                },
+            }
+            ```
+        
         """
         if gamepath == None:
             return
@@ -60,6 +131,8 @@ class Game():
         this.profile = profile or this._PROFILE
         this.baseassets = baseassets or this._BASEASSETS
         this.platform = platform
+        
+        this.level_materials = deepcopy(level_materials or this._LEVEL_MATERIALS)
         
         this.object_pack = object_packs.get_object_pack(this.game)
         

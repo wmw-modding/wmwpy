@@ -1,4 +1,5 @@
 import typing
+from copy import deepcopy
 
 from .game import Game
 
@@ -7,6 +8,85 @@ class WMW(Game):
     _DB = '/Data/water.db'
     _BASEASSETS = '/'
     _PROFILE = None
+    _LEVEL_MATERIALS = {
+        'air': {
+            'rgb': (255,255,255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        'dirt': {
+            'rgb': (113,91,49),
+            'type': 'solid',
+            'image': '/Textures/dirt.webp',
+            'outlined': True,
+            'outline_thickness': 2,
+            'outline_color': (255,255,255),
+        },
+        'rock': {
+            'rgb': (71,71,71),
+            'type': 'solid',
+            'image': '/Textures/rock.webp',
+            'outlined': True,
+            'outline_thickness': 2,
+            'outline_color': (255,255,255),
+            'outline_ignore_materials': [
+                'rock_shadow',
+                'rock_hilight',
+            ]
+        },
+        'rock_hilight': { # That's how it's spelled in the games files
+            'rgb': (166,166,166),
+            'type': 'solid',
+            'image': '/Textures/rock_hilight.webp',
+            'outlined': True,
+            'outline_thickness': 2,
+            'outline_color': (255,255,255),
+            'outline_ignore_materials': [
+                'rock',
+                'rock_shadow',
+            ]
+        },
+        'rock_shadow': {
+            'rgb': (41,41,41),
+            'type': 'solid',
+            'image': '/Textures/rock_shadow.webp',
+            'outlined': True,
+            'outline_thickness': 2,
+            'outline_color': (255,255,255),
+            'outline_ignore_materials': [
+                'rock',
+                'rock_hilight'
+            ]
+        },
+        'water': {
+            'rgb': (43, 33, 254),
+            'type': 'particle',
+        },
+        'poison_water': {
+            'rgb': (139,25,135),
+            'type': 'particle',
+        },
+        'ooze': {
+            'rgb': (190,101,47),
+            'type': 'particle',
+        },
+        "steam": {
+            'rgb': (0, 3, 143),
+            'type': 'particle',
+        },
+        "mud": {
+            'rgb': (63, 50, 27),
+            'type': 'particle',
+        },
+        'algae': {
+            'rgb': (38,139,38),
+            'type': 'particle',
+        },
+        'hot_coals': {
+            'rgb': (178,8,21),
+            'type': 'particle',
+        },
+    }
     
     game = 'WMW'
     
@@ -43,6 +123,57 @@ class WMWF(WMW):
 class WMP(Game):
     _DB = '/Perry/Data/perry.db'
     _BASEASSETS = '/Perry/'
+    _LEVEL_MATERIALS = {
+        "air": {
+            'rgb': (255, 255, 255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        "dirt": {
+            'rgb': (113, 91, 49),
+            'type': 'solid',
+            'image': '/Perry/Texture/materials_dirt.pvr',
+            'outlined': True,
+            'outline_color': (255,255,255),
+            'outline_thickness': 2,
+        },
+        "stone": {
+            'rgb': (71, 71, 71),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_stone_small.pvr',
+            'outlined': True,
+            'outline_color': (255,255,255),
+            'outline_thickness': 2,
+        },
+        "ice": {
+            'rgb': (64, 208, 255),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_ice.pvr',
+            'outlined': True,
+            'outline_color': (255,255,255),
+            'outline_thickness': 2,
+        },
+        "water": {
+            'rgb': (43, 33, 254),
+            'type': 'particle',
+        },
+        "steam": {
+            'rgb': (0, 3, 143),
+            'type': 'particle',
+        },
+        "sludge": {
+            'rgb': (20, 20, 20),
+            'type': 'particle',
+        },
+        "hot_sludge": {
+            'rgb': (126, 44, 0),
+            'type': 'particle',
+        },
+        "cold_sludge": {
+            'rgb': (27, 72, 88),
+            'type': 'particle',
+        },
+    }
     
     game = 'WMP'
     
@@ -77,6 +208,63 @@ class WMPF(WMP):
 class WMM(Game):
     _DB = '/Mickey/Data/perry.db'
     _BASEASSETS = '/Mickey/'
+    _LEVEL_MATERIALS = {
+        "air": {
+            'rgb': (255, 255, 255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        "dirt": {
+            'rgb': (113, 91, 49),
+            'type': 'solid',
+            'image': '/Mickey/Textures/materials_dirt.webp',
+            'outlined': True,
+            'outline_color': '/Mickey/Textures/material_outline_dirt.webp',
+            'outline_thickness': 2,
+        },
+        "stone": {
+            'rgb': (71, 71, 71),
+            'type': 'solid',
+            'image': {
+                'beach': '/Mickey/Textures/materials_stone_beach.webp',
+                'snow': '/Mickey/Textures/materials_stone_snow.webp',
+                'paris': '/Mickey/Textures/materials_stone_paris.webp',
+                'spaceXL': '/Mickey/Textures/materials_stone_spaceXL.webp',
+                'canyon': '/Mickey/Textures/materials_stone_canyon.webp',
+                'venice': '/Mickey/Textures/materials_stone_venice.webp',
+                'goofy_art': '/Mickey/Textures/materials_stone_goofy_art.webp',
+                'goofy_beach': '/Mickey/Textures/materials_stone_goofy_beach.webp',
+            },
+            'outlined': True,
+            'outline_color': {
+                'beach': '/Mickey/Textures/material_outline_rock_beach.webp',
+                'snow': '/Mickey/Textures/material_outline_ice.webp',
+                'paris': '/Mickey/Textures/material_outline_rock_growingpains.webp',
+                'spaceXL': '/Mickey/Textures/material_outline_rock_space.webp',
+                'canyon': '/Mickey/Textures/material_outline_rock_canyon.webp',
+                'venice': '/Mickey/Textures/material_outline_rock_venice.webp',
+                'goofy_art': '/Mickey/Textures/material_outline_rock_vangoofy.webp',
+                'goofy_beach': '/Mickey/Textures/material_outline_rock_shipwrecked.webp',
+            },
+            'outline_thickness': 2,
+        },
+        "water": {
+            'rgb': (43, 33, 254),
+            'type': 'particle',
+        },
+        "fizzle": {
+            'rgb': (184, 222, 68),
+            'type': 'particle',
+        },
+        "cloud": {
+            'rgb': (0, 3, 143),
+            'type': 'particle',
+        },
+        "wet_cloud": {
+            'rgb': (100, 100, 215),
+            'type': 'particle',
+        },
+    }
     
     game = 'WMM'
     
@@ -111,6 +299,57 @@ class WMMF(WMM):
 class WMXYY(Game):
     _DB = '/Perry/Data/perry.db'
     _BASEASSETS = '/Perry/'
+    _LEVEL_MATERIALS = {
+        "air": {
+            'rgb': (255, 255, 255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        "dirt": {
+            'rgb': (113, 91, 49),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_dirt.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_dirt.webp',
+            'outline_thickness': 2,
+        },
+        "stone": {
+            'rgb': (71, 71, 71),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_stone_small.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_rock.webp',
+            'outline_thickness': 2,
+        },
+        "wood": {
+            'rgb': (241, 207, 122),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_wood_normal.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_wood.webp',
+            'outline_thickness': 2,
+        },
+        "water": {
+            'rgb': (43, 33, 254),
+            'type': 'particle'
+        },
+        "poison_water": {
+            'rgb': (80, 0, 71),
+            'type': 'particle'
+        },
+        "oil": {
+            'rgb': (163, 74, 5),
+            'type': 'particle'
+        },
+        "hot_oil": {
+            'rgb': (208, 8, 11),
+            'type': 'particle'
+        },
+        "vines": {
+            'rgb': (38, 139, 38),
+            'type': 'particle'
+        },
+    }
     
     game = 'WMXYY'
     
@@ -129,6 +368,57 @@ class WMXYY(Game):
 class WMWFXYY(Game):
     _DB = '/Perry/Data/perry.db'
     _BASEASSETS = '/Perry/'
+    _LEVEL_MATERIALS = {
+        "air": {
+            'rgb': (255, 255, 255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        "dirt": {
+            'rgb': (113, 91, 49),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_dirt.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_dirt.webp',
+            'outline_thickness': 2,
+        },
+        "stone": {
+            'rgb': (71, 71, 71),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_stone_small.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_rock.webp',
+            'outline_thickness': 2,
+        },
+        "wood": {
+            'rgb': (241, 207, 122),
+            'type': 'solid',
+            'image': '/Perry/Textures/materials_wood_normal.webp',
+            'outlined': True,
+            'outline_color': '/Perry/Textures/material_outline_wood.webp',
+            'outline_thickness': 2,
+        },
+        "water": {
+            'rgb': (43, 33, 254),
+            'type': 'particle'
+        },
+        "poison_water": {
+            'rgb': (80, 0, 71),
+            'type': 'particle'
+        },
+        "oil": {
+            'rgb': (163, 74, 5),
+            'type': 'particle'
+        },
+        "hot_oil": {
+            'rgb': (208, 8, 11),
+            'type': 'particle'
+        },
+        "vines": {
+            'rgb': (38, 139, 38),
+            'type': 'particle'
+        },
+    }
     
     game = 'WMWFXYY'
     
@@ -149,6 +439,61 @@ class WMW2(Game):
     _DB = '/Water/Data/perry.db'
     _BASEASSETS = '/Water/'
     _PROFILE = '/Water/Data/factory_profile.json'
+    _LEVEL_MATERIALS = {
+        "air": {
+            'rgb': (255, 255, 255),
+            'type': 'solid',
+            'outlined': False,
+        },
+        "dirt": {
+            'rgb': (113, 91, 49),
+            'type': 'solid',
+            'image': {
+                'swampy': '/Water/Textures/WMW2_Pattern_Swampy_Dirt.webp',
+                'cranky': '/Water/Textures/WMW2_Pattern_Cranky_Dirt.webp',
+                'allie': '/Water/Textures/WMW2_Pattern_Allie_Dirt.webp',
+            },
+            'outlined': True,
+            'outline_color': (255,255,255),
+            'outline_thickness': 2,
+        },
+        "stone": {
+            'rgb': (71, 71, 71),
+            'type': 'solid',
+            'image': {
+                'swampy': '/Water/Textures/WMW2_Pattern_Swampy_Rock.webp',
+                'cranky': '/Water/Textures/WMW2_Pattern_Cranky_Rock.webp',
+                'allie': '/Water/Textures/WMW2_Pattern_Allie_Rock.webp',
+            },
+            'outlined': True,
+            'outline_color': (255,255,255),
+            'outline_thickness': 2,
+        },
+        "algae": {
+            'rgb': (38, 139, 38),
+            'type': 'particle',
+        },
+        "hot_coals": {
+            'rgb': (178, 8, 21),
+            'type': 'particle',
+        },
+        "water": {
+            'rgb': (43, 33, 254),
+            'type': 'particle',
+        },
+        "poison_water": {
+            'rgb': (139, 25, 135),
+            'type': 'particle',
+        },
+        "ooze": {
+            'rgb': (190, 101, 47),
+            'type': 'particle',
+        },
+        "steam": {
+            'rgb': (0, 3, 143),
+            'type': 'particle',
+        },
+    }
     
     game = 'WMW2'
     
@@ -165,8 +510,9 @@ class WMW2(Game):
 
 # Where's My Holiday?
 class WMH(Game):
-    _DB = '/Data/water-Lite.db'
-    _BASEASSETS = '/'
+    _DB = WMWF._DB
+    _BASEASSETS = WMWF._BASEASSETS
+    _LEVEL_MATERIALS = deepcopy(WMWF._LEVEL_MATERIALS)
     
     game = 'WMH'
     
@@ -190,17 +536,21 @@ class WMH(Game):
         
         mode = mode.lower()
         if mode == 'wmw':
-            this.db = '/Data/water-Lite.db'
-            this.baseassets = '/'
+            this._DB = WMWF._DB
+            this._BASEASSETS = WMWF._BASEASSETS
+            this._LEVEL_MATERIALS = deepcopy(WMWF._LEVEL_MATERIALS)
             
-            this._DB = '/Data/water-Lite.db'
-            this._BASEASSETS = '/'
+            this.db = this._DB
+            this.baseassets = this._BASEASSETS
+            this.level_materials = deepcopy(this._LEVEL_MATERIALS)
         elif mode == 'wmp':
-            this.db = '/Perry/Data/perry-Lite.db'
-            this.baseassets = '/Perry'
-            
-            this._DB = '/Perry/Data/perry-Lite.db'
-            this._BASEASSETS = '/Perry'
+            this._DB = WMPF._DB
+            this._BASEASSETS = WMPF._BASEASSETS
+            this._LEVEL_MATERIALS = deepcopy(WMPF._LEVEL_MATERIALS)
+        
+        this.db = this._DB
+        this.baseassets = this._BASEASSETS
+        this.level_materials = deepcopy(this._LEVEL_MATERIALS)
 
         this.filesystem.baseassets = this.baseassets
 
@@ -236,12 +586,12 @@ def register_game(name : str, class_ : Game):
     if not isinstance(class_, type):
         class_ = class_.__class__
     
-    if not isinstance(class_(None), Game):
-        raise TypeError('class has to be inherited by Game')
+    if not issubclass(class_, Game):
+        raise TypeError(f'class {name} has to be inherited by Game')
     if not isinstance(name, str):
         raise TypeError('name must be a string')
     try:
-        if GAMES[name]:
+        if name in GAMES:
             raise NameError(f'game "{name}" already exists')
     except:
         pass
