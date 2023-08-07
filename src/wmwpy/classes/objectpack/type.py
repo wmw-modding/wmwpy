@@ -130,7 +130,7 @@ class Type():
         """
         self.obj = obj
     
-    def split_property_num(property) -> tuple[str,str]:
+    def split_property_num(self, property) -> tuple[str,str]:
         """Split a property name and number, such as, 'ConnectedSpout0' returns `('ConnectedSpout', '0')`.
 
         Args:
