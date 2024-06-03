@@ -560,6 +560,11 @@ class star(Type):
                 )
             except:
                 pass
+    
+    def ready_properties(self) -> dict[str, str]:
+        return super().ready_properties(include = [
+            'StarType',
+        ])
 
 WMWObjectPack.register_type(star)
 
