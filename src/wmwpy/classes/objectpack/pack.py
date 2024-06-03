@@ -50,15 +50,16 @@ class ObjectPack():
         
         self.register_type(Type)
     
-    def register_type(self, object_type : Type):
+    def register_type(self, object_type : type[Type]):
         """Register an object type. The type must inherit from `classes.objectpack.Type`.
 
         Args:
-            object_type (Type): Object Type
+            object_type (type[Type]): Object Type constructor
 
         Raises:
             TypeError: type must inherit from the classes.objectpack.type.Type class
         """
+        
         if not isinstance(object_type, type):
             object_type = object_type.__class__
         
@@ -67,7 +68,7 @@ class ObjectPack():
         else:
             raise TypeError('type must inherit from the classes.objectpack.type.Type class')
     
-    def get_type(self, object_type : str, obj : 'Object' = None) -> Type:
+    def get_type(self, object_type : str, obj : 'Object' = None) -> type[Type]:
         """Get the object Type class that is registed inside this object pack. If the Type cannot be found, it defaults to an empty object type.
 
         Args:
