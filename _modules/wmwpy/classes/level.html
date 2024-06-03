@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.level &#8212; wmwpy 0.5.1-beta documentation</title>
+    <title>wmwpy.classes.level &#8212; wmwpy 0.5.2-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -16,8 +16,9 @@
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -48,7 +49,6 @@
 
 
 <span class="kn">from</span> <span class="nn">..utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">..utils.logging_utils</span> <span class="kn">import</span> <span class="n">log_exception</span>
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">Object</span>
 <span class="kn">from</span> <span class="nn">..gameobject</span> <span class="kn">import</span> <span class="n">GameObject</span>
 <span class="kn">from</span> <span class="nn">.objectpack.pack</span> <span class="kn">import</span> <span class="n">ObjectPack</span>
@@ -56,7 +56,7 @@
 <div class="viewcode-block" id="Level"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level">[docs]</a><span class="k">class</span> <span class="nc">Level</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Level object.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Attributes:</span>
 <span class="sd">        HD (bool): Using HD graphics</span>
 <span class="sd">        TabHD (bool): Using TabHD graphics.</span>
@@ -70,10 +70,10 @@
 <span class="s2">    &lt;Objects&gt;</span>
 <span class="s2">    &lt;/Objects&gt;</span>
 <span class="s2">    &quot;&quot;&quot;</span>
-    
+
     <span class="n">IMAGE_TEMPLATE</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">127</span><span class="p">),</span> <span class="s1">&#39;white&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
     <span class="n">IMAGE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span>
-    
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">xml</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">File</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -102,53 +102,53 @@
 <span class="sd">            HD (bool, optional): Use HD images. Defaults to False.</span>
 <span class="sd">            TabHD (bool, optional): Use TabHD images. Defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">gamepath</span> <span class="o">=</span> <span class="n">gamepath</span>
         <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="n">assets</span>
         <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="s1">&#39;/assets&#39;</span>
-        
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">gamepath</span><span class="p">,</span> <span class="n">assets</span><span class="p">,</span> <span class="n">baseassets</span><span class="p">)</span>
-        
+
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Level: xml before: </span><span class="si">{</span><span class="n">xml</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Level: xml path: </span><span class="si">{</span><span class="n">xml</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">xml_file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">XML_TEMPLATE</span><span class="p">)</span>
-        
+
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Level: xml after: </span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">xml_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="c1"># try:</span>
         <span class="c1">#     logging.debug(f&#39;Level: raw xml:\n{this.xml_file.getvalue().decode()}&#39;)</span>
         <span class="c1"># except:</span>
         <span class="c1">#     logging.debug(&#39;Level: file not io.BytesIO&#39;)</span>
-        
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
             <span class="n">this</span><span class="o">.</span><span class="n">xml_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml_file</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">image_file</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">image_file</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">IMAGE_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image_file</span><span class="p">)</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">HD</span> <span class="o">=</span> <span class="n">HD</span>
         <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span> <span class="o">=</span> <span class="n">TabHD</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">=</span> <span class="n">object_pack</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">objects</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">this</span><span class="o">.</span><span class="n">challenges</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Level</span><span class="o">.</span><span class="n">Challenge</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">room</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">load_callback</span> <span class="o">=</span> <span class="n">load_callback</span><span class="p">,</span> <span class="n">ignore_errors</span> <span class="o">=</span> <span class="n">ignore_errors</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="mi">5</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Level image size</span>
@@ -157,7 +157,7 @@
 <span class="sd">            tuple[int,int]: (width,height)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">size</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Scaled up Level image</span>
@@ -166,18 +166,18 @@
 <span class="sd">            PIL.Image.Image: PIL Image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        
+
         <span class="n">size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span>
-        
+
         <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">resample</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">NEAREST</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">image</span>
-        
+
     <span class="nd">@image</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">value</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ImageTk.PhotoImage&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tkinter PhotoImage of the Level image</span>
@@ -189,7 +189,7 @@
             <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            
+
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_PhotoImage</span>
 
     <span class="nd">@property</span>
@@ -200,10 +200,10 @@
     <span class="nd">@scale</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="n">value</span>
-        
+
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_scale</span>
-    
+
 <div class="viewcode-block" id="Level.read"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">load_callback</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -213,47 +213,47 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">this</span><span class="o">.</span><span class="n">objects</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
-        
+
         <span class="k">def</span> <span class="nf">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">max</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">load_callback</span><span class="p">):</span>
                     <span class="n">load_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="n">log_exception</span><span class="p">()</span>
-        
+                <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;run_callback error:&#39;</span><span class="p">)</span>
+
         <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
-        
+
         <span class="nb">max</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">)</span>
-        
+
         <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-        
+
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">:</span>
             <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span>
-            
+
             <span class="k">try</span><span class="p">:</span>
-                
+
                 <span class="c1"># comment safe-guard</span>
                 <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                     <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Comment&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
                     <span class="k">continue</span>
-                
+
                 <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Object&#39;</span><span class="p">:</span>
                     <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
                     <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-                    
+
                     <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Object: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-                    
+
                     <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">el</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;AbsoluteLocation&#39;</span><span class="p">:</span>
                                 <span class="n">pos</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-                            
+
                             <span class="k">elif</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Properties&#39;</span><span class="p">:</span>
                                 <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">el</span><span class="p">:</span>
                                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">property</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span> <span class="ow">and</span> <span class="nb">property</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Property&#39;</span><span class="p">:</span>
                                         <span class="n">properties</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-                    
+
                     <span class="n">obj</span> <span class="o">=</span> <span class="n">Object</span><span class="p">(</span>
                         <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]),</span> <span class="c1"># get file because `Object` does not take filepath</span>
                         <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
@@ -264,30 +264,30 @@
                         <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
                         <span class="n">object_pack</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span><span class="p">,</span>
                     <span class="p">)</span>
-                    
+
                     <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-                    
+
                     <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-                    
+
                     <span class="nb">id</span> <span class="o">+=</span> <span class="mi">1</span>
-                
+
                 <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Properties&#39;</span><span class="p">:</span>
                     <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Level Properties&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-                        
+
                     <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">el</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                             <span class="k">continue</span>
-                        
+
                         <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Property&#39;</span><span class="p">:</span>
                             <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-                
+
                 <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Room&#39;</span><span class="p">:</span>
                     <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Room&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-                        
+
                     <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">el</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                             <span class="k">continue</span>
-                        
+
                         <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;AbsoluteLocation&#39;</span><span class="p">:</span>
                             <span class="n">this</span><span class="o">.</span><span class="n">room</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
                 <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Challenges&#39;</span><span class="p">:</span>
@@ -295,23 +295,23 @@
                         <span class="n">challenge</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span>
                         <span class="k">if</span> <span class="n">challenge</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                             <span class="k">continue</span>
-                        
+
                         <span class="k">if</span> <span class="n">challenge</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Challenge&#39;</span><span class="p">:</span>
                             <span class="n">this</span><span class="o">.</span><span class="n">challenges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">Challenge</span><span class="p">(</span><span class="n">challenge</span><span class="p">))</span>
-                        
-                
+
+
                 <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">load_callback</span><span class="p">):</span>
                     <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-                    
+
                 <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
-                
+
                 <span class="n">run_callback</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Done!&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
-                
+
             <span class="k">except</span><span class="p">:</span>
-                <span class="n">log_exception</span><span class="p">()</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;level load error:&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_errors</span><span class="p">:</span>
                     <span class="k">raise</span></div>
-            
+
 <div class="viewcode-block" id="Level.export"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -335,14 +335,14 @@
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filename</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
-        
+
         <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Objects&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">exportObjects</span><span class="p">:</span>
                 <span class="nb">object</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
-            
+
             <span class="n">xml</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">getLevelXML</span><span class="p">())</span>
-        
+
         <span class="n">room</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Room&#39;</span><span class="p">)</span>
         <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">room</span><span class="p">,</span> <span class="s1">&#39;AbsoluteLocation&#39;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">room</span><span class="p">]))</span>
 
@@ -350,51 +350,51 @@
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">properties</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">):</span>
             <span class="n">xml</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
-        
+
         <span class="n">challenges</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Challenges&#39;</span><span class="p">)</span>
-        
+
         <span class="k">for</span> <span class="n">challenge</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">challenges</span><span class="p">:</span>
             <span class="n">challenges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">challenge</span><span class="o">.</span><span class="n">getXML</span><span class="p">())</span>
-        
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">challenges</span><span class="p">):</span>
             <span class="n">xml</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">challenges</span><span class="p">)</span>
-        
+
         <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">xml</span>
-        
+
         <span class="n">output</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xml_declaration</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="p">(</span><span class="n">file</span> <span class="o">:=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Path </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not a file.&#39;</span><span class="p">)</span>
-                
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">saveImage</span><span class="p">:</span>
             <span class="n">imgFile</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
             <span class="n">this</span><span class="o">.</span><span class="n">_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
                 <span class="n">imgFile</span><span class="p">,</span>
                 <span class="nb">format</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">IMAGE_FORMAT</span><span class="p">,</span>
             <span class="p">)</span>
-            
+
             <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">this</span><span class="o">.</span><span class="n">IMAGE_FORMAT</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
-            
+
             <span class="k">if</span> <span class="p">(</span><span class="n">file</span> <span class="o">:=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
                     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">imgFile</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Path </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not a file.&#39;</span><span class="p">)</span>
-                    
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">imgFile</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
-        
+
         <span class="k">return</span> <span class="n">output</span></div>
-    
+
 <div class="viewcode-block" id="Level.addObject"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.addObject">[docs]</a>    <span class="k">def</span> <span class="nf">addObject</span><span class="p">(</span>
         <span class="n">this</span><span class="p">,</span>
         <span class="n">filename</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Object</span><span class="p">,</span>
@@ -426,27 +426,27 @@
             <span class="n">filename</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="n">filename</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
             <span class="n">filename</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
-        
+
         <span class="n">obj</span> <span class="o">=</span> <span class="n">filename</span>
-        
+
         <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">this</span><span class="o">.</span><span class="n">getObjectById</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">+=</span> <span class="mi">1</span>
-        
+
         <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">objnum</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span>
-            
+
             <span class="k">while</span> <span class="n">this</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">objnum</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="n">objnum</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
-        
+
         <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span>
-        
+
         <span class="k">return</span> <span class="n">obj</span></div>
-    
+
 <div class="viewcode-block" id="Level.getObjectById"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.getObjectById">[docs]</a>    <span class="k">def</span> <span class="nf">getObjectById</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="nb">id</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Object</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an Object by it&#39;s id</span>
 
@@ -460,7 +460,7 @@
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">obj</span>
         <span class="k">return</span> <span class="kc">None</span></div>
-    
+
 <div class="viewcode-block" id="Level.getObject"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.getObject">[docs]</a>    <span class="k">def</span> <span class="nf">getObject</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get object by name</span>
@@ -468,11 +468,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            name (str): Object name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">obj</span></div>
-    
+
 <div class="viewcode-block" id="Level.Challenge"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.Challenge">[docs]</a>    <span class="k">class</span> <span class="nc">Challenge</span><span class="p">():</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="n">this</span><span class="p">,</span>
@@ -486,7 +486,7 @@
 <span class="sd">                xml (etree.Element, optional): The xml of the challenge. If it is `None`, it will just use the other values. Defaults to None.</span>
 <span class="sd">                id (str, optional): The id of the challenge. Defaults to &#39;&#39;.</span>
 <span class="sd">                requirements (dict[str, dict[str, str]], optional): The requirements as a `dict`. Defaults to {}.</span>
-<span class="sd">            </span>
+
 <span class="sd">            Requirements format:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                dict[str, dict[str, str]]</span>
@@ -506,46 +506,46 @@
             <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">xml</span>
             <span class="n">this</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
             <span class="n">this</span><span class="o">.</span><span class="n">requirements</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">requirements</span><span class="p">)</span>
-            
+
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">readXML</span><span class="p">()</span>
-        
+
 <div class="viewcode-block" id="Level.Challenge.readXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.Challenge.readXML">[docs]</a>        <span class="k">def</span> <span class="nf">readXML</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Read the XML of the challenge. If the XML wasn&#39;t set, it&#39;ll just return `None`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span><span class="p">):</span>
                 <span class="k">return</span>
-            
+
             <span class="n">this</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            
+
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">xml</span><span class="p">:</span>
                 <span class="c1"># so I can access the attributes in vscode</span>
                 <span class="n">element</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span>
-                
+
                 <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">etree</span><span class="o">.</span><span class="n">Comment</span><span class="p">:</span>
                     <span class="k">continue</span>
-                
+
                 <span class="n">requirement</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">)</span>
-                
+
                 <span class="n">this</span><span class="o">.</span><span class="n">requirements</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">requirement</span></div>
-        
+
 <div class="viewcode-block" id="Level.Challenge.getXML"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.level.Level.Challenge.getXML">[docs]</a>        <span class="k">def</span> <span class="nf">getXML</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Get the XML for the challenge.</span>
-<span class="sd">            </span>
+
 <span class="sd">            Returns:</span>
 <span class="sd">                lxml.etree.Element: lxml etree Element.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">root</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">_Element</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Challenge&#39;</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            
+
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">requirements</span><span class="p">:</span>
                 <span class="n">requirement</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">requirements</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-                
+
                 <span class="n">etree</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">requirement</span><span class="p">)</span>
-            
+
             <span class="n">this</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">root</span>
-            
+
             <span class="k">return</span> <span class="n">root</span></div></div></div>
-            
+
 </pre></div>
 
           </div>
@@ -599,11 +599,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2023, ego-lay-atman-bay.
+      &#169;2023, ego-lay-atman-bay.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
     </div>
 

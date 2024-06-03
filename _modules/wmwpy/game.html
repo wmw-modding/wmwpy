@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.game &#8212; wmwpy 0.5.1-beta documentation</title>
+    <title>wmwpy.game &#8212; wmwpy 0.5.2-beta documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -16,8 +16,9 @@
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -33,6 +34,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">from</span> <span class="nn">.utils.filesystem</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.classes.texture</span> <span class="kn">import</span> <span class="n">Texture</span>
@@ -58,6 +60,15 @@
     <span class="n">_DB</span> <span class="o">=</span> <span class="s1">&#39;/Data/water.db&#39;</span>
     <span class="n">_BASEASSETS</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
     <span class="n">_PROFILE</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_LEVEL_MATERIALS</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span>
+        <span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;image&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;outlined&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;outline_thickness&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;outline_color&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;outline_ignore_materials&#39;</span><span class="p">,</span>
+    <span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
     
     <span class="n">game</span> <span class="o">=</span> <span class="s1">&#39;WMW&#39;</span>
     
@@ -70,7 +81,17 @@
         <span class="n">baseassets</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
         <span class="n">platform</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;ios&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span>
         <span class="n">load_callback</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">level_materials</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span>
+            <span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;image&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;outlined&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;outline_thickness&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;outline_color&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;outline_ignore_materials&#39;</span><span class="p">,</span>
+        <span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;load game</span>
 
 <span class="sd">        Args:</span>
@@ -81,6 +102,57 @@
 <span class="sd">            baseassets (str, optional): Base assets path within the assets folder, e.g. `/perry/` in wmp. Defaults to `/`</span>
 <span class="sd">            platform (Literal[&#39;android&#39;, &#39;ios&#39;], optional): What platform this game is for. Can be &#39;android&#39; or &#39;ios&#39;. Defaults to &#39;android&#39;.</span>
 <span class="sd">            load_callback (Callable[[int, str, int], Any], optional): A callback function to be ran while loading the game. Defaults to None.</span>
+<span class="sd">            level_materials (dict[str, dict[Literal[&#39;rgb&#39;,&#39;type&#39;,&#39;image&#39;,&#39;outlined&#39;,&#39;outline_thickness&#39;,&#39;outline_color&#39;,&#39;outline_ignore_materials&#39;,], str | tuple[int,int,int] | bool | int | float | list[str]]], optional): Level materials in a level. You should not have to set this (if you&#39;re using `wmwpy.load`). Defaults to None.</span>
+<span class="sd">        </span>
+<span class="sd">        ## Level materials example</span>
+<span class="sd">            You should not need to use this if you&#39;re using `wmwpy.load(&#39;...&#39;, game = &#39;WMW&#39;)`</span>
+<span class="sd">        </span>
+<span class="sd">            ```python</span>
+<span class="sd">            level_materials = {</span>
+<span class="sd">                &#39;air&#39;: {</span>
+<span class="sd">                    &#39;rgb&#39;: (255,255,255),</span>
+<span class="sd">                    &#39;type&#39;: &#39;solid&#39;,</span>
+<span class="sd">                    &#39;outlined&#39;: False,</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;dirt&#39;: {</span>
+<span class="sd">                    &#39;rgb&#39;: (113,91,49),</span>
+<span class="sd">                    &#39;type&#39;: &#39;solid&#39;,</span>
+<span class="sd">                    &#39;image&#39;: &#39;/Textures/dirt.webp&#39;,</span>
+<span class="sd">                    &#39;outlined&#39;: True,</span>
+<span class="sd">                    &#39;outline_thickness&#39;: 2,</span>
+<span class="sd">                    &#39;outline_color&#39;: (255,255,255),</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;rock&#39;: {</span>
+<span class="sd">                    &#39;rgb&#39;: (71,71,71),</span>
+<span class="sd">                    &#39;type&#39;: &#39;solid&#39;,</span>
+<span class="sd">                    &#39;image&#39;: &#39;/Textures/rock.webp&#39;,</span>
+<span class="sd">                    &#39;outlined&#39;: True,</span>
+<span class="sd">                    &#39;outline_thickness&#39;: 2,</span>
+<span class="sd">                    &#39;outline_color&#39;: (255,255,255),</span>
+<span class="sd">                    &#39;outline_ignore_materials&#39;: [</span>
+<span class="sd">                        &#39;rock_shadow&#39;,</span>
+<span class="sd">                        &#39;rock_hilight&#39;,</span>
+<span class="sd">                    ]</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;rock_hilight&#39;: { # That&#39;s how it&#39;s spelled in the games files</span>
+<span class="sd">                    &#39;rgb&#39;: (166,166,166),</span>
+<span class="sd">                    &#39;type&#39;: &#39;solid&#39;,</span>
+<span class="sd">                    &#39;image&#39;: &#39;/Textures/rock_hilight.webp&#39;,</span>
+<span class="sd">                    &#39;outlined&#39;: True,</span>
+<span class="sd">                    &#39;outline_thickness&#39;: 2,</span>
+<span class="sd">                    &#39;outline_color&#39;: (255,255,255),</span>
+<span class="sd">                    &#39;outline_ignore_materials&#39;: [</span>
+<span class="sd">                        &#39;rock&#39;,</span>
+<span class="sd">                        &#39;rock_shadow&#39;,</span>
+<span class="sd">                    ]</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;water&#39;: {</span>
+<span class="sd">                    &#39;rgb&#39;: (43, 33, 254),</span>
+<span class="sd">                    &#39;type&#39;: &#39;particle&#39;,</span>
+<span class="sd">                },</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">gamepath</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -92,6 +164,8 @@
         <span class="n">this</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_PROFILE</span>
         <span class="n">this</span><span class="o">.</span><span class="n">baseassets</span> <span class="o">=</span> <span class="n">baseassets</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_BASEASSETS</span>
         <span class="n">this</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="n">platform</span>
+        
+        <span class="n">this</span><span class="o">.</span><span class="n">level_materials</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">level_materials</span> <span class="ow">or</span> <span class="n">this</span><span class="o">.</span><span class="n">_LEVEL_MATERIALS</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">=</span> <span class="n">object_packs</span><span class="o">.</span><span class="n">get_object_pack</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">game</span><span class="p">)</span>
         
@@ -498,11 +572,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2023, ego-lay-atman-bay.
+      &#169;2023, ego-lay-atman-bay.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
     </div>
 
