@@ -1,3 +1,4 @@
+import logging
 from lxml import etree
 from PIL import Image
 import numpy
@@ -127,6 +128,7 @@ class Sprite(GameObject):
         Returns:
             PIL.Image.Image: PIL Image
         """
+        logging.debug(f'sprite {this.filename}')
         if this.SAFE_MODE:
             if hasattr(this, '_image'):
                 if isinstance(this._image, Image.Image):
@@ -139,7 +141,7 @@ class Sprite(GameObject):
         # print(f'{this.scale = }')
         
         size = gridSize * this.scale
-        size = [abs(round(x)) for x in size]
+        size = [max(1, abs(round(x))) for x in size]
         image = image.resize(size)
         
         image = image.rotate(this.angle, Image.BILINEAR, expand=True)
@@ -1067,7 +1069,7 @@ class Sprite(GameObject):
                 else:
                     image = Image.new('RGBA', (1,1), (0,0,0,0))
                 
-                image = image.resize(tuple([round(_) for _ in (numpy.array(this._image.size) * numpy.array(this.scale))]))
+                image = image.resize(tuple([round(_) for _ in (numpy.array(image.size) * numpy.array(this.scale))]))
                 image = image.rotate(this.angleDeg, expand = True)
                 
                 # for color in this.color_filters:
