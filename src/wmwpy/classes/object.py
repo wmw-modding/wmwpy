@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 import typing
 import lxml
 from lxml import etree
@@ -326,6 +327,10 @@ class Object(GameObject):
         image = this.background
         image.alpha_composite(this.foreground)
         
+        if image.size[0] <= 0:
+            logging.warning(f'Object {this.name} image width is <= 0')
+        if image.size[1] <= 0:
+            logging.warning(f'Object {this.name} image hight is <= 0')
         return image
     
     @property
@@ -335,6 +340,8 @@ class Object(GameObject):
         Returns:
             tuple[float,float]: (x,y)
         """
+        logging.info(f'object: {this.name}')
+        
         this.getOffset()
         offset = numpy.array(this._offset)
         
