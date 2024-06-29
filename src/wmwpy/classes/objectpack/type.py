@@ -145,7 +145,7 @@ class Type():
         if not isinstance(property, str):
             raise TypeError('property must be str')
         
-        head = property.rstrip('0123456789')
+        head = property.rstrip('0123456789#')
         tail = property[len(head):]
         return head, tail
     
@@ -287,7 +287,7 @@ class Type():
         
         return types.get(type, types['string'])(value)
     
-    def ready_properties(self, include : list[str] = []) -> dict[str,str]:
+    def ready_properties(self, include : list[str] = None) -> dict[str,str]:
         """Ready the properties before they are put into the level xml. By default, properties that are equal to their default property counterpart are removed, except 'Type', 'Angle', and 'Filename'.
 
         Args:
@@ -312,28 +312,39 @@ class Type():
                 ])
         ```
         """
-        properties = deepcopy(self.obj.properties)
+        if not isinstance(include, list):
+            include = []
+        
+        properties = self.obj.properties
+        self.obj.properties = deepcopy(properties)
         
         include += ['Type', 'Angle', 'Filename']
         
         for property in properties:
             if property in include:
                 continue
+            found_property = False
             for prop in include:
                 if prop.endswith('#'):
-                    split_property : tuple[str,str] = self.split_property_num(property)
+                    split_property = self.split_property_num(property)
                     if split_property[0] == '' or not split_property[1].isnumeric():
                         if prop == property:
-                            continue
-                        elif split_property[1].isnumeric():
-                            if split_property[0] + '#' == prop:
-                                continue
+                            found_property = True
+                            break
+                    elif split_property[1].isnumeric():
+                        if split_property[0] + '#' == prop:
+                            found_property = True
+                            break
                 else:
                     if prop == property:
-                        continue
+                        found_property = True
+                        break
+            
+            if found_property:
+                continue
             
             if property in self.obj.defaultProperties:
-                if self.obj.properties[property] == self.obj.defaultProperties[property]:
+                if property in self.obj.properties and self.obj.properties[property] == self.obj.defaultProperties[property]:
                     del self.obj.properties[property]
         
         return self.obj.properties

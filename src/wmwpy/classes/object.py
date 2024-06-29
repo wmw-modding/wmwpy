@@ -646,8 +646,10 @@ class Object(GameObject):
         # for prop in this.defaultProperties:
         #     if prop not in this.properties:
         #         this.properties[prop] = this.defaultProperties[prop]
-        for prop in this._level_properties:
-            this.properties[prop] = this._level_properties[prop]
+        this.properties = deepcopy(this._level_properties)
+        if this.properties == {}:
+            this.properties = deepcopy(this.defaultProperties)
+        this.Type.ready_properties()
         return this.properties
     
     def _getDefaultProperties(this, xml : etree.ElementBase):
