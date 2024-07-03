@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
   "lxml",
   "numpy",
-  "Pillow",
+  "Pillow == 9.5.0",
   "natsort",
   "filetype",
 ]
