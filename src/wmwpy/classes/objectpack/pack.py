@@ -29,7 +29,7 @@ class ObjectPack():
     pack.register_type(spout)
     ```
     
-    To learn how to define a Type, see `objectpack.Type`.
+    To learn how to define a Type, see `classes.objectpack.Type`.
     """
     
     def __init__(self) -> None:
@@ -46,7 +46,7 @@ class ObjectPack():
         
         More information on how to use it in `classes.objectpack.Type` class.
         """
-        self.types : dict[str, Type] = {}
+        self.types : dict[str, type[Type]] = {}
         
         self.register_type(Type)
     
@@ -68,8 +68,8 @@ class ObjectPack():
         else:
             raise TypeError('type must inherit from the classes.objectpack.type.Type class')
     
-    def get_type(self, object_type : str, obj : 'Object' = None) -> type[Type]:
-        """Get the object Type class that is registed inside this object pack. If the Type cannot be found, it defaults to an empty object type.
+    def get_type(self, object_type : str, obj : 'Object' = None) -> Type:
+        """Get the object Type class that is registered inside this object pack. If the Type cannot be found, it defaults to an empty object type.
 
         Args:
             object_type (str): Type name.
@@ -78,4 +78,4 @@ class ObjectPack():
         Returns:
             Type: Object Type class.
         """
-        return self.types.get(object_type, self.types.get('', None))(obj)
+        return self.types.get(object_type, self.types.get('', Type))(obj)
