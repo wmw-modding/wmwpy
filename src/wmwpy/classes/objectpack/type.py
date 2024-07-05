@@ -288,6 +288,7 @@ class Type():
         }
         
         type_aliases = {
+            'file': 'string',
             'fluid': 'string',
             'angle': 'float',
             'radius': 'float',
