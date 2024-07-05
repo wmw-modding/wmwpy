@@ -1,3 +1,4 @@
+from copy import deepcopy
 import typing
 
 from .type import Type
@@ -78,4 +79,18 @@ class ObjectPack():
         Returns:
             Type: Object Type class.
         """
-        return self.types.get(object_type, self.types.get('', Type))(obj)
+        
+        default_type = Type
+        
+        if object_type:
+            default_type = self.types.get('', Type)
+        
+        result = self.types.get(object_type, self.types.get('', Type))(obj)
+        
+        properties = deepcopy(default_type.PROPERTIES)
+
+        properties.update(result.PROPERTIES)
+        
+        result.PROPERTIES = properties
+        
+        return result
