@@ -164,53 +164,6 @@ class DefaultType(Type):
 WMWObjectPack.register_type(DefaultType)
 
 
-class yswitch(Type):
-    NAME = "yswitch"
-    PROPERTIES = {
-        "YSwitchPosition": {
-            "type": "bit",
-            "default": "0",
-        },
-        "ToggleSpriteIndex": {
-            "type": "index:sprite",
-            "default": "1",
-        },
-        "WindowSpriteIndex": {
-            "type": "index:sprite",
-            "default": "2",
-        },
-        "PlugSpriteIndex": {"type": "index:sprite", "default": "3"},
-        "FirstRightSpout": {
-            "type": "int",
-            "default": "0",
-        },
-        "ConnectedSpout#": {
-            "type": "object",
-        },
-        "ConnectedSpoutProbability#": {"type": "float", "default": "1"},
-        "FirstLeftSpout": {"type": "bit", "default": "1"},
-        "PlugSpriteIndex": {"type": "index:sprite", "default": "3"},
-        "ConnectedConverter": {
-            "type": "object",
-        },
-    }
-
-    def ready_sprites(self):
-        super().ready_sprites()
-
-        YSwitchPosition = self.get_property("YSwitchPosition")
-
-        ToggleSpriteIndex = self.get_property("ToggleSpriteIndex")
-
-        if YSwitchPosition != 1:
-            YSwitchPosition = 0
-
-        self.obj.sprites[ToggleSpriteIndex].angle = (360 / -3) * (YSwitchPosition + 1)
-
-
-WMWObjectPack.register_type(yswitch)
-
-
 class spout(Type):
     NAME = "spout"
     PROPERTIES = {
@@ -310,6 +263,71 @@ class spout(Type):
 
 
 WMWObjectPack.register_type(spout)
+
+
+class bomb(Type):
+    NAME = "bomb"
+    PROPERTIES = {
+        "BlastRadius": {"type": "radius", "default": "7"},
+        "BlastPower": {
+            "type": "int",
+            "default": "4000",
+        },
+        "xBlastRadius": {
+            "type": "radius",
+            "default": "7",
+        },
+    }
+
+
+WMWObjectPack.register_type(bomb)
+
+
+class yswitch(Type):
+    NAME = "yswitch"
+    PROPERTIES = {
+        "YSwitchPosition": {
+            "type": "bit",
+            "default": "0",
+        },
+        "ToggleSpriteIndex": {
+            "type": "index:sprite",
+            "default": "1",
+        },
+        "WindowSpriteIndex": {
+            "type": "index:sprite",
+            "default": "2",
+        },
+        "PlugSpriteIndex": {"type": "index:sprite", "default": "3"},
+        "FirstRightSpout": {
+            "type": "int",
+            "default": "0",
+        },
+        "ConnectedSpout#": {
+            "type": "object",
+        },
+        "ConnectedSpoutProbability#": {"type": "float", "default": "1"},
+        "FirstLeftSpout": {"type": "bit", "default": "1"},
+        "PlugSpriteIndex": {"type": "index:sprite", "default": "3"},
+        "ConnectedConverter": {
+            "type": "object",
+        },
+    }
+
+    def ready_sprites(self):
+        super().ready_sprites()
+
+        YSwitchPosition = self.get_property("YSwitchPosition")
+
+        ToggleSpriteIndex = self.get_property("ToggleSpriteIndex")
+
+        if YSwitchPosition != 1:
+            YSwitchPosition = 0
+
+        self.obj.sprites[ToggleSpriteIndex].angle = (360 / -3) * (YSwitchPosition + 1)
+
+
+WMWObjectPack.register_type(yswitch)
 
 
 class fluidconverter(Type):
