@@ -566,6 +566,32 @@ class star(Type):
 WMWObjectPack.register_type(star)
 
 
+class collectible(Type):
+    NAME = "collectible"
+    PROPERTIES = {
+        "CollectibleID": {
+            "type": "int",
+            "default": "1",
+        },
+        "CrankyMode": {
+            "type": "bit",
+            "default": "1",
+        },
+        "PlatinumType": {
+            "type": "string",
+            "default": "normal",
+            "options": ["platinum", "note", "normal"],
+        },
+        "AllieMode": {
+            "type": "bit",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(collectible)
+
+
 class waterballoon(Type):
     NAME = "waterballoon"
     PROPERTIES = {
@@ -661,3 +687,234 @@ class waterballoon(Type):
 
 
 WMWObjectPack.register_type(waterballoon)
+
+
+class icyhot(Type):
+    NAME = "icyhot"
+    PROPERTIES = {
+        "TemperatureType": {
+            "type": "string",
+            "default": "cold",
+            "options": ["cold"],
+        },
+        "ObjectType": {
+            "type": "string",
+            "default": "icicle",
+            "options": ["icicle"],
+        },
+        "ParticleSpeed": {
+            "type": "int",
+            "default": "15",
+        },
+        "ParticlesPerSecond": {
+            "type": "int",
+            "default": "3",
+        },
+        "SpawnOffset#": {
+            "type": "offset",
+            "default": "0 0",
+        },
+        "SpawnOffsetProbability#": {
+            "type": "float",
+            "default": "0.5",
+        },
+        "OffsetVariation": {
+            "type": "float",
+            "default": "0.5",
+        },
+        "PopsBalloons": {
+            "type": "bit",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(icyhot)
+
+
+class dirtywall(Type):
+    NAME = "dirtywall"
+    PROPERTIES = {
+        "ParticleArea": {
+            "type": "offset",
+            "default": "0 0",
+        },
+        "Health": {
+            "type": "int",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(dirtywall)
+
+
+class fan(Type):
+    NAME = "fan"
+    PROPERTIES = {
+        "FanType": {
+            "type": "string",
+            "default": "vacuum",
+            "options": ["vacuum", "fan"],
+        },
+        "VacuumBaseAngle": {
+            "type": "default",
+            "default": "0",
+        },
+        "VacuumBlows": {
+            "type": "bit",
+            "default": "1",
+        },
+        "VacuumCenterOffsetA": {
+            "type": "offset",
+            "default": "0 0",
+        },
+        "VacuumCenterOffsetB": {
+            "type": "offset",
+            "default": "0 0",
+        },
+        "VacuumMaxAngle": {
+            "type": "angle",
+            "default": "0",
+        },
+        "VacuumMaxD": {
+            "type": "int",
+            "default": "85",
+        },
+        "VacuumMinAngle": {
+            "type": "angle",
+            "default": "0",
+        },
+        "VacuumFriction": {"type": "float", "default": "0.35"},
+        "VacuumForce": {
+            "type": "int",
+            "default": "15",
+        },
+        "VacuumMaxForce": {
+            "type": "int",
+            "default": "20",
+        },
+        "Gears": {
+            "type": "index:sprite ...",
+            "default": "1",
+        },
+        "Fans": {
+            "type": "index:sprite ...",
+            "default": "0",
+        },
+        "VacuumOn": {
+            "type": "bit",
+            "default": "1",
+        },
+        "ConnectedSpout": {
+            "type": "object",
+        },
+        "VacuumMaxStrength": {
+            "type": "int",
+            "default": "20",
+        },
+        "VacuumRaycastOffset": {
+            "type": "int",
+            "default": "8",
+        },
+        "VacuumMaxPower": {
+            "type": "int",
+            "default": "60",
+        },
+        "VacuumPower": {
+            "type": "int",
+            "default": "45",
+        },
+        "VaccuumFriction": {
+            "type": "float",
+            "default": "0.01",
+        },
+    }
+
+
+WMWObjectPack.register_type(fan)
+
+
+class mysterycave(Type):
+    NAME = "mysterycave"
+    PROPERTIES = {
+        "MaterialType": {
+            "type": "int",
+            "default": "-1",
+            "options": ["-1", "0", "1", "2"],
+        },
+        "ParticleSpawner": {
+            "type": "bit",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(mysterycave)
+
+
+class algaehider(Type):
+    NAME = "algaehider"
+    PROPERTIES = {
+        "AlgaeCount": {
+            "type": "int",
+            "default": "20",
+        },
+        "IgnoreInEditorObjectSelect": {
+            "type": "bit",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(algaehider)
+
+
+class floater(Type):
+    NAME = "floater"
+    PROPERTIES = {
+        "CollisionFrictionWorld": {
+            "type": "float",
+            "default": "0.05",
+        },
+        "CollisionElasticityWorld": {
+            "type": "float",
+            "default": "0.8",
+        },
+        "EdgeSpringDamping": {
+            "type": "int",
+            "default": "10",
+        },
+        "EdgeSpringK": {
+            "type": "int",
+            "default": "5000",
+        },
+        "InternalSpring#": {
+            "type": "int int int int",
+            "default": "5 2 5000 10",
+            "options": [
+                "5 2 5000 10",
+                "8 0 5000 10",
+                "7 2 5000 10",
+                "6 2 5000 10",
+                "0 7 5000 10",
+                "7 1 5000 10",
+                "4 2 5000 10",
+            ],
+        },
+        "PointMass": {
+            "type": "int",
+            "default": "3",
+        },
+        "ShapeMatchingDamping": {
+            "type": "int",
+            "default": "10",
+        },
+        "ShapeMatchingK": {
+            "type": "int",
+            "default": "1000",
+        },
+    }
+
+
+WMWObjectPack.register_type(floater)
