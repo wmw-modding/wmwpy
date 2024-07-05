@@ -283,6 +283,47 @@ class bomb(Type):
 WMWObjectPack.register_type(bomb)
 
 
+class switch(Type):
+    NAME = "switch"
+    PROPERTIES = {
+        "SwitchType": {
+            "type": "string",
+            "options": ["momentary", "Momentary", "Flip"],
+        },
+        "GearIndex": {
+            "type": "index:sprite",
+            "default": "1",
+        },
+        "SpoutCollisionIndex": {
+            "type": "index:sprite",
+            "default": "0",
+        },
+        "ConnectedObject#": {
+            "type": "object",
+        },
+        "ButtonOut": {
+            "type": "int",
+            "default": "4",
+        },
+        "ButtonIn": {
+            "type": "int",
+            "default": "2",
+        },
+        "Button#": {
+            "type": "int",
+            "default": "0",
+            "options": ["0", "1", "2", "3"],
+        },
+        "ShowTopEdge": {
+            "type": "bit",
+            "default": "1",
+        },
+    }
+
+
+WMWObjectPack.register_type(switch)
+
+
 class yswitch(Type):
     NAME = "yswitch"
     PROPERTIES = {
