@@ -240,6 +240,7 @@ class Type():
         
         - 'fluid' -> 'string'
         - 'angle' -> 'float'
+        - 'radius' -> 'float'
         - 'index' -> 'int'
         - 'pos' -> 'float float'
         - 'offset' -> 'float float'
@@ -289,6 +290,7 @@ class Type():
         type_aliases = {
             'fluid': 'string',
             'angle': 'float',
+            'radius': 'float',
             'index': 'int',
             'pos': 'float float',
             'offset': 'float float',
