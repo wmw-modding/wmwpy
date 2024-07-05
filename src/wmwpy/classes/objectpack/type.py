@@ -120,7 +120,14 @@ class Type():
         'default' : '',
     }
     
-    VALUE_TYPES = ['string', 'float', 'int', 'bit', 'Vector2', 'Vector2,...']
+    VALUE_TYPES = [
+        'string',
+        'float',
+        'int',
+        'bit',
+        'vector',
+        'vector,...',
+    ]
     
     def __init__(self, obj : 'Object' = None) -> None:
         """Object Type class.
@@ -200,7 +207,8 @@ class Type():
     
     def value(
         self,
-        value : str, type : typing.Literal[
+        value : str,
+        type : typing.Literal[
             'string',
             'float',
             'int',
@@ -208,42 +216,55 @@ class Type():
             '<Vector>',
             '<Vector ...>',
             '<Vector,...>',
-        ] = 'string',
+            'angle',
+            'index',
+            'pos',
+            'offset',
+        ] | str = 'string',
     ) -> str | float | int | list[str | float | int] | list[list[str | float | int]]:
         """Convert this value from a string to a python build-in data type.
         
         Args:
             value (str): The value
-            type (Literal['string', 'float', 'int', 'bit', '<Vector>', '<Vector ...>', '<Vector,...>' ], optional): The value type. Defaults to 'string'.
+            type (str, optional): The value type. Defaults to 'string'.
         
         - 'string'
         - 'float'
         - 'int'
         - 'bit' (0 or 1)
-        - '<Vector>' (list of types seperated by spaces, e.g. 'string int')
-        - '<Vector> ...' (list of retypes seperated by spaces, but also can be repeated, e.g. 'string int ...')
-        - '<Vector>,...' (list of types seperated by spaces, but also repeated by commas, e.g. 'string int,...')
+        - '<Vector>' (list of types separated by spaces, e.g. 'string int')
+        - '<Vector> ...' (list of types separated by spaces, but also can be repeated, e.g. 'string int ...')
+        - '<Vector>,...' (list of types separated by spaces, but also repeated by commas, e.g. 'string int,...')
+
+        There are also some type aliases.
+        
+        - 'fluid' -> 'string'
+        - 'angle' -> 'float'
+        - 'index' -> 'int'
+        - 'pos' -> 'float float'
+        - 'offset' -> 'float float'
+        - 'rgb' -> 'int int int'
+        - 'rgba' -> 'int int int int'
+        
+        You can even use something like 'index:sprite' to indicate a sprite index.
         
         Example
         ```python
-        >> Type.value('foo', 'string')
+        >> Type().value('foo', 'string')
         'foo'
-        >> Type.value('2.5', 'float')
+        >> Type().value('2.5', 'float')
         2.5
-        >> Type.value('5', 'int')
+        >> Type().value('5', 'int')
         5
-        >> Type.value('text 5', 'string int')
+        >> Type().value('text 5', 'string int')
         ['text', 5]
-        >> Type.value('0.5 2.2,-2.5 5.2', 'float float,...')
+        >> Type().value('0.5 2.2,-2.5 5.2', 'float float,...')
         [[0.5,2.2],[-2.5,5.2]]
         ```
         """
         def getint(value : str):
             try:
-                try:
-                    return int(value)
-                except:
-                    return int(float(value))
+                return int(float(value))
             except:
                 return 0
         
@@ -264,6 +285,20 @@ class Type():
             'comma' : lambda string : string.split(','),
             'spaced' : lambda string : string.split(),
         }
+        
+        type_aliases = {
+            'fluid': 'string',
+            'angle': 'float',
+            'index': 'int',
+            'pos': 'float float',
+            'offset': 'float float',
+            'rgb': 'int int int',
+            'rgba': 'int int int int',
+        }
+        
+        type_prefix = type.split(':', 1)[0]
+        if type_prefix in type_aliases:
+            type = type_aliases.get(type_prefix, 'string')
         
         values = []
         
