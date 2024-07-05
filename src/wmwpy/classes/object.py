@@ -209,9 +209,9 @@ class Object(GameObject):
         
         
     @property
-    def Type(this):
-        if this.object_pack != None:
-            return this.object_pack.get_type(this.type, this)
+    def Type(self):
+        if self.object_pack != None:
+            return self.object_pack.get_type(self.type, self)
     
     @property
     def background(this) -> Image.Image:
@@ -578,12 +578,7 @@ class Object(GameObject):
     def type(this) -> str | None:
         """The Object type, based off the `Type` property.
         """
-        if 'Type' in this.properties:
-            return this.properties['Type']
-        elif 'Type' in this.defaultProperties:
-            return this.defaultProperties['Type']
-        else:
-            return ''
+        return this.properties.get('Type', this.defaultProperties.get('Type', ''))
     @type.setter
     def type(this, value : str):
         if not isinstance(value, str):
