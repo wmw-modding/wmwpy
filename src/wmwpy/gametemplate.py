@@ -59,24 +59,29 @@ class WMW(Game):
             ]
         },
         'water': {
+            'name': 'water',
             'rgb': (43, 33, 254),
-            'type': 'particle',
+            'type': 'fluid',
         },
         'poison_water': {
+            'name': 'contaminatedwater',
             'rgb': (139,25,135),
-            'type': 'particle',
+            'type': 'fluid',
         },
         'ooze': {
+            'name': ['lava', 'ooze'],
             'rgb': (190,101,47),
-            'type': 'particle',
+            'type': 'fluid',
         },
         "steam": {
+            'name': 'steam',
             'rgb': (0, 3, 143),
-            'type': 'particle',
+            'type': 'fluid',
         },
         "mud": {
+            'name': 'mud',
             'rgb': (63, 50, 27),
-            'type': 'particle',
+            'type': 'fluid',
         },
         'algae': {
             'rgb': (38,139,38),
@@ -86,6 +91,17 @@ class WMW(Game):
             'rgb': (178,8,21),
             'type': 'particle',
         },
+        'drymud': {
+            'name': 'drymud',
+            'type': 'fluid',
+        },
+        'wetmud': {
+            'name': 'wetmud',
+            'type': 'fluid',
+        },
+        'cement': {
+            'type': 'fluid',
+        }
     }
     
     game = 'WMW'
