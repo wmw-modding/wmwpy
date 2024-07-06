@@ -278,6 +278,11 @@ class bomb(Type):
             "default": "7",
         },
     }
+    
+    def ready_properties(self) -> dict[str, str]:
+        return super().ready_properties(
+            include = ['BlastRadius', 'BlastPower'],
+        )
 
 
 WMWObjectPack.register_type(bomb)
