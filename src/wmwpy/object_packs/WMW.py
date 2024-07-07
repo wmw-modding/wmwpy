@@ -185,6 +185,7 @@ class spout(Type):
                 "wetmud",
             ],
         },
+        "TouchSpoutActiveSeconds": {"type": "float", "default": "0.0"},
         "ExpulsionAngle": {"type": "angle", "default": "0.0"},
         "ExpulsionAngleVariation": {"type": "angle", "default": "0.0"},
         "ParticleSpeed": {"type": "float", "default": "1"},
@@ -272,10 +273,6 @@ class bomb(Type):
         "BlastPower": {
             "type": "int",
             "default": "4000",
-        },
-        "xBlastRadius": {
-            "type": "radius",
-            "default": "7",
         },
     }
     
