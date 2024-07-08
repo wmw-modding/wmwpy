@@ -129,6 +129,18 @@ class Type():
         'vector,...',
     ]
     
+    TYPE_ALIASES = {
+        'file': 'string',
+        'fluid': 'string',
+        'angle': 'float',
+        'radius': 'float',
+        'index': 'int',
+        'pos': 'float float',
+        'offset': 'float float',
+        'rgb': 'int int int',
+        'rgba': 'int int int int',
+    }
+    
     def __init__(self, obj : 'Object' = None) -> None:
         """Object Type class.
 
@@ -287,21 +299,9 @@ class Type():
             'spaced' : lambda string : string.split(),
         }
         
-        type_aliases = {
-            'file': 'string',
-            'fluid': 'string',
-            'angle': 'float',
-            'radius': 'float',
-            'index': 'int',
-            'pos': 'float float',
-            'offset': 'float float',
-            'rgb': 'int int int',
-            'rgba': 'int int int int',
-        }
-        
         type_prefix = type.split(':', 1)[0]
-        if type_prefix in type_aliases:
-            type = type_aliases.get(type_prefix, 'string')
+        if type_prefix in self.TYPE_ALIASES:
+            type = self.TYPE_ALIASES.get(type_prefix, 'string')
         
         values = []
         
