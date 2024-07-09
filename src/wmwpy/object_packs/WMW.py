@@ -53,11 +53,11 @@ class DefaultType(Type):
         },
         "PathIsClosed": {
             "type": "bit",
-            "default": "1",
+            "default": "0",
         },
         "PathIsGlobal": {
             "type": "bit",
-            "default": "1",
+            "default": "0",
         },
         "MotorMoveSpeed": {
             "type": "float",
