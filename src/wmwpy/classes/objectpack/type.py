@@ -1,9 +1,10 @@
+import logging
 import typing
+from copy import deepcopy
 from typing import TYPE_CHECKING
+
 # if TYPE_CHECKING:
 from ..object import Object
-    
-from copy import deepcopy
 
 
 class Type():
@@ -323,6 +324,8 @@ class Type():
                 
                 return new_values
         
+        if isinstance(value, str):
+            value = value.strip()
         return types.get(type, types['string'])(value)
     
     def ready_properties(self, include : list[str] = None) -> dict[str,str]:
@@ -419,17 +422,46 @@ class Type():
             property,
             self.obj.defaultProperties.get(
                 property,
-                self.PROPERTIES.get(
-                    property,
-                    self.DEFAULT_PROPERTY
-                )['default']
             )
         )
         
-        if property in self.PROPERTIES:
+        if value == None:
+            value = self.PROPERTIES.get(property).get('default')
+        
+        split_property = self.split_property_num(property)
+        if split_property[1]:
             value = self.value(
                 value,
-                self.PROPERTIES[property]['type']
+                self.PROPERTIES.get(split_property[0] + '#', {}).get('type', 'string'),
+            )
+        else:
+            value = self.value(
+                value,
+                self.PROPERTIES.get(property, {}).get('type', 'string'),
             )
         
         return value
+    
+    def get_properties(self, property: str) -> dict[str, typing.Any]:
+        result = {}
+        
+        logging.debug(f'property: {property}')
+        if property.endswith('#'):
+            properties = set(self.obj.defaultProperties.keys())
+            properties.update(self.obj.properties.keys())
+            
+            split_property = self.split_property_num(property)
+            filtered_properties = sorted(filter(
+                lambda name: self.split_property_num(name)[0] == split_property[0],
+                properties,
+            ), key = lambda name: self.split_property_num(name)[1])
+
+            logging.debug(f'filtered properties: {filtered_properties}')
+            
+            for name in filtered_properties:
+                result[name] = self.get_property(name)
+            
+        else:
+            result[property] = self.get_property(name)
+        
+        return result
