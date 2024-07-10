@@ -423,6 +423,11 @@ class Level(GameObject):
         Returns:
             Object: wmwpy Object
         """
+        try:
+            id = int(float(id))
+        except:
+            return
+        
         for obj in this.objects:
             if obj.id == id:
                 return obj
