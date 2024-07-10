@@ -269,7 +269,7 @@ WMWObjectPack.register_type(spout)
 class bomb(Type):
     NAME = "bomb"
     PROPERTIES = {
-        "BlastRadius": {"type": "radius", "default": "7"},
+        "BlastRadius": {"type": "radius", "default": "20"},
         "BlastPower": {
             "type": "int",
             "default": "4000",
@@ -509,8 +509,8 @@ class star(Type):
         },
         "TeleportMoveTime": {"type": "float", "default": "0"},
         "NumParticlesToHatch": {"type": "int", "default": "5"},
-        "CutRadius": {"type": "radius", "default": "5"},
-        "BlastRadius": {"type": "radius", "default": "7.5"},
+        "CutRadius": {"type": "radius", "default": "4"},
+        "BlastRadius": {"type": "radius", "default": "0"},
         "IsSponge": {"type": "bit", "default": "0"},
         "CutsDirt": {"type": "bit", "default": "1"},
         "IgnoreFluid": {
