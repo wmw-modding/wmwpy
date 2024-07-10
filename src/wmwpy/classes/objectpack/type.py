@@ -447,7 +447,7 @@ class Type():
             try:
                 return int(float(value))
             except:
-                return 0
+                return value
         
         result = {}
         
