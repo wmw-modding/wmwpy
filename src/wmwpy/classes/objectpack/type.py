@@ -468,6 +468,6 @@ class Type():
                 result[name] = self.get_property(name)
             
         else:
-            result[property] = self.get_property(name)
+            result[property] = self.get_property(property)
         
         return result
