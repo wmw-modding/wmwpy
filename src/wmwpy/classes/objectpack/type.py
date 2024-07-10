@@ -443,6 +443,12 @@ class Type():
         return value
     
     def get_properties(self, property: str) -> dict[str, typing.Any]:
+        def getint(value : str):
+            try:
+                return int(float(value))
+            except:
+                return 0
+        
         result = {}
         
         logging.debug(f'property: {property}')
@@ -454,7 +460,7 @@ class Type():
             filtered_properties = sorted(filter(
                 lambda name: self.split_property_num(name)[0] == split_property[0],
                 properties,
-            ), key = lambda name: self.split_property_num(name)[1])
+            ), key = lambda name: getint(self.split_property_num(name)[1]))
 
             logging.debug(f'filtered properties: {filtered_properties}')
             
