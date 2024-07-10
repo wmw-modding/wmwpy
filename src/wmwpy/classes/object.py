@@ -775,21 +775,22 @@ class Object(GameObject):
             save_file = filename,
         )
     
-    def copy(this) -> Object:
+    def copy(self) -> Object:
         """Creates a copy of this object (aka, get the object again).
 
         Returns:
             Object: New Object.
         """
         return Object(
-            this.file,
-            filesystem = this.filesystem,
-            properties = this.properties,
-            pos = this.pos,
-            name = this.name,
-            scale = this.scale,
-            HD = this.HD,
-            TabHD = this.TabHD,
+            self.file,
+            filesystem = self.filesystem,
+            properties = self.properties,
+            pos = self.pos,
+            name = self.name,
+            scale = self.scale,
+            HD = self.HD,
+            TabHD = self.TabHD,
+            object_pack = self.object_pack
         )
 
 class Shape(GameObject):
