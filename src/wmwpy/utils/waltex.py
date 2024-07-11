@@ -59,7 +59,7 @@ class _WaltexImageFile(ImageFile.ImageFile):
         self._size = w, h
 
         # mode setting
-        self.mode = 'RGBA'
+        self._mode = 'RGBA'
 
         # Decoder
         if fmt == 0:
@@ -71,7 +71,9 @@ class _WaltexImageFile(ImageFile.ImageFile):
             # Use raw decoder with custom RGBA;4B unpacker
             self.tile = [("raw", (0, 0) + self.size, self.HEADER_LENGTH, ('RGBA;4B', 0, 1))]
         elif fmt in [1,2]:
-            raise NotImplementedError(f'Format {fmt} is not supported yet.\nPlease go to https://github.com/wmw-modding/wmwpy/issues and report the issue. Please include the file too.')
+            e = NotImplementedError(f'Format {fmt} is not supported yet.')
+            e.add_note("Please go to https://github.com/wmw-modding/wmwpy/issues and report the issue. Please include the file too.")
+            raise e
 
 # regester file type in PIL
 Image.register_open(_WaltexImageFile.format, _WaltexImageFile, _accept)
