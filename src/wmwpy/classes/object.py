@@ -1,5 +1,6 @@
 import logging
 import typing
+from typing import Self
 from lxml import etree
 import os
 from copy import deepcopy
@@ -55,7 +56,7 @@ class Object(GameObject):
         scale : int = 50,
         HD : bool = False,
         TabHD : bool = False,
-        object_pack : ObjectPack = None,
+        object_pack : 'ObjectPack' = None,
     ) -> None:
         """Get game object. Game object is `.hs` file.
 
@@ -772,7 +773,7 @@ class Object(GameObject):
             save_file = filename,
         )
     
-    def copy(self) -> Object:
+    def copy(self) -> Self:
         """Creates a copy of this object (aka, get the object again).
 
         Returns:
