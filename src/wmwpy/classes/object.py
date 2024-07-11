@@ -1,9 +1,6 @@
-from __future__ import annotations
 import logging
 import typing
-import lxml
 from lxml import etree
-import io
 import os
 from copy import deepcopy
 from PIL import Image, ImageDraw

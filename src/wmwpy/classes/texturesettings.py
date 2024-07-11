@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from lxml import etree
 from copy import deepcopy
 import os
