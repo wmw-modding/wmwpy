@@ -503,10 +503,10 @@ class Imagelist(GameObject):
                 if image.name == name:
                     return image
         
-        def add(this,
+        def add(self,
                 name : str,
                 image : PIL.Image.Image,
-                properties : dict = {},
+                properties : dict = None,
                 replace = False,
             ) -> 'Imagelist.Page.Image':
             """Add image to imagelist.
@@ -523,25 +523,34 @@ class Imagelist(GameObject):
             Returns:
                 Imagelist.Page.Image: Resulting imagelist image.
             """
-            if name in this.images:
+            existing = self.get(name)
+            if existing:
                 # print(f'Warning: "{name}" already in imagelist.')
                 if not replace:
                     raise NameError(f'Image "{name}" already exists.')
+            
+                self.images.remove(existing)
+            
+            if properties == None:
+                properties = {}
+            
+            properties = deepcopy(properties)
+            
             properties['name'] = name
             properties['rect'] = ' '.join([str(_) for _ in (0,0) + image.size])
             
-            texture = this.Image(
+            texture = self.Image(
                 image,
                 properties,
-                textureBasePath = this.textureBasePath,
-                filesystem = this.filesystem,
-                gamepath = this.gamepath,
-                assets = this.assets,
+                textureBasePath = self.textureBasePath,
+                filesystem = self.filesystem,
+                gamepath = self.gamepath,
+                assets = self.assets,
                 save_image = True,
             )
-            this.images.append(texture)
+            self.images.append(texture)
             
-            this._getRects()
+            self._getRects()
             
             return texture
         
@@ -553,7 +562,7 @@ class Imagelist(GameObject):
                 auto_fit (bool, optional): Auto minimize the atlas image size while keeping all the sprites in the image. Defaults to False.
             """
             for image in this.images:
-                image.getImage()
+                image.image
             
             this._getRects(gap = gap, auto_fit = auto_fit)
             this._updateAtlas()
