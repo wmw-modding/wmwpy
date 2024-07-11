@@ -137,7 +137,7 @@ class Level(GameObject):
         size = numpy.array(image.size)
         size = size * this.scale
 
-        image = image.resize(size, resample = Image.NEAREST)
+        image = image.resize(tuple(size), resample = Image.NEAREST)
 
         return image
 
