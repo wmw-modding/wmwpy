@@ -7,11 +7,10 @@ name = "wmwpy"
 authors = [
   { name="ego-lay-atman-bay" },
 ]
-# version = "0.0.1"
-description = "Python module to work with Where's My...? games files."
+description = "Python module to work with files in the Where's My Water? mobile game series."
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
