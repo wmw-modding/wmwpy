@@ -2,7 +2,7 @@ import os
 import pathlib
 
 def joinPath(*args : str) -> str:
-    """Join a list of paths to create a new path, while ignoring any forward or backward slashes (`/` `\`)
+    r"""Join a list of paths to create a new path, while ignoring any forward or backward slashes (`/` `\`)
 
     Args:
         *args: (str): str path
@@ -17,7 +17,7 @@ def joinPath(*args : str) -> str:
     return path.as_posix()
 
 def makeRelativePath(path : str) -> str:
-    """Remove forward and backward slashes (`/` `\`) from the beginning of a path.
+    r"""Remove forward and backward slashes (`/` `\`) from the beginning of a path.
 
     Args:
         path (str): Path to check
