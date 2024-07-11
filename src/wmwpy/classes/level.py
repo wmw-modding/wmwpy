@@ -100,7 +100,7 @@ class Level(GameObject):
         if this.image_file == None:
             this.image = this.IMAGE_TEMPLATE.copy()
         else:
-            this.image = Image.open(this.image_file).quantize(colors=256)
+            this.image = Image.open(this.image_file)
 
         this.HD = HD
         this.TabHD = TabHD
