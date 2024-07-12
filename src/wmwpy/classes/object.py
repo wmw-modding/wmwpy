@@ -169,10 +169,8 @@ class Object(GameObject):
         max = numpy.array([math.ceil(v.max()) for v in rects])
         
         
-        this.size = max - min
+        this.size = numpy.maximum(max - min, [1, 1])
         this._offset = [a.mean() for a in numpy.array([min,max]).swapaxes(0,1)]
-        
-        
         
         return this._offset
     
@@ -298,6 +296,7 @@ class Object(GameObject):
         image = this.rotateImage(image)
         
         this.SAFE_MODE = False
+        
         return image
     
     @property
