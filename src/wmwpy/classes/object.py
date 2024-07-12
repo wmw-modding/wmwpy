@@ -563,10 +563,7 @@ class Object(GameObject):
     def filename(this) -> str | None:
         """Object filename based on the `Filename` property
         """
-        if 'Filename' in this.properties:
-            return this.properties['Filename']
-        else:
-            return None
+        return this.properties.get('Filename')
     @filename.setter
     def filename(this, value : str):
         this.properties['Filename'] = value
