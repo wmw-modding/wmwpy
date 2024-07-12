@@ -221,22 +221,23 @@ class Level(GameObject):
                                     if not property is etree.Comment and property.tag == 'Property':
                                         properties[property.get('name')] = property.get('value')
 
-                    obj = Object(
-                        this.filesystem.get(properties['Filename']), # get file because `Object` does not take filepath
-                        filesystem = this.filesystem,
-                        properties = properties,
-                        pos = pos,
-                        name = name,
-                        HD = this.HD,
-                        TabHD = this.TabHD,
-                        object_pack = this.object_pack,
-                    )
+                    if 'Filename' in properties:
+                        obj = Object(
+                            this.filesystem.get(properties['Filename']), # get file because `Object` does not take filepath
+                            filesystem = this.filesystem,
+                            properties = properties,
+                            pos = pos,
+                            name = name,
+                            HD = this.HD,
+                            TabHD = this.TabHD,
+                            object_pack = this.object_pack,
+                        )
 
-                    obj.id = id
+                        obj.id = id
 
-                    this.objects.append(obj)
+                        this.objects.append(obj)
 
-                    id += 1
+                        id += 1
 
                 elif element.tag == 'Properties':
                     run_callback(index, 'Level Properties', max)
