@@ -1,4 +1,4 @@
-__version__ = "0.6.0-beta"
+__version__ = "1.0.0"
 __author__ = 'ego-lay-atman-bay'
 
 import typing
