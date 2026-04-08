@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wmwpy.classes.object &#8212; wmwpy 0.5.2-beta documentation</title>
+    <title>wmwpy.classes.object &#8212; wmwpy 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -31,12 +31,10 @@
           <div class="body" role="main">
             
   <h1>Source code for wmwpy.classes.object</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">import</span> <span class="nn">lxml</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
@@ -91,7 +89,7 @@
         <span class="n">scale</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">HD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">TabHD</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">object_pack</span> <span class="p">:</span> <span class="n">ObjectPack</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">object_pack</span> <span class="p">:</span> <span class="s1">&#39;ObjectPack&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get game object. Game object is `.hs` file.</span>
 
@@ -204,10 +202,8 @@
         <span class="nb">max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">])</span>
         
         
-        <span class="n">this</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">max</span> <span class="o">-</span> <span class="nb">min</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="nb">max</span> <span class="o">-</span> <span class="nb">min</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">this</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">])</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
-        
-        
         
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">_offset</span></div>
     
@@ -242,9 +238,9 @@
         
         
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">Type</span><span class="p">(</span><span class="n">this</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">object_pack</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">Type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_pack</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_pack</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">background</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
@@ -333,6 +329,7 @@
         <span class="n">image</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">rotateImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         
         <span class="n">this</span><span class="o">.</span><span class="n">SAFE_MODE</span> <span class="o">=</span> <span class="kc">False</span>
+        
         <span class="k">return</span> <span class="n">image</span>
     
     <span class="nd">@property</span>
@@ -599,10 +596,7 @@
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Object filename based on the `Filename` property</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;Filename&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">)</span>
     <span class="nd">@filename</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
@@ -611,12 +605,7 @@
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The Object type, based off the `Type` property.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;Type&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Type&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="s1">&#39;Type&#39;</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="p">[</span><span class="s1">&#39;Type&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
     <span class="nd">@type</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -679,8 +668,11 @@
         <span class="c1"># for prop in this.defaultProperties:</span>
         <span class="c1">#     if prop not in this.properties:</span>
         <span class="c1">#         this.properties[prop] = this.defaultProperties[prop]</span>
-        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span><span class="p">:</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">_level_properties</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">defaultProperties</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">this</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ready_properties</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span></div>
     
     <span class="k">def</span> <span class="nf">_getDefaultProperties</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">xml</span> <span class="p">:</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementBase</span><span class="p">):</span>
@@ -810,21 +802,22 @@
             <span class="n">save_file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span>
         <span class="p">)</span></div>
     
-<div class="viewcode-block" id="Object.copy"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Object</span><span class="p">:</span>
+<div class="viewcode-block" id="Object.copy"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Object.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a copy of this object (aka, get the object again).</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Object: New Object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Object</span><span class="p">(</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
-            <span class="n">filesystem</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
-            <span class="n">properties</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">scale</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
-            <span class="n">HD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
-            <span class="n">TabHD</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
+            <span class="n">filesystem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span>
+            <span class="n">properties</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
+            <span class="n">HD</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HD</span><span class="p">,</span>
+            <span class="n">TabHD</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TabHD</span><span class="p">,</span>
+            <span class="n">object_pack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_pack</span>
         <span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Shape"><a class="viewcode-back" href="../../../wmwpy.classes.html#wmwpy.classes.object.Shape">[docs]</a><span class="k">class</span> <span class="nc">Shape</span><span class="p">(</span><span class="n">GameObject</span><span class="p">):</span>
