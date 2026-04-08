@@ -12,5 +12,6 @@ permissions:
 jobs:
   publish:
     uses: ego-lay-atman-bay/python-publish-workflow/.github/workflows/python-publish.yml@main
+    secrets: inherit
     with:
         python_version: '3.14'
