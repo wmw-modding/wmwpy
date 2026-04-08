@@ -918,5 +918,15 @@ class floater(Type):
         },
     }
 
-
 WMWObjectPack.register_type(floater)
+
+class pipe(Type):
+    NAME = 'pipe'
+    PROPERTIES = {
+        "PathPoints": {
+            "type": "float float,...",
+            "default": "0 0, 0 0, 0 0",
+        },
+    }
+
+WMWObjectPack.register_type(pipe)
