@@ -1,6 +1,6 @@
-lxml==5.2.2
+lxml==6.0.2
 natsort==8.4.0
-numpy==2.0.0
+numpy==2.4.4
 tk==0.1.0
-Pillow==10.4.0
+Pillow==12.2.0
 filetype==1.2.0
