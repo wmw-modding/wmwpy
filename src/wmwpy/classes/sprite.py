@@ -1069,7 +1069,13 @@ class Sprite(GameObject):
                 else:
                     image = Image.new('RGBA', (1,1), (0,0,0,0))
                 
-                image = image.resize(tuple([round(_) for _ in (numpy.array(image.size) * numpy.array(this.scale))]))
+                # Validate scale before resize to prevent negative dimensions
+                scale_array = numpy.array(this.scale)
+                if scale_array[0] <= 0 or scale_array[1] <= 0:
+                    # Use original image if scale has negative/zero values
+                    image = this._image.image.copy() if hasattr(this._image, 'image') else this._image.copy()
+                else:
+                    image = image.resize(tuple([round(_) for _ in (numpy.array(image.size) * scale_array)]))
                 image = image.rotate(this.angleDeg, expand = True)
                 
                 # for color in this.color_filters:
