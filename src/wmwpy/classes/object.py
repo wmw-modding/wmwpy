@@ -152,13 +152,7 @@ class Object(GameObject):
 
             if 'filename' in sprite.properties:
                 filename = sprite.properties['filename']
-                if 'Tap_Button' in filename or 'Button' in filename:
-                    self._child_sprites.append(sprite)
-                    continue
-
-            if 'filename' in sprite.properties:
-                filename = sprite.properties['filename']
-                if 'glow' in filename.lower():
+                if 'Tap_Button' in filename or 'Button' in filename or ('icicle' in filename.lower() and 'glow' in filename.lower()):
                     self._child_sprites.append(sprite)
                     continue
 
